@@ -1,0 +1,9 @@
+{
+  "name": "smbs-users-order-station",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "test": "node scripts/verify.mjs"
+  }
+}

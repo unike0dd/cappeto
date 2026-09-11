@@ -1,0 +1,66 @@
+import {createServer} from 'node:http';
+import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
+import {createReadStream,existsSync} from 'node:fs';
+import {extname,join,normalize,resolve} from 'node:path';
+import {randomBytes,randomUUID,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
+
+const root=resolve(process.cwd());
+const dataFile=join(root,'data/products.json');
+const runtimeDir=join(root,'data/runtime');
+const runtimeFile=join(runtimeDir,'products.json');
+const uploadsDir=join(root,'uploads');
+const port=Number(process.env.PORT||4173);
+const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'owner@cappeto.local').toLowerCase();
+const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'Cappeto123!';
+const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
+const isProduction=process.env.NODE_ENV==='production';
+if(isProduction&&(!process.env.CAPPETO_ADMIN_PASSWORD||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_PASSWORD and CAPPETO_SESSION_SECRET');
+if(!isProduction&&!process.env.CAPPETO_ADMIN_PASSWORD)console.warn('Development sign-in: owner@cappeto.local / Cappeto123!');
+
+await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true});
+if(!existsSync(runtimeFile))await writeFile(runtimeFile,await readFile(dataFile));
+const sessions=new Map();
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.webp':'image/webp','.json':'application/json; charset=utf-8'};
+const securityHeaders={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Permissions-Policy':'camera=(), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"};
+const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8',...securityHeaders,...extra});res.end(JSON.stringify(body))};
+const readBody=async req=>{let size=0;const chunks=[];for await(const chunk of req){size+=chunk.length;if(size>4_000_000)throw Object.assign(new Error('Request is too large'),{status:413});chunks.push(chunk)}return JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}')};
+const catalog=()=>readFile(runtimeFile,'utf8').then(JSON.parse);
+async function saveCatalog(value){const temp=`${runtimeFile}.${randomUUID()}.tmp`;await writeFile(temp,JSON.stringify(value,null,2));await rename(temp,runtimeFile)}
+const cookies=req=>Object.fromEntries((req.headers.cookie||'').split(';').map(v=>v.trim().split('=').map(decodeURIComponent)).filter(pair=>pair.length===2));
+const sign=value=>createHmac('sha256',sessionSecret).update(value).digest('base64url');
+function sessionFor(req){const raw=cookies(req).cappeto_session;if(!raw)return null;const [id,signature]=raw.split('.');if(!id||!signature)return null;const expected=Buffer.from(sign(id));const actual=Buffer.from(signature);if(expected.length!==actual.length||!timingSafeEqual(expected,actual))return null;const session=sessions.get(id);if(!session||session.expiresAt<Date.now()){sessions.delete(id);return null}return session}
+function requireStaff(req,res){const session=sessionFor(req);if(!session){json(res,401,{error:'Please sign in again.'});return null}if(!['POST','PUT','PATCH','DELETE'].includes(req.method))return session;if(req.headers['x-csrf-token']!==session.csrf){json(res,403,{error:'Security token is missing or expired.'});return null}return session}
+const clean=(value,max)=>String(value||'').trim().replace(/[<>]/g,'').slice(0,max);
+const validItems=(items,products)=>{if(!Array.isArray(items)||items.length>20)throw Object.assign(new Error('Order items are invalid.'),{status:400});return items.map(item=>{const product=products.find(p=>p.id===item.productId);const quantity=Number(item.quantity);if(!product||!Number.isInteger(quantity)||quantity<1||quantity>product.stock)throw Object.assign(new Error('A product or quantity is no longer available.'),{status:409});return{product,quantity}})};
+const totals=(lines,vatRate)=>{const subtotalCents=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);const vatCents=Math.round(subtotalCents*vatRate/100);return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate}};
+
+const server=createServer(async(req,res)=>{try{
+  const url=new URL(req.url,'http://local');
+  if(url.pathname==='/api/auth/login'&&req.method==='POST'){
+    const body=await readBody(req);if(body.consent!==true)return json(res,400,{error:'Authorization and consent are required.'});
+    const email=clean(body.email,160).toLowerCase();const password=String(body.password||'');
+    const expected=scryptSync(adminPassword,'cappeto-login-v1',64);const received=scryptSync(password,'cappeto-login-v1',64);
+    if(email!==adminEmail||!timingSafeEqual(expected,received))return json(res,401,{error:'Email or password is incorrect.'});
+    const id=randomBytes(24).toString('base64url');const csrf=randomBytes(24).toString('base64url');sessions.set(id,{email,csrf,expiresAt:Date.now()+8*60*60*1000});
+    return json(res,200,{user:{email,role:'owner'},csrfToken:csrf},{'Set-Cookie':`cappeto_session=${id}.${sign(id)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${isProduction?'; Secure':''}`});
+  }
+  if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=sessionFor(req);return json(res,200,session?{authenticated:true,user:{email:session.email,role:'owner'},csrfToken:session.csrf}:{authenticated:false})}
+  if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'})}
+  if(url.pathname==='/api/products'&&req.method==='GET'){const data=await catalog();return json(res,200,data)}
+  if(url.pathname==='/api/products'&&req.method==='POST'){
+    if(!requireStaff(req,res))return;const body=await readBody(req);const data=await catalog();if(data.products.length>=20)return json(res,409,{error:'The 20-product limit has been reached.'});
+    const name=clean(body.name,80),category=clean(body.category,40),description=clean(body.description,140),priceCents=Math.round(Number(body.price)*100),stock=Number(body.stock);
+    if(!name||!category||!description||!Number.isInteger(priceCents)||priceCents<1||priceCents>999900||!Number.isInteger(stock)||stock<0||stock>9999)return json(res,400,{error:'Check the product details and try again.'});
+    const match=String(body.imageData||'').match(/^data:image\/webp;base64,([A-Za-z0-9+/=]+)$/);if(!match)return json(res,400,{error:'The uploaded picture must be a valid WebP image.'});const image=Buffer.from(match[1],'base64');if(image.length>2_500_000||image.subarray(0,4).toString()!=='RIFF'||image.subarray(8,12).toString()!=='WEBP')return json(res,400,{error:'The WebP image is invalid or larger than 2.5 MB.'});
+    const id=`${name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'product'}-${randomBytes(3).toString('hex')}`;await writeFile(join(uploadsDir,`${id}.webp`),image,{flag:'wx'});const product={id,name,category,description,priceCents,stock,imageUrl:`/uploads/${id}.webp`};data.products.push(product);await saveCatalog(data);return json(res,201,{product})
+  }
+  if(url.pathname.startsWith('/api/products/')&&req.method==='DELETE'){if(!requireStaff(req,res))return;const id=decodeURIComponent(url.pathname.slice(14));const data=await catalog();const before=data.products.length;data.products=data.products.filter(p=>p.id!==id);if(data.products.length===before)return json(res,404,{error:'Product not found.'});await saveCatalog(data);return json(res,200,{ok:true})}
+  if(url.pathname==='/api/orders/quote'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();return json(res,200,totals(validItems(body.items,data.products),data.vatRate))}
+  if(url.pathname==='/api/orders'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();const lines=validItems(body.items,data.products);const amount=totals(lines,data.vatRate);for(const line of lines)line.product.stock-=line.quantity;await saveCatalog(data);return json(res,201,{orderId:randomUUID().slice(0,8).toUpperCase(),...amount})}
+  if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
+  let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
+  const publicTopLevel=new Set(['/index.html','/styles.css','/app.js','/cafe-latte.webp','/double-espresso.webp','/fresh-milk.webp','/orange-soda.webp','/sparkling-cola.webp']);
+  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/'))return json(res,404,{error:'Not found'});
+  const file=join(root,pathname);if(!file.startsWith(root)||!existsSync(file))return json(res,404,{error:'Not found'});res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':extname(file)==='.html'?'no-store':'public, max-age=3600',...securityHeaders});createReadStream(file).pipe(res)
+}catch(error){console.error(error);json(res,error.status||500,{error:error.status?error.message:'The server could not complete this request.'})}});
+server.listen(port,'0.0.0.0',()=>console.log(`Cappeto ready on http://localhost:${port}`));

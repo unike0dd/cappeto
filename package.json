@@ -1,9 +1,9 @@
 {
-  "name": "smbs-users-order-station",
+  "name": "cappeto-cafe-catalog",
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/dev.mjs",
-    "test": "node scripts/verify.mjs"
+    "dev": "node server.mjs",
+    "test": "node verify.mjs"
   }
 }

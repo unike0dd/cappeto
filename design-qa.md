@@ -20,7 +20,7 @@ The appropriate small-but-scalable boundary is a responsive catalog plus a compa
 
 ## Visual direction
 
-The redesign keeps the café character through deep forest, cream, and copper. Product photography is given a consistent 4:3 stage, editorial serif headings provide warmth, and restrained controls keep the interface quiet. The catalog changes from a single-product carousel to a responsive comparison grid, while the order remains available in a focused side drawer.
+The redesign keeps the café character through deep forest, cream, and copper. Product photography is given a consistent 4:3 stage, editorial serif headings provide warmth, and restrained controls keep the interface quiet. The catalog uses a responsive carousel showing one large product on phones, two on tablets, and three on laptop/desktop screens, while the order remains available in a focused side drawer.
 
 ## Verification
 
@@ -30,4 +30,5 @@ The redesign keeps the café character through deep forest, cream, and copper. P
 - A two-latte quote returns subtotal $7.50, VAT $1.13, and total $8.63.
 - Invalid credentials return HTTP 401.
 - Browser QA confirms the catalog, category controls, five product cards, cart drawer, and $4.31 one-latte total.
+- Carousel QA confirms previous/next navigation, touch/trackpad scrolling, keyboard arrows, responsive card widths, and live position status.
 - No application console errors were observed; browser-extension metadata warnings were unrelated to Cappeto.

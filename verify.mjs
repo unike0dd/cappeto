@@ -11,5 +11,5 @@ const products=JSON.parse(readFileSync('data/products.json','utf8'));
 if(products.products.length>20)throw new Error('Catalog exceeds 20 products');
 for(const product of products.products){if(!Number.isInteger(product.priceCents)||product.priceCents<1)throw new Error(`Invalid price: ${product.id}`);if(!existsSync(product.imageUrl.replace(/^\//,'')))throw new Error(`Missing image: ${product.imageUrl}`)}
 const html=readFileSync('index.html','utf8');
-for(const marker of ['authForm','productImage','subtotal','vat','total'])if(!html.includes(marker))throw new Error(`Missing UI marker: ${marker}`);
+for(const marker of ['authForm','productImage','subtotal','vat','total','previousProduct','nextProduct','carouselPosition'])if(!html.includes(marker))throw new Error(`Missing UI marker: ${marker}`);
 console.log('Cappeto verification passed');

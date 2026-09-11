@@ -3,381 +3,87 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#07140f">
-  <title>SMBs Staff Orders</title>
-  <style>
-    :root{--ink:#f5f0df;--muted:#aebbb3;--bg:#06110d;--panel:#0d2018;--panel2:#122a20;--gold:#e7b94d;--gold2:#ffd87b;--green:#57c88b;--danger:#ff7878;--line:rgba(231,185,77,.25);--shadow:0 22px 70px rgba(0,0,0,.45)}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 15% 10%,#183a2b 0,transparent 32%),var(--bg);color:var(--ink);font:500 16px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}.hidden{display:none!important}
-    .auth{min-height:100dvh;display:grid;place-items:center;padding:24px}.auth-card{width:min(520px,100%);padding:clamp(24px,5vw,44px);border:1px solid var(--line);border-radius:28px;background:rgba(13,32,24,.94);box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:12px}.brand-mark{display:grid;place-items:center;width:45px;height:45px;border:1px solid var(--gold);border-radius:14px;color:var(--gold);font-weight:900}.eyebrow{margin:0;color:var(--gold2);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}.auth h1{font-size:clamp(2rem,8vw,3.2rem);line-height:1.05;margin:24px 0 12px}.auth-copy{color:var(--muted);margin:0 0 26px}.field{display:grid;gap:7px;margin:15px 0}.field span{font-size:.82rem;color:var(--muted)}input,select{width:100%;min-height:50px;border:1px solid #315142;border-radius:13px;background:#081812;color:var(--ink);padding:0 14px}input::placeholder{color:#718179}.consent{display:flex;gap:10px;align-items:flex-start;margin:19px 0;color:var(--muted);font-size:.88rem}.consent input{width:19px;min-height:19px;accent-color:var(--gold);margin-top:2px}.primary{border:0;border-radius:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a160b;font-weight:900;min-height:52px;padding:0 20px}.primary:disabled{opacity:.42;cursor:not-allowed}.full{width:100%}.security-note{display:flex;gap:8px;margin-top:18px;color:#8fa79a;font-size:.78rem}.auth-error{color:var(--danger);min-height:22px;font-size:.84rem}
-    .app{min-height:100dvh;padding:clamp(12px,2vw,24px)}.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2501}.session{display:flex;align-items:center;gap:10px}.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}.session strong{font-size:.9rem}.session small{display:block;color:var(--muted);font-size:.72rem}.icon-btn{width:50px;height:50px;border:1px solid var(--line);border-radius:15px;background:rgba(13,32,24,.96);color:var(--gold2);display:grid;place-items:center}.hamburger{gap:5px}.hamburger i{display:block;width:22px;height:2px;background:currentColor;transition:.2s}.hamburger[aria-expanded=true] i:first-child{transform:translateY(7px) rotate(45deg)}.hamburger[aria-expanded=true] i:nth-child(2){opacity:0}.hamburger[aria-expanded=true] i:last-child{transform:translateY(-7px) rotate(-45deg)}
-    .menu{position:fixed;right:18px;top:76px;z-index:2600;width:min(330px,calc(100vw - 36px));padding:12px;border:1px solid var(--line);border-radius:20px;background:#0b1d16;box-shadow:var(--shadow);transform:translateX(calc(100% + 36px));transition:.25s ease}.menu.open{transform:none}.menu button{width:100%;min-height:52px;border:0;border-radius:12px;background:transparent;color:var(--ink);text-align:left;padding:0 14px}.menu button:hover,.menu button.active{background:#183527;color:var(--gold2)}.menu hr{border:0;border-top:1px solid var(--line);margin:8px}.menu .menu-contact{padding:10px}.menu .menu-contact label{display:grid;gap:5px;color:var(--muted);font-size:.78rem;margin-bottom:10px}.menu .menu-contact input{min-height:44px}.menu .save-contact{background:var(--gold);color:#171207;text-align:center;font-weight:900}
-    .workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:18px;align-items:start}.product-stage{position:relative;z-index:1000;width:85%;min-height:calc(100dvh - 108px);justify-self:center;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#071711;box-shadow:var(--shadow)}.visual{position:relative;height:calc(100dvh - 250px);min-height:470px;touch-action:pan-y;overflow:hidden}.visual-bg{position:absolute;inset:0;background:radial-gradient(circle at 60% 42%,rgba(231,185,77,.19) 0,transparent 36%),linear-gradient(135deg,#0c2a1d,#04100c)}.product-art{position:absolute;inset:3% 16% 1% 23%;display:grid;place-items:center;transition:transform .28s,opacity .2s}.product-art img{width:min(82%,560px);height:82%;object-fit:contain;object-position:center;mix-blend-mode:screen;filter:drop-shadow(0 30px 28px rgba(0,0,0,.46))}.product-meta{position:absolute;left:clamp(18px,4vw,42px);top:clamp(18px,4vw,36px);z-index:2}.product-meta h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.25rem,5vw,4.8rem);font-weight:500;line-height:.95;margin:8px 0 22px;max-width:540px}.price{display:block;color:var(--gold2);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,3vw,3rem);font-weight:800}.stock{display:inline-flex;align-items:center;gap:7px;margin-top:8px;color:#c4d4cb;font-size:.9rem}.stock:before{content:"";width:7px;height:7px;background:var(--green);border-radius:50%}.swipe-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;color:var(--muted);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;background:rgba(6,17,13,.76);padding:7px 12px;border-radius:999px}
-    .quantity{position:absolute;right:clamp(12px,2vw,28px);top:50%;transform:translateY(-50%);z-index:2500;display:grid;gap:8px}.quantity button{width:64px;height:64px;border:2px solid var(--gold);border-radius:16px;background:rgba(7,20,15,.88);color:var(--gold2);font-size:2.2rem;line-height:1}.quantity output{display:grid;place-items:center;height:56px;color:var(--ink);font-family:Georgia,serif;font-size:2.3rem;font-weight:700}.carousel{height:142px;border-top:1px solid var(--line);background:rgba(7,20,15,.98);display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:10px;padding:14px}.arrow{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--panel2);color:var(--gold2);font-size:1.4rem}.thumbs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}.thumbs::-webkit-scrollbar{display:none}.thumb{flex:0 0 112px;height:102px;border:1px solid #29483a;border-radius:15px;background:#071711;color:var(--ink);padding:8px;scroll-snap-align:center}.thumb.active{border:2px solid var(--gold);background:#10291e}.thumb img{width:100%;height:60px;object-fit:contain;mix-blend-mode:screen}.thumb span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.72rem;text-align:center}.order-panel{position:sticky;top:84px;min-height:calc(100dvh - 108px);border:1px solid var(--line);border-radius:24px;background:rgba(7,28,20,.96);padding:28px;box-shadow:var(--shadow)}.order-panel h2{margin:0 0 2px;font-family:Georgia,"Times New Roman",serif;font-size:2.25rem;font-weight:500}.order-number{color:var(--muted);font-size:.84rem}.order-lines{display:grid;gap:12px;margin:28px 0;max-height:50vh;overflow:auto}.empty{padding:25px 0;text-align:center;color:var(--muted);font-size:.85rem}.line-item{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.line-item img{width:52px;height:62px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#0a1a13;mix-blend-mode:screen}.line-item small{display:block;color:var(--muted)}.line-item button{display:block;border:0;background:transparent;color:var(--danger);font-size:.72rem;padding:4px 0;margin-left:auto}.total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:20px 0;font-size:1.25rem}.total strong{color:var(--gold2)}.review{width:100%}.sync-note{display:flex;gap:8px;color:var(--muted);font-size:.72rem;margin:12px 0 0}
-    dialog{width:min(560px,calc(100% - 28px));border:1px solid var(--line);border-radius:24px;background:#0c2017;color:var(--ink);padding:0;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(0,8,5,.8);backdrop-filter:blur(6px)}.modal{padding:25px}.modal h2{margin-top:0}.review-list{display:grid;gap:8px;margin:18px 0}.review-row{display:flex;justify-content:space-between;background:#122a20;padding:10px;border-radius:10px}.modal-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}.secondary{min-height:52px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--ink);font-weight:800}.success{text-align:center;padding:20px}.success-mark{margin:auto;display:grid;place-items:center;width:70px;height:70px;border-radius:50%;background:var(--green);color:#062015;font-size:2rem;font-weight:900}
-    .toast{position:fixed;left:50%;bottom:22px;z-index:4000;transform:translate(-50%,140%);padding:12px 18px;border:1px solid var(--line);border-radius:12px;background:#193729;box-shadow:var(--shadow);transition:.25s}.toast.show{transform:translate(-50%,0)}
-    @media(max-width:950px){.workspace{grid-template-columns:1fr}.product-stage{width:85vw;min-height:auto}.visual{height:calc(100dvh - 280px);min-height:430px}.order-panel{position:relative;top:auto;width:85vw;justify-self:center;margin-bottom:20px}.carousel{height:130px}.thumb{flex-basis:100px;height:92px}}
-    @media(max-width:600px){.app{padding:8px}.topbar{height:58px}.product-stage,.order-panel{width:85vw;border-radius:22px}.visual{height:calc(100dvh - 252px);min-height:420px}.product-meta h1{font-size:clamp(1.8rem,11vw,3rem);max-width:65vw}.quantity{right:8px}.quantity button{width:52px;height:52px}.carousel{grid-template-columns:38px 1fr 38px;padding:10px 6px;gap:5px;height:126px}.arrow{width:36px;height:36px}.thumb{flex-basis:88px}.session strong{font-size:.8rem}.session small{font-size:.64rem}.modal-actions{grid-template-columns:1fr}}
-    @media(min-width:951px){.product-stage{width:100%}.visual-bg{background:radial-gradient(circle at 64% 38%,rgba(231,185,77,.19) 0,transparent 36%),linear-gradient(135deg,#0c2a1d,#04100c)}.product-art{inset:5% 18% 12% 34%;align-items:center}.product-art img{width:min(78%,520px);height:78%;object-position:center}.swipe-hint{bottom:24px}}
-    @media(max-width:950px){.product-art{inset:22% 10% 12% 18%;align-items:center}.product-art img{width:min(76%,440px);height:76%;object-position:center}.order-panel{min-height:auto}.swipe-hint{bottom:18px}}
-    @media(max-width:600px){.visual{height:auto;min-height:560px}.product-meta{max-width:72%}.product-meta h1{font-size:clamp(1.65rem,10vw,2.65rem)}.product-art{inset:28% 7% 15% 7%;align-items:center}.product-art img{width:min(72%,320px);height:72%}.quantity{top:54%}.swipe-hint{bottom:18px}}
-    @media(max-width:430px){.visual{min-height:590px}.product-art{inset:31% 5% 17% 5%}.product-art img{width:min(68%,280px);height:68%}.quantity{top:56%}}
-    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-
-    /* In-flow product layout: zoom enlarges content without clipping it. */
-    .workspace{grid-template-columns:minmax(0,1fr)}
-    .product-stage{width:100%;min-height:0}
-    .visual{height:auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:18px;padding:24px}
-    .product-meta{position:relative;inset:auto;max-width:none;grid-column:1;grid-row:1}
-    .product-meta h1{max-width:none;font-size:clamp(2rem,4vw,4rem);overflow-wrap:anywhere;line-height:1.1}
-    .product-art{position:relative;inset:auto;grid-column:1;grid-row:2;height:clamp(240px,45dvh,540px);min-width:0;display:block}
-    .product-art img{position:absolute;inset:0;display:block;width:100%;height:100%;max-height:100%;object-fit:contain;object-position:center}
-    .quantity{position:relative;inset:auto;transform:none;grid-column:2;grid-row:2;align-self:center}
-    .order-toggle{grid-column:2;grid-row:1;z-index:2500;position:relative;border:2px solid #c6a078;color:#e5c399;align-self:start;width:64px;height:64px}
-    .order-toggle svg{width:30px;height:30px}
-    .order-count{position:absolute;right:-5px;top:-7px;background:var(--gold);color:#171207;border-radius:20px;padding:1px 5px;font-size:.7rem}
-    .swipe-hint{position:relative;inset:auto;transform:none;grid-column:1/-1;justify-self:center;text-align:center}
-    .carousel{grid-template-columns:44px minmax(0,1fr) 44px;height:auto;min-height:126px}
-    .thumbs{min-width:0}
-    .session{min-width:0}.session small{overflow-wrap:anywhere}.topbar{height:auto;min-height:64px;gap:12px}.hamburger{flex-shrink:0}
-    .menu{visibility:hidden;max-height:calc(100dvh - 90px);overflow:auto}.menu.open{visibility:visible}
-    #orderDialog{width:min(460px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;margin:12px 12px 12px auto}
-    #orderDialog .order-panel{position:static;width:100%;min-height:0;margin:0;border:0;box-shadow:none;padding:20px}
-    .order-heading{display:flex;align-items:start;justify-content:space-between;gap:12px}.order-heading h2{font-size:clamp(1.5rem,5vw,2.25rem);overflow-wrap:anywhere}.order-heading button{flex-shrink:0}
-    .order-lines{max-height:none;overflow:visible}
-    .line-item{grid-template-columns:40px minmax(0,1fr) auto}.line-item img{width:40px}.line-item strong{overflow-wrap:anywhere}
-    .total{gap:12px;flex-wrap:wrap}
-    @media(max-width:600px){.visual{padding:16px;gap:12px;grid-template-columns:minmax(0,1fr) 52px}.order-toggle{width:52px;height:52px}.product-meta h1{font-size:clamp(1.65rem,7vw,2.65rem)}.carousel{padding:10px 6px;gap:5px}.arrow{width:44px;height:44px}}
-
-
-    .hand-preference{border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:10px;min-width:0}
-    .hand-preference legend{color:var(--muted);font-size:.8rem}
-    .hand-options{display:flex;flex-wrap:wrap;gap:8px}
-    .hand-options label{display:flex;align-items:center;gap:6px;flex:1;min-height:44px;color:var(--ink);cursor:pointer}
-    .hand-options input{width:20px;min-height:20px;margin:0;accent-color:var(--gold);flex-shrink:0}
-    body[data-hand="left"] .topbar{flex-direction:row-reverse}
-    body[data-hand="left"] .visual{grid-template-columns:64px minmax(0,1fr)}
-    body[data-hand="left"] .product-meta,body[data-hand="left"] .product-art{grid-column:2}
-    body[data-hand="left"] .order-toggle,body[data-hand="left"] .quantity{grid-column:1}
-    body[data-hand="left"] .menu{left:18px;right:auto;transform:translateX(calc(-100% - 36px))}
-    body[data-hand="left"] .menu.open{transform:none}
-    body[data-hand="left"] #orderDialog{margin:12px auto 12px 12px}
-    @media(max-width:600px){body[data-hand="left"] .visual{grid-template-columns:52px minmax(0,1fr)}}
-
-    /* Card-local navigation and full, contained product artwork. */
-    .product-stage .hamburger{grid-column:2;grid-row:1;position:relative;z-index:2700;width:64px;height:64px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
-    .hamburger i{flex:0 0 2px}
-    .product-meta{grid-row:1 / span 2}
-    .order-toggle{grid-row:2}
-    .product-art,.quantity{grid-row:3}
-    .product-stage .menu{position:absolute;top:100px;right:24px;left:auto;width:min(330px,calc(100% - 48px));max-height:calc(100dvh - 140px);transform:none;transition:none}
-    body[data-hand="left"] .product-stage .hamburger{grid-column:1}
-    body[data-hand="left"] .product-stage .menu{left:24px;right:auto;transform:none}
-    @media(min-width:951px){
-      .product-art{height:clamp(380px,65dvh,820px)}
-    }
-    @media(max-width:600px){
-      .product-stage .hamburger{width:52px;height:52px}
-      .product-stage .menu{top:80px;right:16px;width:calc(100% - 32px);max-height:calc(100dvh - 110px)}
-      body[data-hand="left"] .product-stage .menu{left:16px;right:auto}
-    }
-
-    /* Compact card: artwork alongside details on wide screens. */
-    .visual-bg{background:#071711}
-    .product-art{isolation:isolate}
-    .product-art img{mix-blend-mode:normal;filter:none}
-    /* Feather the photographed backdrop while preserving the central product. */
-    .product-art img{mask-image:linear-gradient(to right,transparent,black 22%,black 78%,transparent),linear-gradient(to bottom,transparent,black 7%,black 90%,transparent);mask-composite:intersect}
-    #orderDialog .session{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-    .visual{gap:12px;padding-bottom:12px}
-    .product-art{height:clamp(220px,38dvh,380px)}
-    .carousel{min-height:110px;padding-top:10px;padding-bottom:10px}
-    @media(min-width:951px){
-      .visual{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 64px;grid-template-rows:64px 64px minmax(200px,1fr) auto}
-      .product-meta{grid-column:1;grid-row:1 / span 3;align-self:start}
-      .product-meta h1{font-size:clamp(2rem,3.5vw,4rem)}
-      .product-art{grid-column:2;grid-row:1 / span 3;height:clamp(340px,58dvh,620px);align-self:start}
-      .product-stage .hamburger{grid-column:3;grid-row:1}
-      .order-toggle{grid-column:3;grid-row:2}
-      .quantity{grid-column:3;grid-row:3}
-      body[data-hand="left"] .visual{grid-template-columns:64px minmax(0,1.4fr) minmax(0,1fr)}
-      body[data-hand="left"] .product-meta{grid-column:3}
-      body[data-hand="left"] .product-art{grid-column:2}
-    }
-.pending-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pending-actions button{flex:1;padding:10px}#pendingOrders{display:grid;gap:8px;max-height:240px;overflow:auto}#pendingOrders button{text-align:left;padding:12px;overflow-wrap:anywhere}#pendingOrders button[aria-current="true"]{border-color:var(--gold);color:var(--gold2)}
-  </style>
+  <meta name="theme-color" content="#122019">
+  <meta name="description" content="Cappeto café catalog and order station">
+  <title>Cappeto · Café counter</title>
+  <link rel="stylesheet" href="styles.css?v=carousel-1">
+  <script src="app.js?v=carousel-1" defer></script>
 </head>
 <body>
   <section class="auth" id="authView" aria-labelledby="authTitle">
     <form class="auth-card" id="authForm">
-      <div class="brand"><span class="brand-mark">M</span><div><p class="eyebrow">Marxia · Staff access</p><strong>SMB Order Station</strong></div></div>
+      <div class="brand"><span class="brand-mark">C</span><div><p class="eyebrow">Cappeto · Staff access</p><strong>Café order station</strong></div></div>
       <h1 id="authTitle">Authorized staff only.</h1>
-      <p class="auth-copy">Access requires active consent from the SMB owner and verified staff authentication.</p>
+      <p class="auth-copy">Sign in to manage the café catalog and prepare customer orders.</p>
       <label class="field"><span>Staff email</span><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" required></label>
-      <label class="field"><span>Authorization code</span><input id="authCode" type="password" autocomplete="current-password" minlength="6" placeholder="Owner-issued code" required></label>
-      <label class="consent"><input id="consent" type="checkbox" required><span>I confirm I am authorized by this SMB owner to create orders and handle customer contact details.</span></label>
-      <p class="auth-error" id="authError" role="alert"></p>
-      <button class="primary full" type="submit">Verify and open order station</button>
-      <p class="security-note"><span>◈</span><span>Deny-by-default access · Session and order actions prepared for audit logging</span></p>
+      <label class="field"><span>Password</span><input id="authCode" type="password" autocomplete="current-password" minlength="8" placeholder="Enter your password" required></label>
+      <label class="consent"><input id="consent" type="checkbox" required><span>I confirm I am authorized by this business owner to manage products and orders.</span></label>
+      <p class="form-message" id="authError" role="alert"></p>
+      <button class="button button-primary button-full" type="submit">Sign in</button>
+      <button class="text-button" id="browseButton" type="button">Browse as a customer</button>
+      <p class="security-note">Server-validated session · Password never stored in the browser</p>
     </form>
   </section>
 
   <main class="app hidden" id="appView">
+    <header class="topbar">
+      <a class="wordmark" href="#catalog" aria-label="Cappeto home"><span>C</span>Cappeto</a>
+      <nav class="view-switcher" aria-label="Workspace">
+        <button class="nav-button active" data-view="catalog" type="button">Menu</button>
+        <button class="nav-button staff-only hidden" data-view="manage" type="button">Manage products</button>
+      </nav>
+      <div class="top-actions">
+        <span class="session-label" id="sessionLabel">Customer view</span>
+        <button class="icon-button staff-only hidden" id="logoutButton" type="button" aria-label="Sign out" title="Sign out">↗</button>
+        <button class="cart-button" id="cartButton" type="button" aria-label="Open order"><span>Order</span><b id="cartCount">0</b></button>
+      </div>
+    </header>
 
-    
+    <section class="catalog-view" id="catalogView">
+      <div class="intro-row">
+        <div><p class="eyebrow">Freshly prepared</p><h1>Simple café pleasures.</h1><p>Choose a favorite, set the quantity, and review the order.</p></div>
+        <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search the menu" aria-label="Search the menu"></label>
+      </div>
+      <div class="category-row" id="categoryRow" aria-label="Product categories"></div>
+      <div class="carousel-shell" aria-label="Product carousel">
+        <button class="carousel-arrow carousel-previous" id="previousProduct" type="button" aria-label="Previous products">←</button>
+        <div class="product-grid" id="productGrid" aria-live="polite" tabindex="0"></div>
+        <button class="carousel-arrow carousel-next" id="nextProduct" type="button" aria-label="Next products">→</button>
+      </div>
+      <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span>Swipe or use the arrows</span></div>
+    </section>
 
-    <div class="workspace">
-      <section class="product-stage" aria-label="Product selection">
-<nav class="menu" id="mainMenu" aria-label="Order menu">
-      <button class="active" data-category="all">Order</button>
-      <button data-category="soft-drink">Soft drinks</button>
-      <button data-category="coffee">Coffee</button>
-      <hr>
-
-      <hr>
-      <fieldset class="hand-preference"><legend>Control placement</legend><div class="hand-options">
-        <label title="Place controls on the left"><input type="radio" name="handPreference" value="left">Left-handed</label>
-        <label title="Place controls on the right"><input type="radio" name="handPreference" value="right" checked>Right-handed</label>
-      </div></fieldset>
-      <button id="lockSession" type="button">Lock staff session</button>
-    </nav>
-        <div class="visual" id="swipeArea">
-          <div class="visual-bg"></div>
-<button class="icon-btn hamburger" id="menuButton" type="button" title="Toggle order menu" aria-label="Open order menu" aria-expanded="false" aria-controls="mainMenu"><i></i><i></i><i></i></button>
-          <button class="icon-btn order-toggle" id="orderToggle" type="button" aria-label="Open current order" aria-haspopup="dialog" aria-controls="orderDialog" aria-expanded="false" title="Open current order"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 5h16v23l-4-2-4 2-4-2-4 2V5Z"/><path d="M12 11h8m-8 6h8m-8 5h5"/></svg><span class="order-count" id="orderCount" aria-hidden="true">0</span></button>
-          <div class="product-meta"><p class="eyebrow" id="categoryLabel">Soft drink</p><h1 id="productName">Sparkling Cola</h1><span class="price" id="productPrice">$2.50</span><span class="stock" id="productStock">24 available</span></div>
-          <div class="product-art" id="productArt" aria-hidden="true"></div>
-          <div class="quantity" aria-label="Quantity controls">
-            <button id="increase" type="button" aria-label="Add one Sparkling Cola">+</button>
-            <output id="quantity" aria-live="polite">0</output>
-            <button id="decrease" type="button" aria-label="Remove one Sparkling Cola">−</button>
-          </div>
-          <span class="swipe-hint">Swipe left or right</span>
+    <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
+      <div class="manage-heading"><div><p class="eyebrow">Owner workspace</p><h1 id="manageTitle">Product library</h1><p>Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
+      <form class="product-form" id="productForm">
+        <div class="upload-preview" id="uploadPreview"><span>Product image</span><small>JPG, PNG, or WebP · converted to WebP</small></div>
+        <label class="file-button">Choose picture<input id="productImage" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+        <div class="form-grid">
+          <label class="field"><span>Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
+          <label class="field"><span>Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
+          <label class="field"><span>Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
+          <label class="field"><span>Available quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
         </div>
-        <div class="carousel" aria-label="Other products">
-          <button class="arrow" id="previous" type="button" aria-label="Previous product">‹</button>
-          <div class="thumbs" id="thumbs"></div>
-          <button class="arrow" id="next" type="button" aria-label="Next product">›</button>
-        </div>
-      </section>
-
-
-    </div>
+        <label class="field"><span>Short description</span><input id="productDescription" maxlength="140" required placeholder="Espresso, steamed milk and cinnamon"></label>
+        <p class="form-message" id="productMessage" role="status"></p>
+        <button class="button button-primary" type="submit">Publish product</button>
+      </form>
+      <div class="manage-list" id="manageList"></div>
+    </section>
   </main>
 
-  <dialog id="orderDialog" aria-labelledby="orderTitle">      <aside class="order-panel" aria-label="Current order">
-        <div class="session"><span class="live-dot"></span><div><strong>Order station active</strong><small id="staffIdentity">Authorized staff session</small></div></div>
-        <div class="order-heading"><h2 id="orderTitle">Current order</h2><button class="icon-btn" id="closeOrder" type="button" aria-label="Close current order" title="Close current order">×</button></div><span class="order-number" id="orderNumber"></span>
-        <div class="order-lines" id="orderLines"><p class="empty">Use + to add a product.</p></div>
-
-        <button class="secondary full" id="addClient" type="button" aria-expanded="false" aria-controls="clientFields">+ Add Client</button>
-        <div id="clientFields" hidden>
-          <label class="field"><span>Client name</span><input id="clientName" maxlength="120" autocomplete="name"></label>
-                <div class="menu-contact">
-        <label>Consumer email <input id="consumerEmail" type="email" inputmode="email" placeholder="Optional"></label>
-        <label>Consumer WhatsApp <input id="consumerWhatsApp" type="tel" inputmode="tel" placeholder="Optional"></label>
-        <button class="save-contact" id="saveContact" type="button">Save consumer details</button>
-      </div>
-        </div>
-        <label class="field"><span>VAT %</span><input id="vatRate" type="number" min="0" max="100" step="0.01" inputmode="decimal"></label>
-        <label class="field"><span>Reference</span><input id="orderReference" maxlength="200"></label>
-        <p>Subtotal <strong id="orderSubtotal">$0.00</strong> · VAT <strong id="orderVat">$0.00</strong></p>
-        <p id="draftStatus" role="status"></p>
-        <button class="secondary full" id="vatLock" type="button" aria-pressed="false">Lock VAT for new orders</button>
-        <div class="pending-actions"><button class="secondary" id="newPending" type="button">Save &amp; New Order</button><button class="secondary" id="addMore" type="button">Add more items</button></div>
-        <h3>Pending orders</h3><div id="pendingOrders" aria-label="Saved unpaid orders"></div>
-        <div class="total"><span>Total</span><strong id="orderTotal">$0.00</strong></div>
-        <button class="primary review" id="reviewOrder" type="button" disabled>Review order</button>
-        <button class="primary full" id="paidOrder" type="button" disabled style="margin-top:12px">Paid</button>
-<p class="sync-note">Paid records staff confirmation on this device; it does not charge a payment method.</p>
-      </aside></dialog>
-  <dialog id="reviewDialog"><div class="modal" id="reviewContent"></div></dialog>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script>
-    'use strict';
-    const products=[
-      {id:'cola',name:'Sparkling Cola',category:'soft-drink',label:'Soft drink',price:2.5,stock:24,image:'assets/products/sparkling-cola.webp'},
-      {id:'orange',name:'Orange Soda',category:'soft-drink',label:'Soft drink',price:2.25,stock:18,image:'assets/products/orange-soda.webp'},
-      {id:'latte',name:'Café Latte',category:'coffee',label:'Coffee',price:3.75,stock:15,image:'assets/products/cafe-latte.webp'},
-      {id:'espresso',name:'Double Espresso',category:'coffee',label:'Coffee',price:3.25,stock:12,image:'assets/products/double-espresso.webp'},
-      {id:'milk',name:'Fresh Milk',category:'milk',label:'Milk',price:2.9,stock:10,image:'assets/products/fresh-milk.webp'}
-    ];
-    const state={index:0,filter:'all',cart:new Map(),contact:{email:'',whatsapp:''}};
-    const $=id=>document.getElementById(id); const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
-    const art=p=>`<img src="${p.image}" alt="${p.name}" loading="eager">`;
-    function visible(){return state.filter==='all'?products:products.filter(p=>p.category===state.filter)}
-    function current(){const list=visible();return list[state.index%list.length]}
-    function renderProduct(direction=0){const p=current(),el=$('productArt');if(direction){el.style.transform=`translateX(${direction*24}px)`;el.style.opacity='.3';setTimeout(()=>{el.style.transform='';el.style.opacity='1'},120)}$('categoryLabel').textContent=p.label;$('productName').textContent=p.name;$('productPrice').textContent=money(p.price);$('productStock').textContent=`${p.stock-(state.cart.get(p.id)||0)} available`;$('quantity').textContent=state.cart.get(p.id)||0;$('increase').disabled=(state.cart.get(p.id)||0)>=p.stock;$('increase').setAttribute('aria-label',`Add one ${p.name}`);$('decrease').setAttribute('aria-label',`Remove one ${p.name}`);el.innerHTML=art(p);renderThumbs()}
-    function renderThumbs(){const list=visible();$('thumbs').innerHTML=list.map((p,i)=>`<button class="thumb ${i===state.index?'active':''}" data-index="${i}" type="button" aria-label="Select ${p.name}">${art(p)}<span>${p.name}</span></button>`).join('');const active=document.querySelector('.thumb.active');if(active)$('thumbs').scrollTo({left:active.offsetLeft-$('thumbs').offsetLeft-($('thumbs').clientWidth-active.clientWidth)/2,behavior:'smooth'})}
-    function changeQty(delta){const p=current(),qty=Math.max(0,Math.min(p.stock,(state.cart.get(p.id)||0)+delta));qty?state.cart.set(p.id,qty):state.cart.delete(p.id);renderProduct();renderCart()}
-    function renderCart(){const items=[...state.cart].map(([id,qty])=>({p:products.find(x=>x.id===id),qty}));$('orderLines').innerHTML=items.length?items.map(({p,qty})=>`<div class="line-item"><img src="${p.image}" alt=""><div><strong>${p.name}</strong><small>${qty} × ${money(p.price)}</small></div><div><strong>${money(qty*p.price)}</strong><button data-remove="${p.id}" aria-label="Remove ${p.name}">Remove</button></div></div>`).join(''):'<p class="empty">Use + to add a product.</p>';const total=items.reduce((sum,{p,qty})=>sum+p.price*qty,0);$('orderTotal').textContent=money(orderAmounts().total/100);$('orderSubtotal').textContent=money(orderAmounts().subtotal/100);$('orderVat').textContent=money(orderAmounts().vat/100);$('paidOrder').disabled=!items.length;$('reviewOrder').disabled=!items.length;const count=items.reduce((n,item)=>n+item.qty,0);$('orderCount').textContent=count;$('orderToggle').setAttribute('aria-label',`Open current order, ${count} items`);saveDraft()}
-    $('orderToggle').addEventListener('click',()=>{$('mainMenu').classList.remove('open');$('menuButton').setAttribute('aria-expanded','false');$('orderDialog').showModal();$('orderToggle').setAttribute('aria-expanded','true')});
-    $('closeOrder').addEventListener('click',()=>$('orderDialog').close());
-    $('orderDialog').addEventListener('close',()=>{$('orderToggle').setAttribute('aria-expanded','false');$('orderToggle').focus({preventScroll:true})});
-    $('orderDialog').addEventListener('click',e=>{const r=$('orderDialog').getBoundingClientRect();if(e.target===$('orderDialog')&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))$('orderDialog').close()});
-    function move(delta){const list=visible();state.index=(state.index+delta+list.length)%list.length;renderProduct(delta)}
-    function toast(message){$('toast').textContent=message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
-    $('authForm').addEventListener('submit',e=>{e.preventDefault();const email=$('staffEmail').value.trim(),code=$('authCode').value;if(code.length<6||!$('consent').checked){$('authError').textContent='Authorization and consent are required.';return}sessionStorage.setItem('marxiaStaffSession',JSON.stringify({email,consentedAt:new Date().toISOString()}));$('staffIdentity').textContent=email;restoreDraft(email);$('authView').classList.add('hidden');$('appView').classList.remove('hidden');renderProduct();renderCart()});
-    $('menuButton').addEventListener('click',()=>{const open=$('mainMenu').classList.toggle('open');$('menuButton').setAttribute('aria-expanded',open)});document.addEventListener('click',e=>{if(!$('mainMenu').contains(e.target)&&!$('menuButton').contains(e.target)){$('mainMenu').classList.remove('open');$('menuButton').setAttribute('aria-expanded','false')}});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('mainMenu').classList.contains('open')){$('mainMenu').classList.remove('open');$('menuButton').setAttribute('aria-expanded','false');$('menuButton').focus()}});
-    $('mainMenu').addEventListener('click',e=>{const button=e.target.closest('[data-category]');if(!button)return;state.filter=button.dataset.category;state.index=0;document.querySelectorAll('[data-category]').forEach(x=>x.classList.toggle('active',x===button));renderProduct();$('mainMenu').classList.remove('open');$('menuButton').setAttribute('aria-expanded','false')});
-    $('increase').addEventListener('click',()=>changeQty(1));$('decrease').addEventListener('click',()=>changeQty(-1));$('previous').addEventListener('click',()=>move(-1));$('next').addEventListener('click',()=>move(1));$('thumbs').addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(b){state.index=Number(b.dataset.index);renderProduct()}});$('orderLines').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(b){state.cart.delete(b.dataset.remove);renderProduct();renderCart()}});
-    let startX=0;$('swipeArea').addEventListener('pointerdown',e=>startX=e.clientX);$('swipeArea').addEventListener('pointerup',e=>{const d=e.clientX-startX;if(Math.abs(d)>48)move(d<0?1:-1)});
-
-    const draftPrefix='marxiaUnpaidOrder:v1:';
-    let draftKey=null, draftRevision=null, cacheConflict=false;
-    function orderAmounts(){
-      const subtotal=[...state.cart].reduce((sum,[id,qty])=>sum+Math.round(products.find(p=>p.id===id).price*100)*qty,0);
-      const rate=Number($('vatRate').value)||0;
-      const vat=Math.round(subtotal*rate/100);
-      return {subtotal,vat,total:subtotal+vat};
-    }
-    function draftData(){
-      return {version:1,id:$('orderNumber').textContent,lines:[...state.cart],vat:$('vatRate').value,reference:$('orderReference').value,client:{name:$('clientName').value,email:$('consumerEmail').value,whatsapp:$('consumerWhatsApp').value}};
-    }
-
-    let pending={version:2,next:1,active:null,orders:[],vatLocked:false,vatDefault:''};
-    let loadingOrder=false;
-    function newDraft(){
-      return {version:1,id:'Order #'+pending.next++,lines:[],vat:pending.vatLocked?pending.vatDefault:'',reference:'',client:{name:'',email:'',whatsapp:''}};
-    }
-    function loadOrder(d){
-      loadingOrder=true;
-      state.cart=new Map(d.lines);$('orderNumber').textContent=d.id;
-      $('vatRate').value=d.vat??'';$('orderReference').value=d.reference??'';
-      $('clientName').value=d.client?.name??'';$('consumerEmail').value=d.client?.email??'';$('consumerWhatsApp').value=d.client?.whatsapp??'';
-      $('vatRate').readOnly=pending.vatLocked;
-      $('vatLock').textContent=pending.vatLocked?'Unlock VAT ('+pending.vatDefault+'%)':'Lock VAT for new orders';
-      $('vatLock').setAttribute('aria-pressed',String(pending.vatLocked));
-      renderProduct();renderCart();loadingOrder=false;renderPending();
-    }
-    function renderPending(){
-      const list=$('pendingOrders');list.replaceChildren();
-      const orders=pending.orders.filter(d=>d.lines.length);
-      if(!orders.length){list.textContent='No pending orders.';return}
-      orders.forEach(d=>{
-        const b=document.createElement('button');b.type='button';b.className='secondary';
-        b.textContent=d.id+' · Reference '+(d.reference||'not entered');
-        b.setAttribute('aria-current',String(d.id===pending.active));
-        b.onclick=()=>{if(!saveDraft())return;const before=JSON.stringify(pending);pending.active=d.id;if(!persistPending()){pending=JSON.parse(before);return}loadOrder(d)};
-        list.append(b);
-      });
-    }
-    function persistPending(){
-      if(!draftKey||cacheConflict)return false;
-      try{
-        if(localStorage.getItem(draftKey)!==draftRevision){cacheConflict=true;throw Error('conflict')}
-        const value=JSON.stringify(pending);localStorage.setItem(draftKey,value);draftRevision=value;
-        $('draftStatus').textContent='Pending orders saved on this device.';return true;
-      }catch{$('draftStatus').textContent=cacheConflict?'Orders changed in another tab. Reload before continuing.':'Storage unavailable. Keep this page open; changes are not saved.';return false}
-    }
-    function saveDraft(){
-      if(loadingOrder)return true;
-      if(!draftKey||cacheConflict)return false;
-      const d=draftData(),index=pending.orders.findIndex(x=>x.id===d.id);
-      if(index<0)pending.orders.push(d);else pending.orders[index]=d;
-      pending.active=d.id;
-      const ok=persistPending();renderPending();return ok;
-    }
-    function restoreDraft(email){
-      draftKey=draftPrefix+encodeURIComponent(email.trim().toLowerCase());
-      try{
-        draftRevision=localStorage.getItem(draftKey);
-        if(draftRevision){
-          const data=JSON.parse(draftRevision);
-          if(data.version===1){
-            const oldNumber=Number(String(data.id).replace('Order #',''));
-            pending={version:2,next:Number.isSafeInteger(oldNumber)?oldNumber+1:1,active:data.id,orders:[data],vatLocked:false,vatDefault:''};
-          }else if(data.version===2)pending=data;else throw Error('version');
-          if(!Array.isArray(pending.orders)||!pending.orders.every(d=>typeof d.id==='string'&&Array.isArray(d.lines)&&d.lines.every(line=>Array.isArray(line)&&products.some(p=>p.id===line[0])&&Number.isInteger(line[1])&&line[1]>0)))throw Error('invalid orders');
-        }
-        let active=pending.orders.find(d=>d.id===pending.active);
-        if(!active){active=newDraft();pending.orders.push(active);pending.active=active.id}
-        loadOrder(active);
-      }catch{cacheConflict=true;$('draftStatus').textContent='Saved orders could not be restored; stored data has been preserved.'}
-    }
-    $('newPending').addEventListener('click',()=>{
-      if(state.cart.size&&!validOrder())return;
-      if(!saveDraft())return;
-      if(!state.cart.size){toast('Add products before starting another order');return}
-      const before=JSON.stringify(pending),d=newDraft();pending.orders.push(d);pending.active=d.id;
-      if(!persistPending()){pending=JSON.parse(before);return}loadOrder(d);
-    });
-    $('addMore').addEventListener('click',()=>{$('orderDialog').close();$('increase').focus({preventScroll:true})});
-    $('vatLock').addEventListener('click',()=>{
-      if(!pending.vatLocked&&($('vatRate').value===''||!$('vatRate').reportValidity())){toast('Enter a valid VAT percentage first');return}
-      if(!saveDraft())return;
-      const before=JSON.stringify(pending);pending.vatLocked=!pending.vatLocked;
-      if(pending.vatLocked)pending.vatDefault=$('vatRate').value;
-      if(!persistPending()){pending=JSON.parse(before);return}
-      $('vatRate').readOnly=pending.vatLocked;
-      $('vatLock').setAttribute('aria-pressed',String(pending.vatLocked));
-      $('vatLock').textContent=pending.vatLocked?'Unlock VAT ('+pending.vatDefault+'%)':'Lock VAT for new orders';
-    });
-    function validOrder(){
-      return !cacheConflict&&state.cart.size>0&&['vatRate','consumerEmail','clientName','orderReference'].every(id=>$(id).reportValidity());
-    }
-    $('addClient').addEventListener('click',()=>{
-      const open=$('clientFields').hidden;
-      $('clientFields').hidden=!open;
-      $('addClient').setAttribute('aria-expanded',String(open));
-      if(open)$('clientName').focus();
-    });
-    ['vatRate','orderReference','clientName','consumerEmail','consumerWhatsApp'].forEach(id=>$(id).addEventListener('input',()=>renderCart()));
-    $('saveContact').addEventListener('click',()=>{if($('consumerEmail').reportValidity()&&saveDraft())toast('Client saved to this order')});
-    function showOrderReview(paying){
-      if(!validOrder())return;
-      const amounts=orderAmounts();
-      $('reviewContent').innerHTML='<h2></h2><div class="review-list"></div><p class="review-summary"></p><div class="modal-actions"><button class="secondary" id="cancelReview">Go back</button><button class="primary" id="confirmReview"></button></div>';
-      $('reviewContent').querySelector('h2').textContent=paying?'Confirm payment received':'Review current order';
-      const list=$('reviewContent').querySelector('.review-list');
-      [...state.cart].forEach(([id,q])=>{const row=document.createElement('div');row.className='review-row';row.textContent=q+' × '+products.find(p=>p.id===id).name;list.append(row)});
-      $('reviewContent').querySelector('.review-summary').textContent='Subtotal '+money(amounts.subtotal/100)+' · VAT '+money(amounts.vat/100)+' · Total '+money(amounts.total/100)+(paying?' — Confirm only after payment has been received.':'');
-      $('confirmReview').textContent=paying?'Confirm paid':'Keep unpaid order';
-      $('reviewDialog').showModal();
-      $('cancelReview').onclick=()=>$('reviewDialog').close();
-      $('confirmReview').onclick=paying?markPaid:()=>$('reviewDialog').close();
-    }
-    $('reviewOrder').addEventListener('click',()=>showOrderReview(false));
-    $('paidOrder').addEventListener('click',()=>showOrderReview(true));
-
-    function markPaid(){
-      if(!validOrder()||!saveDraft())return;
-      const before=JSON.stringify(pending),paidId=pending.active;
-      pending.orders=pending.orders.filter(d=>d.id!==paidId);
-      const next=pending.orders.find(d=>d.lines.length)||pending.orders[0]||newDraft();
-      if(!pending.orders.includes(next))pending.orders.push(next);
-      pending.active=next.id;
-      if(!persistPending()){pending=JSON.parse(before);return}
-      $('reviewDialog').close();loadOrder(next);
-      $('draftStatus').textContent=paidId+' marked paid and removed. Other pending orders retained.';
-    }
-    window.addEventListener('storage',event=>{
-      if(draftKey&&(event.key===draftKey||event.key===null)){cacheConflict=true;$('draftStatus').textContent='Order changed in another tab. Reload to use the latest saved order.'}
-    });
-
-    const handPreferenceKey='marxiaOrderHandPreference';
-    function applyHandPreference(value){
-      const hand=value==='left'?'left':'right';
-      document.body.dataset.hand=hand;
-      document.querySelectorAll('input[name="handPreference"]').forEach(input=>{input.checked=input.value===hand});
-    }
-    function restoreHandPreference(){
-      let hand='right';
-      try{hand=localStorage.getItem(handPreferenceKey)||'right'}catch{}
-      applyHandPreference(hand);
-    }
-    document.querySelectorAll('input[name="handPreference"]').forEach(input=>input.addEventListener('change',()=>{
-      if(!input.checked)return;
-      applyHandPreference(input.value);
-      try{localStorage.setItem(handPreferenceKey,input.value)}catch{toast('Control placement changed for this visit; browser storage is unavailable')}
-    }));
-    window.addEventListener('storage',event=>{if(event.key===handPreferenceKey||event.key===null)restoreHandPreference()});
-    restoreHandPreference();
-
-    $('lockSession').addEventListener('click',()=>{sessionStorage.removeItem('marxiaStaffSession');location.reload()});
-    $('orderNumber').textContent=`Order #${String(Date.now()).slice(-6)}`;
-    const active=sessionStorage.getItem('marxiaStaffSession');if(active){try{const s=JSON.parse(active);$('staffIdentity').textContent=s.email;restoreDraft(s.email);$('authView').classList.add('hidden');$('appView').classList.remove('hidden');renderProduct();renderCart()}catch{sessionStorage.removeItem('marxiaStaffSession')}}
-  </script>
+  <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
+    <div class="drawer-heading"><div><p class="eyebrow">Current order</p><h2 id="cartTitle">Your selection</h2></div><button class="icon-button" id="closeCart" type="button" aria-label="Close order">×</button></div>
+    <div class="cart-lines" id="cartLines"></div>
+    <div class="totals">
+      <div><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+      <div><span id="vatLabel">VAT</span><strong id="vat">$0.00</strong></div>
+      <div class="grand-total"><span>Total</span><strong id="total">$0.00</strong></div>
+    </div>
+    <button class="button button-primary button-full" id="placeOrder" type="button">Place order</button>
+    <p class="drawer-note">Final prices and stock are confirmed securely by the server.</p>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="toast" id="toast" role="status"></div>
 </body>
 </html>

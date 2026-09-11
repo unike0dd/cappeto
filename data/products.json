@@ -1,0 +1,10 @@
+{
+  "vatRate": 15,
+  "products": [
+    {"id":"cafe-latte","name":"Café Latte","category":"Coffee","description":"Espresso softened with silky steamed milk.","priceCents":375,"stock":15,"imageUrl":"/cafe-latte.webp"},
+    {"id":"double-espresso","name":"Double Espresso","category":"Coffee","description":"Two rich shots with a deep caramel finish.","priceCents":325,"stock":12,"imageUrl":"/double-espresso.webp"},
+    {"id":"fresh-milk","name":"Fresh Milk","category":"Cold drinks","description":"Chilled whole milk, simply served.","priceCents":290,"stock":10,"imageUrl":"/fresh-milk.webp"},
+    {"id":"orange-soda","name":"Orange Soda","category":"Cold drinks","description":"Bright citrus bubbles served ice-cold.","priceCents":225,"stock":18,"imageUrl":"/orange-soda.webp"},
+    {"id":"sparkling-cola","name":"Sparkling Cola","category":"Cold drinks","description":"Classic cola with a crisp sparkling finish.","priceCents":250,"stock":24,"imageUrl":"/sparkling-cola.webp"}
+  ]
+}

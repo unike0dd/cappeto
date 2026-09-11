@@ -31,4 +31,5 @@ The redesign keeps the café character through deep forest, cream, and copper. P
 - Invalid credentials return HTTP 401.
 - Browser QA confirms the catalog, category controls, five product cards, cart drawer, and $4.31 one-latte total.
 - Carousel QA confirms previous/next navigation, touch/trackpad scrolling, keyboard arrows, responsive card widths, and live position status.
+- At 250% browser zoom, the layout collapses to one full-width carousel card, keeps the complete 4:3 product image visible, wraps long text, preserves 44 px controls, and prevents page-level horizontal overflow.
 - No application console errors were observed; browser-extension metadata warnings were unrelated to Cappeto.

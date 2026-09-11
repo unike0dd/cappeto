@@ -19,6 +19,7 @@ Staff sign-in remains disabled when its email or password is absent. Production 
 - Server validation of WebP signatures and a 2.5 MB stored-image limit
 - Server-authoritative price, VAT, stock, quote, and order calculations
 - JSON persistence suitable for the small prototype
+- Responsive carousel and navigation designed to remain usable through 250% browser zoom
 
 ## Scale-up boundary
 

@@ -10,12 +10,12 @@ const runtimeDir=join(root,'data/runtime');
 const runtimeFile=join(runtimeDir,'products.json');
 const uploadsDir=join(root,'uploads');
 const port=Number(process.env.PORT||4173);
-const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'owner@cappeto.local').toLowerCase();
-const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'Cappeto123!';
+const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'').toLowerCase();
+const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'';
 const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
 const isProduction=process.env.NODE_ENV==='production';
-if(isProduction&&(!process.env.CAPPETO_ADMIN_PASSWORD||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_PASSWORD and CAPPETO_SESSION_SECRET');
-if(!isProduction&&!process.env.CAPPETO_ADMIN_PASSWORD)console.warn('Development sign-in: owner@cappeto.local / Cappeto123!');
+if(isProduction&&(!adminEmail||!adminPassword||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_EMAIL, CAPPETO_ADMIN_PASSWORD, and CAPPETO_SESSION_SECRET');
+if(!adminEmail||!adminPassword)console.warn('Staff sign-in is disabled until CAPPETO_ADMIN_EMAIL and CAPPETO_ADMIN_PASSWORD are configured.');
 
 await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true});
 if(!existsSync(runtimeFile))await writeFile(runtimeFile,await readFile(dataFile));
@@ -37,6 +37,7 @@ const totals=(lines,vatRate)=>{const subtotalCents=lines.reduce((sum,line)=>sum+
 const server=createServer(async(req,res)=>{try{
   const url=new URL(req.url,'http://local');
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){
+    if(!adminEmail||!adminPassword)return json(res,503,{error:'Staff sign-in is not configured yet.'});
     const body=await readBody(req);if(body.consent!==true)return json(res,400,{error:'Authorization and consent are required.'});
     const email=clean(body.email,160).toLowerCase();const password=String(body.password||'');
     const expected=scryptSync(adminPassword,'cappeto-login-v1',64);const received=scryptSync(password,'cappeto-login-v1',64);

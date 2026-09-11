@@ -8,7 +8,7 @@ A small, responsive café catalog with a public customer menu and a protected st
 2. Run `npm run dev`.
 3. Open `http://localhost:4173`.
 
-For local evaluation only, when environment credentials are absent, the server prints its development credentials at startup. Production startup fails closed unless a password and session secret are supplied.
+Staff sign-in remains disabled when its email or password is absent. Production startup fails closed unless the email, password, and session secret are all supplied.
 
 ## What is included
 

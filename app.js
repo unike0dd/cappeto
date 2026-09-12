@@ -2,8 +2,38 @@ const $=id=>document.getElementById(id);
 const state={products:[],cart:new Map(),category:'All',query:'',staff:null,csrf:'',imageData:'',carouselIndex:0};
 const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 const escapeHtml=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const staticPrototype=location.hostname.endsWith('github.io');
+let staticCatalog=null;
+
+async function digest(value){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return [...new Uint8Array(bytes)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
+async function staticApi(path,options={}){
+  const method=options.method||'GET';
+  const body=JSON.parse(options.body||'{}');
+  if(path==='/api/auth/session')return sessionStorage.getItem('cappeto_demo_session')?{authenticated:true,user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'}:{authenticated:false};
+  if(path==='/api/auth/login'&&method==='POST'){
+    const fingerprint=await digest(`${String(body.email||'').trim().toLowerCase()}:${String(body.password||'')}`);
+    if(!body.consent||fingerprint!=='b6b030b845221156f2bd566f039e0d9d076c636f019b6e6f4e0a3fedd4b5d336')throw new Error('Email or password is incorrect.');
+    sessionStorage.setItem('cappeto_demo_session','active');return{user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'};
+  }
+  if(path==='/api/auth/logout'){sessionStorage.removeItem('cappeto_demo_session');return{ok:true}}
+  if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store'}).then(response=>response.json());
+  if(path==='/api/products'&&method==='GET')return staticCatalog;
+  if(path==='/api/products'&&method==='POST'){
+    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
+    if(staticCatalog.products.length>=20)throw new Error('The 20-product limit has been reached.');
+    const product={id:`demo-${Date.now()}`,name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),stock:Number(body.stock),imageUrl:body.imageData};
+    staticCatalog.products.push(product);return{product};
+  }
+  if(path.startsWith('/api/products/')&&method==='DELETE'){staticCatalog.products=staticCatalog.products.filter(product=>product.id!==decodeURIComponent(path.slice(14)));return{ok:true}}
+  if((path==='/api/orders/quote'||path==='/api/orders')&&method==='POST'){
+    const subtotalCents=(body.items||[]).reduce((sum,item)=>{const product=staticCatalog.products.find(entry=>entry.id===item.productId);return sum+(product?product.priceCents*item.quantity:0)},0);
+    const vatCents=Math.round(subtotalCents*staticCatalog.vatRate/100);return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate:staticCatalog.vatRate,orderId:`DEMO-${Date.now().toString().slice(-6)}`};
+  }
+  throw new Error('This action is unavailable.');
+}
 
 async function api(path,options={}){
+  if(staticPrototype)return staticApi(path,options);
   const response=await fetch(path,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(state.csrf?{'X-CSRF-Token':state.csrf}:{}),...options.headers},...options});
   const body=await response.json().catch(()=>({error:'Unexpected server response'}));
   if(!response.ok) throw new Error(body.error||'Request failed');

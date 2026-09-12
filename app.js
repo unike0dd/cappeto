@@ -1,4 +1,32 @@
 const $=id=>document.getElementById(id);
+const preferences={
+  language:localStorage.getItem('cappeto_language')==='es'?'es':'en',
+  theme:localStorage.getItem('cappeto_theme')==='light'?'light':'dark'
+};
+const authTranslations={
+  en:{password:'Password',passwordPlaceholder:'Enter your password',emailLabel:'Staff email',passwordLabel:'Password',consent:'I confirm I am authorized by this business owner',signIn:'Sign in',browse:'Browse as a customer',languageLabel:'Cambiar idioma a español',themeLight:'Switch to light theme',themeDark:'Switch to dark theme'},
+  es:{password:'Contraseña',passwordPlaceholder:'Ingrese su contraseña',emailLabel:'Correo del personal',passwordLabel:'Contraseña',consent:'Confirmo que estoy autorizado por el propietario del negocio',signIn:'Iniciar sesión',browse:'Explorar como cliente',languageLabel:'Change language to English',themeLight:'Cambiar al tema claro',themeDark:'Cambiar al tema oscuro'}
+};
+function applyPreferences(){
+  const copy=authTranslations[preferences.language];
+  document.documentElement.lang=preferences.language;
+  document.documentElement.dataset.theme=preferences.theme;
+  $('languageToggle').setAttribute('aria-label',copy.languageLabel);
+  $('languageToggle').setAttribute('aria-pressed',String(preferences.language==='es'));
+  $('themeToggle').setAttribute('aria-label',preferences.theme==='dark'?copy.themeLight:copy.themeDark);
+  $('themeToggle').setAttribute('aria-pressed',String(preferences.theme==='light'));
+  $('passwordLabel').textContent=copy.password;
+  $('staffEmail').setAttribute('aria-label',copy.emailLabel);
+  $('authCode').placeholder=copy.passwordPlaceholder;
+  $('authCode').setAttribute('aria-label',copy.passwordLabel);
+  $('consent').setAttribute('aria-label',copy.consent);
+  $('signInButton').textContent=copy.signIn;
+  $('browseButton').textContent=copy.browse;
+  document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#122019':'#f7f2e7';
+}
+applyPreferences();
+$('languageToggle').addEventListener('click',()=>{preferences.language=preferences.language==='en'?'es':'en';localStorage.setItem('cappeto_language',preferences.language);applyPreferences()});
+$('themeToggle').addEventListener('click',()=>{preferences.theme=preferences.theme==='dark'?'light':'dark';localStorage.setItem('cappeto_theme',preferences.theme);applyPreferences()});
 const state={products:[],cart:new Map(),category:'All',query:'',manageQuery:'',staff:null,csrf:'',imageData:'',editingProductId:null,carouselIndex:0,quoteVersion:0};
 const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 const escapeHtml=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));

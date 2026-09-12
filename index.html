@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#122019">
   <meta name="description" content="Cappeto café catalog and order station">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=product-update-1">
-  <script src="app.js?v=product-update-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=inventory-actions-2">
+  <script src="app.js?v=inventory-actions-2" defer></script>
 </head>
 <body>
   <section class="auth" id="authView" aria-labelledby="authTitle">
@@ -55,6 +55,7 @@
 
     <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
       <div class="manage-heading"><div><p class="eyebrow">Owner workspace</p><h1 id="manageTitle">Product library</h1><p>Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
+      <p class="limit-message hidden" id="capacityMessage" role="status">The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.</p>
       <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
       <form class="product-form" id="productForm">
         <div class="upload-column">
@@ -81,7 +82,10 @@
             <div><dt>Available</dt><dd id="previewStock">0</dd></div><div><dt>Purchased</dt><dd id="previewDate">Not selected</dd></div>
             <div class="preview-description"><dt>Description</dt><dd id="previewDescription">Short product description</dd></div>
           </dl>
-          <button class="button button-primary preview-publish hidden" id="productSubmitButton" type="submit">Publish product</button>
+          <div class="preview-actions">
+            <button class="button clear-product-button" id="clearProductButton" type="button">Clear fields</button>
+            <button class="button preview-publish hidden" id="productSubmitButton" type="submit">Publish product</button>
+          </div>
         </aside>
       </form>
       <h2 class="inventory-title">Inventory products</h2>

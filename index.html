@@ -62,12 +62,15 @@
           <label class="field"><span>Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
           <label class="field"><span>Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
           <label class="field"><span>Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
-          <label class="field"><span>Available quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
+          <label class="field"><span>VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
+          <label class="field"><span>Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
+          <label class="field"><span>Purchase date</span><input id="productPurchaseDate" type="date" required></label>
         </div>
         <label class="field"><span>Short description</span><input id="productDescription" maxlength="140" required placeholder="Espresso, steamed milk and cinnamon"></label>
         <p class="form-message" id="productMessage" role="status"></p>
         <button class="button button-primary" type="submit">Publish product</button>
       </form>
+      <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" placeholder="Search product to add inventory" aria-label="Search product to add inventory"></label>
       <div class="manage-list" id="manageList"></div>
     </section>
   </main>

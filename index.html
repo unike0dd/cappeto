@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#122019">
   <meta name="description" content="Cappeto café catalog and order station">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=manage-preview-1">
-  <script src="app.js?v=manage-preview-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=product-update-1">
+  <script src="app.js?v=product-update-1" defer></script>
 </head>
 <body>
   <section class="auth" id="authView" aria-labelledby="authTitle">
@@ -58,7 +58,7 @@
       <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
       <form class="product-form" id="productForm">
         <div class="upload-column">
-          <label class="file-button">Choose picture<input id="productImage" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+          <label class="file-button">Choose picture<input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
           <div class="upload-preview" id="uploadPreview"><span>Product image</span><small>Upload JPG, PNG, or WebP<br>Converted to optimized WebP</small></div>
         </div>
         <div class="product-entry-fields"><div class="form-grid">
@@ -81,7 +81,7 @@
             <div><dt>Available</dt><dd id="previewStock">0</dd></div><div><dt>Purchased</dt><dd id="previewDate">Not selected</dd></div>
             <div class="preview-description"><dt>Description</dt><dd id="previewDescription">Short product description</dd></div>
           </dl>
-          <button class="button button-primary preview-publish" type="submit">Publish product</button>
+          <button class="button button-primary preview-publish hidden" id="productSubmitButton" type="submit">Publish product</button>
         </aside>
       </form>
       <h2 class="inventory-title">Inventory products</h2>

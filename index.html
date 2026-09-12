@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#122019">
   <meta name="description" content="Cappeto café catalog and order station">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=preferences-2">
-  <script src="app.js?v=preferences-2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=customer-preferences-1">
+  <script src="app.js?v=customer-preferences-1" defer></script>
 </head>
 <body>
   <section class="auth" id="authView" aria-label="Staff sign in">
@@ -15,8 +15,8 @@
       <div class="auth-toolbar">
         <span class="brand-mark" aria-label="Cappeto">C</span>
         <div class="preference-buttons">
-          <button class="preference-button" id="languageToggle" type="button" aria-label="Cambiar idioma a español">EN</button>
-          <button class="preference-button" id="themeToggle" type="button" aria-label="Switch to dark theme">Light</button>
+          <button class="preference-button" id="languageToggle" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button>
+          <button class="preference-button" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button>
         </div>
       </div>
       <label class="field email-field"><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" aria-label="Staff email" required></label>
@@ -32,19 +32,20 @@
     <header class="topbar">
       <a class="wordmark" href="#catalog" aria-label="Cappeto home"><span>C</span>Cappeto</a>
       <nav class="view-switcher" aria-label="Workspace">
-        <button class="nav-button active" data-view="catalog" type="button">Menu</button>
-        <button class="nav-button staff-only hidden" data-view="manage" type="button">Manage products</button>
+        <button class="nav-button active" id="menuNav" data-view="catalog" type="button">Menu</button>
+        <button class="nav-button staff-only hidden" id="manageNav" data-view="manage" type="button">Manage products</button>
       </nav>
       <div class="top-actions">
+        <div class="preference-buttons customer-preferences"><button class="preference-button" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button><button class="preference-button" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button></div>
         <span class="session-label" id="sessionLabel">Customer view</span>
         <button class="icon-button staff-only hidden" id="logoutButton" type="button" aria-label="Sign out" title="Sign out">↗</button>
-        <button class="cart-button" id="cartButton" type="button" aria-label="Open order"><span>Order</span><b id="cartCount">0</b></button>
+        <button class="cart-button" id="cartButton" type="button" aria-label="Open order"><span id="orderButtonLabel">Order</span><b id="cartCount">0</b></button>
       </div>
     </header>
 
     <section class="catalog-view" id="catalogView">
       <div class="intro-row">
-        <div><p class="eyebrow">Freshly prepared</p><h1>Simple café pleasures.</h1><p>Choose a favorite, set the quantity, and review the order.</p></div>
+        <div><p class="eyebrow" id="catalogEyebrow">Freshly prepared</p><h1 id="catalogTitle">Simple café pleasures.</h1><p id="catalogDescription">Choose a favorite, set the quantity, and review the order.</p></div>
         <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search the menu" aria-label="Search the menu"></label>
       </div>
       <div class="category-row" id="categoryRow" aria-label="Product categories"></div>
@@ -53,7 +54,7 @@
         <div class="product-grid" id="productGrid" aria-live="polite" tabindex="0"></div>
         <button class="carousel-arrow carousel-next" id="nextProduct" type="button" aria-label="Next products">→</button>
       </div>
-      <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span>Swipe or use the arrows</span></div>
+      <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span id="carouselHint">Swipe or use the arrows</span></div>
     </section>
 
     <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
@@ -97,12 +98,12 @@
   </main>
 
   <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
-    <div class="drawer-heading"><div><p class="eyebrow">Current order</p><h2 id="cartTitle">Your selection</h2></div><div class="drawer-actions"><button class="clear-order-button" id="clearOrder" type="button">Clear</button><button class="icon-button" id="closeCart" type="button" aria-label="Close order">×</button></div></div>
+    <div class="drawer-heading"><div><p class="eyebrow" id="cartEyebrow">Current order</p><h2 id="cartTitle">Your selection</h2></div><div class="drawer-actions"><button class="clear-order-button" id="clearOrder" type="button">Clear</button><button class="icon-button" id="closeCart" type="button" aria-label="Close order">×</button></div></div>
     <div class="cart-lines" id="cartLines"></div>
     <div class="totals">
-      <div><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+      <div><span id="subtotalLabel">Subtotal</span><strong id="subtotal">$0.00</strong></div>
       <div><span id="vatLabel">VAT</span><strong id="vat">$0.00</strong></div>
-      <div class="grand-total"><span>Total</span><strong id="total">$0.00</strong></div>
+      <div class="grand-total"><span id="totalLabel">Total</span><strong id="total">$0.00</strong></div>
     </div>
     <button class="button button-primary button-full" id="placeOrder" type="button">Place order</button>
   </aside>

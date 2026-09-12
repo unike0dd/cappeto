@@ -61,7 +61,7 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
   let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const publicTopLevel=new Set(['/index.html','/styles.css','/app.js','/cafe-latte.webp','/double-espresso.webp','/fresh-milk.webp','/orange-soda.webp','/sparkling-cola.webp']);
-  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/'))return json(res,404,{error:'Not found'});
+  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/')&&!pathname.startsWith('/assets/products/'))return json(res,404,{error:'Not found'});
   const file=join(root,pathname);if(!file.startsWith(root)||!existsSync(file))return json(res,404,{error:'Not found'});const extension=extname(file);const cacheControl=['.html','.js','.css'].includes(extension)?'no-store':'public, max-age=3600';res.writeHead(200,{'Content-Type':mime[extension]||'application/octet-stream','Cache-Control':cacheControl,...securityHeaders});createReadStream(file).pipe(res)
 }catch(error){console.error(error);json(res,error.status||500,{error:error.status?error.message:'The server could not complete this request.'})}});
 server.listen(port,'0.0.0.0',()=>console.log(`Cappeto ready on http://localhost:${port}`));

@@ -10,10 +10,10 @@ const runtimeDir=join(root,'data/runtime');
 const runtimeFile=join(runtimeDir,'products.json');
 const uploadsDir=join(root,'uploads');
 const port=Number(process.env.PORT||4173);
-const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'').toLowerCase();
-const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'';
-const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
 const isProduction=process.env.NODE_ENV==='production';
+const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||(isProduction?'':'demo@cappeto.local')).toLowerCase();
+const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||(isProduction?'':'CappetoDemo!2026');
+const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
 if(isProduction&&(!adminEmail||!adminPassword||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_EMAIL, CAPPETO_ADMIN_PASSWORD, and CAPPETO_SESSION_SECRET');
 if(!adminEmail||!adminPassword)console.warn('Staff sign-in is disabled until CAPPETO_ADMIN_EMAIL and CAPPETO_ADMIN_PASSWORD are configured.');
 

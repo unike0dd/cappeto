@@ -8,7 +8,7 @@ A small, responsive café catalog with a public customer menu and a protected st
 2. Run `npm run dev`.
 3. Open `http://localhost:4173`.
 
-Staff sign-in remains disabled when its email or password is absent. Production startup fails closed unless the email, password, and session secret are all supplied.
+Development demo credentials are `demo@cappeto.local` / `CappetoDemo!2026`. They are intentionally disabled when `NODE_ENV=production`. Production startup fails closed unless the email, password, and session secret are supplied privately.
 
 ## What is included
 

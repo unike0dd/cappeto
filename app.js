@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 const preferences={
   language:localStorage.getItem('cappeto_language')==='es'?'es':'en',
-  theme:localStorage.getItem('cappeto_theme')==='light'?'light':'dark'
+  theme:localStorage.getItem('cappeto_theme')==='dark'?'dark':'light'
 };
 const authTranslations={
   en:{password:'Password',passwordPlaceholder:'Enter your password',emailLabel:'Staff email',passwordLabel:'Password',consent:'I confirm I am authorized by this business owner',signIn:'Sign in',browse:'Browse as a customer',languageLabel:'Cambiar idioma a español',themeLight:'Switch to light theme',themeDark:'Switch to dark theme'},
@@ -11,6 +11,8 @@ function applyPreferences(){
   const copy=authTranslations[preferences.language];
   document.documentElement.lang=preferences.language;
   document.documentElement.dataset.theme=preferences.theme;
+  $('languageToggle').textContent=preferences.language==='en'?'EN':'ES';
+  $('themeToggle').textContent=preferences.theme==='light'?'Light':'Dark';
   $('languageToggle').setAttribute('aria-label',copy.languageLabel);
   $('languageToggle').setAttribute('aria-pressed',String(preferences.language==='es'));
   $('themeToggle').setAttribute('aria-label',preferences.theme==='dark'?copy.themeLight:copy.themeDark);

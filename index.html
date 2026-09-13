@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=inventory-card-repair-1">
-  <script src="i18n/translations.js?v=inventory-layout-2" defer></script>
-  <script src="app.js?v=inventory-identity-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=business-profile-1">
+  <script src="i18n/translations.js?v=business-profile-1" defer></script>
+  <script src="app.js?v=business-profile-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -51,14 +51,14 @@
 
   <main class="app hidden" id="appView" tabindex="-1">
     <header class="topbar">
-      <a class="wordmark" href="#catalog" data-i18n-aria="cappetoHome" aria-label="Cappeto home"><span>C</span>Cappeto</a>
+      <a class="wordmark" href="#catalog" data-i18n-aria="cappetoHome" aria-label="Cappeto home"><span id="businessLogoMark">C</span><strong id="businessWordmark">Cappeto</strong></a>
       <nav class="view-switcher" data-i18n-aria="workspace" aria-label="Workspace">
         <button class="nav-button active" id="menuNav" data-i18n="menu" data-view="catalog" aria-current="page" type="button">Menu</button>
         <button class="nav-button staff-only hidden" id="manageNav" data-i18n="manage" data-view="manage" type="button">Manage products</button>
       </nav>
       <div class="top-actions">
         <div class="preference-buttons customer-preferences"><button class="preference-button" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button><button class="preference-button" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button></div>
-        <span class="session-label" id="sessionLabel">Customer view</span>
+        <span class="session-label" id="sessionLabel">Customer view</span><button class="owner-profile-button staff-only hidden" id="ownerSettingsButton" data-i18n="ownerProfile" type="button">Cappeto owner</button>
         <button class="icon-button staff-only hidden" id="logoutButton" data-i18n-aria="signOut" type="button" aria-label="Sign out" title="Sign out">↗</button>
         <button class="cart-button" id="cartButton" data-i18n-aria="openOrder" type="button" aria-label="Open order"><span id="orderButtonLabel" data-i18n="order">Order</span><b id="cartCount">0</b></button>
       </div>
@@ -112,6 +112,28 @@
       </form>
       <h2 class="inventory-title" data-i18n="inventoryProducts">Inventory products</h2>
       <div class="manage-list" id="manageList"></div>
+    </section>
+
+    <section class="settings-view hidden" id="settingsView" aria-labelledby="settingsTitle">
+      <div class="settings-heading">
+        <div><p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p><h1 id="settingsTitle" data-i18n="businessProfile">Business profile</h1><p data-i18n="businessProfileIntro">Manage the business information shown across Cappeto.</p></div>
+      </div>
+      <form class="business-profile-form" id="businessProfileForm">
+        <div class="business-logo-card">
+          <div class="business-logo-preview" id="businessLogoPreview" aria-hidden="true"><span>C</span></div>
+          <label class="file-button business-logo-button"><span data-i18n="chooseLogo">Choose logo</span><input id="businessLogo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+          <small data-i18n="logoHelp">Upload JPG, PNG, or WebP. A square image works best.</small>
+        </div>
+        <div class="business-fields">
+          <label class="field"><span data-i18n="businessName">Business name</span><input id="businessName" maxlength="80" autocomplete="organization" required></label>
+          <label class="field business-address"><span data-i18n="address">Address</span><textarea id="businessAddress" maxlength="160" autocomplete="street-address" required></textarea></label>
+          <label class="field"><span data-i18n="phone">Phone</span><input id="businessPhone" type="tel" maxlength="30" autocomplete="tel" required></label>
+          <label class="field"><span data-i18n="email">Email</span><input id="businessEmail" type="email" maxlength="120" autocomplete="email" required></label>
+          <label class="field"><span data-i18n="currency">Currency</span><select id="businessCurrency" required><option value="USD">USD — US Dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British Pound</option><option value="COP">COP — Colombian Peso</option><option value="CLP">CLP — Chilean Peso</option><option value="MXN">MXN — Mexican Peso</option></select></label>
+          <p class="form-message business-profile-message" id="businessProfileMessage" role="status"></p>
+          <button class="button button-primary save-business-button" data-i18n="saveSettings" type="submit">Save settings</button>
+        </div>
+      </form>
     </section>
   </main>
 

@@ -3,14 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#122019">
-  <meta name="description" content="Cappeto café catalog and order station">
+  <meta name="theme-color" content="#f4f6f0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.">
+  <meta name="application-name" content="Cappeto">
+  <meta name="author" content="Cappeto">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_EC">
+  <meta property="og:site_name" content="Cappeto">
+  <meta property="og:title" content="Cappeto · Café menu">
+  <meta property="og:description" content="Explore Cappeto's café products, prices, availability, and order totals.">
+  <meta property="og:url" content="https://unike0dd.github.io/cappeto/">
+  <meta property="og:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
+  <meta property="og:image:alt" content="Cappeto café latte">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cappeto · Café menu">
+  <meta name="twitter:description" content="Explore Cappeto's café products, prices, availability, and order totals.">
+  <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
+  <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=contrast-2">
+  <link rel="stylesheet" href="styles.css?v=hci-palette-1">
   <script src="i18n/translations.js?v=1" defer></script>
   <script src="app.js?v=i18n-1" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
+  <a class="skip-link" id="skipLink" href="#appView">Skip to main content</a>
   <section class="auth" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">
     <form class="auth-card" id="authForm">
       <div class="auth-toolbar">
@@ -29,11 +49,11 @@
     </form>
   </section>
 
-  <main class="app hidden" id="appView">
+  <main class="app hidden" id="appView" tabindex="-1">
     <header class="topbar">
       <a class="wordmark" href="#catalog" data-i18n-aria="cappetoHome" aria-label="Cappeto home"><span>C</span>Cappeto</a>
       <nav class="view-switcher" data-i18n-aria="workspace" aria-label="Workspace">
-        <button class="nav-button active" id="menuNav" data-i18n="menu" data-view="catalog" type="button">Menu</button>
+        <button class="nav-button active" id="menuNav" data-i18n="menu" data-view="catalog" aria-current="page" type="button">Menu</button>
         <button class="nav-button staff-only hidden" id="manageNav" data-i18n="manage" data-view="manage" type="button">Manage products</button>
       </nav>
       <div class="top-actions">
@@ -44,7 +64,7 @@
       </div>
     </header>
 
-    <section class="catalog-view" id="catalogView">
+    <section class="catalog-view" id="catalogView" aria-labelledby="catalogTitle">
       <div class="intro-row">
         <div><p class="eyebrow" id="catalogEyebrow" data-i18n="fresh">Freshly prepared</p><h1 id="catalogTitle" data-i18n="title">Simple café pleasures.</h1><p id="catalogDescription" data-i18n="description">Choose a favorite, set the quantity, and review the order.</p></div>
         <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" data-i18n-placeholder="search" data-i18n-aria="search" placeholder="Search the menu" aria-label="Search the menu"></label>

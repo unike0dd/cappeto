@@ -16,7 +16,11 @@ function applyPreferences(){
   document.querySelectorAll('[data-i18n]').forEach(element=>element.textContent=t(element.dataset.i18n));
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>element.placeholder=t(element.dataset.i18nPlaceholder));
   document.querySelectorAll('[data-i18n-aria]').forEach(element=>element.setAttribute('aria-label',t(element.dataset.i18nAria)));
-  document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#122019':'#f7f2e7';
+  $('skipLink').textContent=preferences.language==='es'?'Ir al contenido principal':'Skip to main content';
+  const spanish=preferences.language==='es';
+  document.title=spanish?'Cappeto · Menú de café':'Cappeto · Café menu';
+  document.querySelector('meta[name="description"]').content=spanish?'Explore el menú de Cappeto, revise la disponibilidad y prepare un pedido con subtotal, IVA y total claros.':"Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.";
+  document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#0d1511':'#f4f6f0';
 }
 applyPreferences();
 document.querySelectorAll('[data-language-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.language=preferences.language==='en'?'es':'en';localStorage.setItem('cappeto_language',preferences.language);applyPreferences();if(!$('appView').classList.contains('hidden')){renderAll();renderProductPreview();showStaffControls(Boolean(state.staff))}}));
@@ -92,7 +96,7 @@ function updateProductAction(){const button=$('productSubmitButton');const editi
 function clearProductForm(message=''){state.editingProductId=null;state.imageData='';$('productForm').reset();$('productVat').value='15';for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage='';$(id).classList.remove('has-image')}renderProductPreview();updateProductAction();$('productMessage').textContent=message}
 function editProduct(product){state.editingProductId=product.id;$('productName').value=product.name;$('productCategory').value=product.category;$('productPrice').value=(product.priceCents/100).toFixed(2);$('productVat').value=Number(product.vatRate??state.vatRate);$('productStock').value=product.stock;$('productPurchaseDate').value=product.purchaseDate||'';$('productDescription').value=product.description;state.imageData=product.imageUrl;for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage=`url(${product.imageUrl})`;$(id).classList.add('has-image')}renderProductPreview();updateProductAction();$('productForm').scrollIntoView({behavior:'smooth',block:'start'});$('productMessage').textContent=t('editing',{name:productCopy(product).name})}
 function openCart(open){$('cartDrawer').classList.toggle('open',open);$('scrim').classList.toggle('open',open);$('cartDrawer').setAttribute('aria-hidden',String(!open))}
-function switchView(view){$('catalogView').classList.toggle('hidden',view!=='catalog');$('manageView').classList.toggle('hidden',view!=='manage');document.querySelectorAll('.nav-button').forEach(button=>button.classList.toggle('active',button.dataset.view===view))}
+function switchView(view){$('catalogView').classList.toggle('hidden',view!=='catalog');$('manageView').classList.toggle('hidden',view!=='manage');document.querySelectorAll('.nav-button').forEach(button=>{const active=button.dataset.view===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')})}
 
 $('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';try{const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:$('staffEmail').value.trim(),password:$('authCode').value,consent:$('consent').checked})});state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}});
 $('browseButton').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});

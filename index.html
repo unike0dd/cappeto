@@ -24,7 +24,7 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=inventory-layout-2">
+  <link rel="stylesheet" href="styles.css?v=carousel-chevrons-1">
   <script src="i18n/translations.js?v=inventory-layout-2" defer></script>
   <script src="app.js?v=inventory-layout-2" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
@@ -71,9 +71,9 @@
       </div>
       <div class="category-row" id="categoryRow" data-i18n-aria="productCategories" aria-label="Product categories"></div>
       <div class="carousel-shell" data-i18n-aria="productCarousel" aria-label="Product carousel">
-        <button class="carousel-arrow carousel-previous" id="previousProduct" data-i18n-aria="previousProducts" type="button" aria-label="Previous products">←</button>
+        <button class="carousel-arrow carousel-previous" id="previousProduct" data-i18n-aria="previousProducts" type="button" aria-label="Previous products"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>
         <div class="product-grid" id="productGrid" aria-live="polite" tabindex="0"></div>
-        <button class="carousel-arrow carousel-next" id="nextProduct" data-i18n-aria="nextProducts" type="button" aria-label="Next products">→</button>
+        <button class="carousel-arrow carousel-next" id="nextProduct" data-i18n-aria="nextProducts" type="button" aria-label="Next products"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></button>
       </div>
       <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span id="carouselHint" data-i18n="carousel">Swipe or use the arrows</span></div>
     </section>

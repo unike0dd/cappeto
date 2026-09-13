@@ -7,10 +7,11 @@
   <meta name="description" content="Cappeto café catalog and order station">
   <title>Cappeto · Café counter</title>
   <link rel="stylesheet" href="styles.css?v=customer-preferences-1">
-  <script src="app.js?v=customer-preferences-1" defer></script>
+  <script src="i18n/translations.js?v=1" defer></script>
+  <script src="app.js?v=i18n-1" defer></script>
 </head>
 <body>
-  <section class="auth" id="authView" aria-label="Staff sign in">
+  <section class="auth" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">
     <form class="auth-card" id="authForm">
       <div class="auth-toolbar">
         <span class="brand-mark" aria-label="Cappeto">C</span>
@@ -19,93 +20,90 @@
           <button class="preference-button" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button>
         </div>
       </div>
-      <label class="field email-field"><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" aria-label="Staff email" required></label>
-      <label class="field"><span id="passwordLabel">Password</span><input id="authCode" type="password" autocomplete="current-password" minlength="8" placeholder="Enter your password" aria-label="Password" required></label>
-      <label class="consent consent-only"><input id="consent" type="checkbox" aria-label="I confirm I am authorized by this business owner" required></label>
+      <label class="field email-field"><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" data-i18n-aria="emailLabel" aria-label="Staff email" required></label>
+      <label class="field"><span id="passwordLabel" data-i18n="password">Password</span><input id="authCode" type="password" autocomplete="current-password" minlength="8" data-i18n-placeholder="passwordPlaceholder" data-i18n-aria="password" placeholder="Enter your password" aria-label="Password" required></label>
+      <label class="consent consent-only"><input id="consent" type="checkbox" data-i18n-aria="consent" aria-label="I confirm I am authorized by this business owner" required></label>
       <p class="form-message" id="authError" role="alert"></p>
-      <button class="button button-primary button-full" id="signInButton" type="submit">Sign in</button>
-      <button class="text-button" id="browseButton" type="button">Browse as a customer</button>
+      <button class="button button-primary button-full" id="signInButton" data-i18n="signIn" type="submit">Sign in</button>
+      <button class="text-button" id="browseButton" data-i18n="browse" type="button">Browse as a customer</button>
     </form>
   </section>
 
   <main class="app hidden" id="appView">
     <header class="topbar">
-      <a class="wordmark" href="#catalog" aria-label="Cappeto home"><span>C</span>Cappeto</a>
-      <nav class="view-switcher" aria-label="Workspace">
-        <button class="nav-button active" id="menuNav" data-view="catalog" type="button">Menu</button>
-        <button class="nav-button staff-only hidden" id="manageNav" data-view="manage" type="button">Manage products</button>
+      <a class="wordmark" href="#catalog" data-i18n-aria="cappetoHome" aria-label="Cappeto home"><span>C</span>Cappeto</a>
+      <nav class="view-switcher" data-i18n-aria="workspace" aria-label="Workspace">
+        <button class="nav-button active" id="menuNav" data-i18n="menu" data-view="catalog" type="button">Menu</button>
+        <button class="nav-button staff-only hidden" id="manageNav" data-i18n="manage" data-view="manage" type="button">Manage products</button>
       </nav>
       <div class="top-actions">
         <div class="preference-buttons customer-preferences"><button class="preference-button" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button><button class="preference-button" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button></div>
         <span class="session-label" id="sessionLabel">Customer view</span>
-        <button class="icon-button staff-only hidden" id="logoutButton" type="button" aria-label="Sign out" title="Sign out">↗</button>
-        <button class="cart-button" id="cartButton" type="button" aria-label="Open order"><span id="orderButtonLabel">Order</span><b id="cartCount">0</b></button>
+        <button class="icon-button staff-only hidden" id="logoutButton" data-i18n-aria="signOut" type="button" aria-label="Sign out" title="Sign out">↗</button>
+        <button class="cart-button" id="cartButton" data-i18n-aria="openOrder" type="button" aria-label="Open order"><span id="orderButtonLabel" data-i18n="order">Order</span><b id="cartCount">0</b></button>
       </div>
     </header>
 
     <section class="catalog-view" id="catalogView">
       <div class="intro-row">
-        <div><p class="eyebrow" id="catalogEyebrow">Freshly prepared</p><h1 id="catalogTitle">Simple café pleasures.</h1><p id="catalogDescription">Choose a favorite, set the quantity, and review the order.</p></div>
-        <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search the menu" aria-label="Search the menu"></label>
+        <div><p class="eyebrow" id="catalogEyebrow" data-i18n="fresh">Freshly prepared</p><h1 id="catalogTitle" data-i18n="title">Simple café pleasures.</h1><p id="catalogDescription" data-i18n="description">Choose a favorite, set the quantity, and review the order.</p></div>
+        <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" data-i18n-placeholder="search" data-i18n-aria="search" placeholder="Search the menu" aria-label="Search the menu"></label>
       </div>
-      <div class="category-row" id="categoryRow" aria-label="Product categories"></div>
-      <div class="carousel-shell" aria-label="Product carousel">
-        <button class="carousel-arrow carousel-previous" id="previousProduct" type="button" aria-label="Previous products">←</button>
+      <div class="category-row" id="categoryRow" data-i18n-aria="productCategories" aria-label="Product categories"></div>
+      <div class="carousel-shell" data-i18n-aria="productCarousel" aria-label="Product carousel">
+        <button class="carousel-arrow carousel-previous" id="previousProduct" data-i18n-aria="previousProducts" type="button" aria-label="Previous products">←</button>
         <div class="product-grid" id="productGrid" aria-live="polite" tabindex="0"></div>
-        <button class="carousel-arrow carousel-next" id="nextProduct" type="button" aria-label="Next products">→</button>
+        <button class="carousel-arrow carousel-next" id="nextProduct" data-i18n-aria="nextProducts" type="button" aria-label="Next products">→</button>
       </div>
-      <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span id="carouselHint">Swipe or use the arrows</span></div>
+      <div class="carousel-status"><span id="carouselPosition">1 / 1</span><span id="carouselHint" data-i18n="carousel">Swipe or use the arrows</span></div>
     </section>
 
     <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
-      <div class="manage-heading"><div><p class="eyebrow">Owner workspace</p><h1 id="manageTitle">Product library</h1><p>Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
-      <p class="limit-message hidden" id="capacityMessage" role="status">The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.</p>
-      <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
+      <div class="manage-heading"><div><p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p><h1 id="manageTitle" data-i18n="productLibrary">Product library</h1><p data-i18n="managerIntro">Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
+      <p class="limit-message hidden" id="capacityMessage" data-i18n="capacity" role="status">The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.</p>
+      <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" data-i18n-placeholder="inventorySearch" data-i18n-aria="inventorySearch" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
       <form class="product-form" id="productForm">
         <div class="upload-column">
-          <label class="file-button">Choose picture<input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
-          <div class="upload-preview" id="uploadPreview"><span>Product image</span><small>Upload JPG, PNG, or WebP<br>Converted to optimized WebP</small></div>
+          <label class="file-button"><span data-i18n="choosePicture">Choose picture</span><input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
+          <div class="upload-preview" id="uploadPreview"><span data-i18n="productImage">Product image</span><small data-i18n="uploadHelp">Upload JPG, PNG, or WebP. Converted to optimized WebP.</small></div>
         </div>
         <div class="product-entry-fields"><div class="form-grid">
-          <label class="field"><span>Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
-          <label class="field"><span>Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
-          <label class="field"><span>Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
-          <label class="field"><span>VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
-          <label class="field"><span>Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
-          <label class="field"><span>Purchase date</span><input id="productPurchaseDate" type="date" required></label>
+          <label class="field"><span data-i18n="productName">Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
+          <label class="field"><span data-i18n="category">Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
+          <label class="field"><span data-i18n="price">Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
+          <label class="field"><span data-i18n="vat">VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
+          <label class="field"><span data-i18n="quantity">Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
+          <label class="field"><span data-i18n="purchaseDate">Purchase date</span><input id="productPurchaseDate" type="date" required></label>
         </div>
-          <label class="field description-field"><span>Short description</span><textarea id="productDescription" maxlength="140" required placeholder="Espresso, steamed milk and cinnamon"></textarea></label>
+          <label class="field description-field"><span data-i18n="shortDescription">Short description</span><textarea id="productDescription" maxlength="140" required placeholder="Espresso, steamed milk and cinnamon"></textarea></label>
           <p class="form-message" id="productMessage" role="status"></p>
         </div>
         <aside class="product-live-preview" aria-labelledby="previewTitle">
-          <p class="preview-label" id="previewTitle">Customer preview</p>
-          <div class="preview-picture" id="previewPicture"><span>Product image</span></div>
+          <div class="preview-header"><p class="preview-label" id="previewTitle" data-i18n="customerPreview">Customer preview</p><button class="clear-product-button" id="clearProductButton" data-i18n="clearFields" type="button">Clear fields</button></div>
+          <div class="preview-picture" id="previewPicture"><span data-i18n="productImage">Product image</span></div>
           <dl class="preview-details">
-            <div><dt>Product</dt><dd id="previewName">Product name</dd></div><div><dt>Category</dt><dd id="previewCategory">Category</dd></div>
-            <div><dt>Price</dt><dd id="previewPrice">$0.00</dd></div><div><dt>VAT</dt><dd id="previewVat">15%</dd></div>
-            <div><dt>Available</dt><dd id="previewStock">0</dd></div><div><dt>Purchased</dt><dd id="previewDate">Not selected</dd></div>
-            <div class="preview-description"><dt>Description</dt><dd id="previewDescription">Short product description</dd></div>
+            <div><dt data-i18n="product">Product</dt><dd id="previewName">Product name</dd></div><div><dt data-i18n="category">Category</dt><dd id="previewCategory">Category</dd></div>
+            <div><dt data-i18n="price">Price</dt><dd id="previewPrice">$0.00</dd></div><div><dt data-i18n="vat">VAT</dt><dd id="previewVat">15%</dd></div>
+            <div><dt data-i18n="availableLabel">Available</dt><dd id="previewStock">0</dd></div><div><dt data-i18n="purchased">Purchased</dt><dd id="previewDate">Not selected</dd></div>
+            <div class="preview-description"><dt data-i18n="descriptionLabel">Description</dt><dd id="previewDescription">Short product description</dd></div>
           </dl>
-          <div class="preview-actions">
-            <button class="button clear-product-button" id="clearProductButton" type="button">Clear fields</button>
-            <button class="button preview-publish hidden" id="productSubmitButton" type="submit">Publish product</button>
-          </div>
+          <button class="button preview-publish hidden" id="productSubmitButton" data-i18n="publishProduct" type="submit">Publish product</button>
         </aside>
       </form>
-      <h2 class="inventory-title">Inventory products</h2>
+      <h2 class="inventory-title" data-i18n="inventoryProducts">Inventory products</h2>
       <div class="manage-list" id="manageList"></div>
     </section>
   </main>
 
   <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
-    <div class="drawer-heading"><div><p class="eyebrow" id="cartEyebrow">Current order</p><h2 id="cartTitle">Your selection</h2></div><div class="drawer-actions"><button class="clear-order-button" id="clearOrder" type="button">Clear</button><button class="icon-button" id="closeCart" type="button" aria-label="Close order">×</button></div></div>
+    <div class="drawer-heading"><div><p class="eyebrow" id="cartEyebrow" data-i18n="currentOrder">Current order</p><h2 id="cartTitle" data-i18n="selection">Your selection</h2></div><div class="drawer-actions"><button class="clear-order-button" id="clearOrder" data-i18n="clear" type="button">Clear</button><button class="icon-button" id="closeCart" data-i18n-aria="closeOrder" type="button" aria-label="Close order">×</button></div></div>
     <div class="cart-lines" id="cartLines"></div>
     <div class="totals">
-      <div><span id="subtotalLabel">Subtotal</span><strong id="subtotal">$0.00</strong></div>
+      <div><span id="subtotalLabel" data-i18n="subtotal">Subtotal</span><strong id="subtotal">$0.00</strong></div>
       <div><span id="vatLabel">VAT</span><strong id="vat">$0.00</strong></div>
-      <div class="grand-total"><span id="totalLabel">Total</span><strong id="total">$0.00</strong></div>
+      <div class="grand-total"><span id="totalLabel" data-i18n="total">Total</span><strong id="total">$0.00</strong></div>
     </div>
-    <button class="button button-primary button-full" id="placeOrder" type="button">Place order</button>
+    <button class="button button-primary button-full" id="placeOrder" data-i18n="placeOrder" type="button">Place order</button>
   </aside>
   <div class="scrim" id="scrim"></div>
   <div class="toast" id="toast" role="status"></div>

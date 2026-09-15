@@ -21,6 +21,7 @@ function applyPreferences(){
   document.title=spanish?'Cappeto · Menú de café':'Cappeto · Café menu';
   document.querySelector('meta[name="description"]').content=spanish?'Explore el menú de Cappeto, revise la disponibilidad y prepare un pedido con subtotal, IVA y total claros.':"Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.";
   document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#0d1511':'#f4f6f0';
+  if($('authForm')?.dataset.mode)setAuthMode($('authForm').dataset.mode);
 }
 applyPreferences();
 document.querySelectorAll('[data-language-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.language=preferences.language==='en'?'es':'en';localStorage.setItem('cappeto_language',preferences.language);applyPreferences();if(!$('appView').classList.contains('hidden')){renderAll();renderProductPreview();showStaffControls(Boolean(state.staff))}}));
@@ -78,7 +79,19 @@ async function api(path,options={}){
   return body;
 }
 function toast(message){$('toast').textContent=message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
-function enterApp(){ $('authView').classList.add('hidden');$('appView').classList.remove('hidden');renderAll() }
+function enterApp(){ $('landingView').classList.add('hidden');$('authView').classList.add('hidden');$('appView').classList.remove('hidden');$('skipLink').href='#appView';renderAll() }
+function showLanding(){ $('landingView').classList.remove('hidden');$('authView').classList.add('hidden');$('appView').classList.add('hidden');$('skipLink').href='#landingMain';$('landingTitle').focus?.() }
+function showAuth(mode='signin'){$('landingView').classList.add('hidden');$('authView').classList.remove('hidden');$('appView').classList.add('hidden');$('skipLink').href='#authForm';setAuthMode(mode);$('authTitle').focus?.()}
+function setAuthMode(mode){
+  const signup=mode==='signup';
+  document.querySelectorAll('.signup-only').forEach(element=>element.classList.toggle('hidden',!signup));
+  document.querySelectorAll('.signin-only').forEach(element=>element.classList.toggle('hidden',signup));
+  $('signInTab').classList.toggle('active',!signup);$('signUpTab').classList.toggle('active',signup);
+  $('signInTab').setAttribute('aria-selected',String(!signup));$('signUpTab').setAttribute('aria-selected',String(signup));
+  $('authTitle').textContent=t(signup?'createYourAccount':'welcomeBack');$('authIntro').textContent=t(signup?'signUpIntro':'signInIntro');$('signInButton').textContent=t(signup?'createAccount':'signIn');
+  $('signupBusiness').required=signup;$('confirmPassword').required=signup;$('termsConsent').required=signup;$('consent').required=!signup;
+  $('authCode').autocomplete=signup?'new-password':'current-password';$('authForm').dataset.mode=mode;$('authError').textContent='';
+}
 function showStaffControls(enabled){document.querySelectorAll('.staff-only').forEach(el=>el.classList.toggle('hidden',!enabled));$('sessionLabel').classList.toggle('hidden',enabled);$('sessionLabel').textContent=t('customer')}
 
 async function loadCatalog(){const data=await api('/api/products');state.products=data.products;state.vatRate=data.vatRate;renderAll()}
@@ -108,7 +121,11 @@ function applyBusinessProfile(fillForm=false){$('businessWordmark').textContent=
 async function toBusinessLogo(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,400/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.82)}
 applyBusinessProfile();
 
-$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';try{const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:$('staffEmail').value.trim(),password:$('authCode').value,consent:$('consent').checked})});state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}});
+$('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);
+$('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab').addEventListener('click',()=>setAuthMode('signup'));
+$('landingBrowse').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
+$('forgotPassword').addEventListener('click',()=>{$('authError').textContent=t('passwordResetInfo')});
+$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';if(event.currentTarget.dataset.mode==='signup'){if($('authCode').value!==$('confirmPassword').value){$('authError').textContent=t('passwordMismatch');return}$('authError').textContent=t('signupBackendRequired');return}try{const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:$('staffEmail').value.trim(),password:$('authCode').value,consent:$('consent').checked})});state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}});
 $('browseButton').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('logoutButton').addEventListener('click',async()=>{await api('/api/auth/logout',{method:'POST',body:'{}'});location.reload()});
 $('categoryRow').addEventListener('click',event=>{const button=event.target.closest('[data-category]');if(!button)return;state.category=button.dataset.category;state.carouselIndex=0;renderCategories();renderProducts()});

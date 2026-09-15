@@ -24,25 +24,66 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=business-profile-1">
-  <script src="i18n/translations.js?v=business-profile-1" defer></script>
-  <script src="app.js?v=business-profile-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=landing-auth-1">
+  <script src="i18n/translations.js?v=landing-auth-1" defer></script>
+  <script src="app.js?v=landing-auth-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
-  <a class="skip-link" id="skipLink" href="#appView">Skip to main content</a>
-  <section class="auth" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">
+  <a class="skip-link" id="skipLink" href="#landingMain">Skip to main content</a>
+  <section class="landing" id="landingView" aria-labelledby="landingTitle">
+    <header class="landing-header">
+      <a class="landing-brand" href="#" aria-label="Cappeto home"><span>C</span><strong>Cappeto</strong></a>
+      <nav class="landing-actions" aria-label="Primary navigation">
+        <div class="preference-buttons"><button class="preference-button" data-language-toggle type="button">EN</button><button class="preference-button" data-theme-toggle type="button">Light</button></div>
+        <button class="text-button landing-signin" id="openSignIn" data-i18n="signIn" type="button">Sign in</button>
+        <button class="button landing-signup" id="openSignUp" data-i18n="createAccount" type="button">Create account</button>
+      </nav>
+    </header>
+    <main class="landing-main" id="landingMain">
+      <div class="landing-copy">
+        <p class="eyebrow" data-i18n="landingEyebrow">A simpler café workspace</p>
+        <h1 id="landingTitle" data-i18n="landingTitle" tabindex="-1">Your products, inventory, and customers—together.</h1>
+        <p class="landing-lead" data-i18n="landingLead">Cappeto helps small cafés publish a beautiful menu, keep stock organized, and serve customers from one focused workspace.</p>
+        <div class="landing-cta"><button class="button button-primary" id="landingCreateAccount" data-i18n="getStarted" type="button">Get started</button><button class="button secondary-button" id="landingBrowse" data-i18n="browseMenu" type="button">Browse the menu</button></div>
+        <p class="landing-note" data-i18n="landingNote">Designed for owners, staff, and customers on any screen.</p>
+      </div>
+      <div class="landing-showcase" aria-label="Featured Cappeto products">
+        <article class="showcase-card showcase-main"><img src="assets/products/01-cappeto-cafe-latte.webp" alt="Cappeto café latte"><div><span data-i18n="featured">Featured</span><strong>Café Latte</strong></div></article>
+        <article class="showcase-card showcase-small"><img src="assets/products/12-cappeto-butter-croissant.webp" alt="Cappeto butter croissant"><strong data-i18n="freshDaily">Fresh daily</strong></article>
+        <div class="showcase-stat"><strong>20</strong><span data-i18n="productCapacity">product spaces</span></div>
+      </div>
+    </main>
+    <section class="landing-benefits" aria-label="Cappeto benefits">
+      <article><span>01</span><h2 data-i18n="benefitMenu">Publish your menu</h2><p data-i18n="benefitMenuCopy">Present products and prices clearly to customers.</p></article>
+      <article><span>02</span><h2 data-i18n="benefitStock">Manage inventory</h2><p data-i18n="benefitStockCopy">Track stock, sales, returns, and damaged items.</p></article>
+      <article><span>03</span><h2 data-i18n="benefitBilingual">Serve bilingually</h2><p data-i18n="benefitBilingualCopy">Switch between English and Spanish instantly.</p></article>
+    </section>
+  </section>
+
+  <section class="auth hidden" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">
     <form class="auth-card" id="authForm">
       <div class="auth-toolbar">
+        <button class="auth-back" id="authBack" type="button" data-i18n-aria="backHome" aria-label="Back to home">←</button>
         <span class="brand-mark" aria-label="Cappeto">C</span>
         <div class="preference-buttons">
           <button class="preference-button" id="languageToggle" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button>
           <button class="preference-button" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button>
         </div>
       </div>
-      <label class="field email-field"><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" data-i18n-aria="emailLabel" aria-label="Staff email" required></label>
+      <p class="eyebrow auth-eyebrow" data-i18n="ownerAccess">Owner access</p>
+      <h1 id="authTitle" data-i18n="welcomeBack" tabindex="-1">Welcome back</h1>
+      <p class="auth-intro" id="authIntro" data-i18n="signInIntro">Sign in to manage your products and business profile.</p>
+      <div class="auth-tabs" role="tablist" aria-label="Account access">
+        <button class="auth-tab active" id="signInTab" type="button" role="tab" aria-selected="true" data-i18n="signIn">Sign in</button>
+        <button class="auth-tab" id="signUpTab" type="button" role="tab" aria-selected="false" data-i18n="createAccount">Create account</button>
+      </div>
+      <label class="field signup-only hidden"><span data-i18n="businessName">Business name</span><input id="signupBusiness" type="text" autocomplete="organization" maxlength="80"></label>
+      <label class="field email-field"><span data-i18n="emailLabel">Staff email</span><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" required></label>
       <label class="field"><span id="passwordLabel" data-i18n="password">Password</span><input id="authCode" type="password" autocomplete="current-password" minlength="8" data-i18n-placeholder="passwordPlaceholder" data-i18n-aria="password" placeholder="Enter your password" aria-label="Password" required></label>
-      <label class="consent consent-only"><input id="consent" type="checkbox" data-i18n-aria="consent" aria-label="I confirm I am authorized by this business owner" required></label>
+      <label class="field signup-only hidden"><span data-i18n="confirmPassword">Confirm password</span><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8"></label>
+      <div class="auth-options signin-only"><label class="consent"><input id="consent" type="checkbox" required><span data-i18n="consent">I confirm I am authorized by this business owner</span></label><button class="text-button compact-link" id="forgotPassword" type="button" data-i18n="forgotPassword">Forgot password?</button></div>
+      <label class="consent signup-only hidden"><input id="termsConsent" type="checkbox"><span data-i18n="termsConsent">I agree to the Terms and Privacy Notice.</span></label>
       <p class="form-message" id="authError" role="alert"></p>
       <button class="button button-primary button-full" id="signInButton" data-i18n="signIn" type="submit">Sign in</button>
       <button class="text-button" id="browseButton" data-i18n="browse" type="button">Browse as a customer</button>

@@ -1,42 +1,22 @@
-@import url("./styles-base.css?v=split-auth-1");
+@import url("./styles-base.css?v=split-auth-2");
 
-/* Split owner authentication workspace. Desktop/laptop uses the available horizontal viewport; tablet, mobile and high zoom reflow to one column. */
 .auth{min-height:100dvh;display:grid;place-items:center;padding:clamp(18px,3vw,42px)}
-.auth-card{position:relative;display:grid;grid-template-columns:minmax(300px,.82fr) minmax(390px,1.18fr);grid-auto-flow:row;width:min(1120px,100%);max-width:none;padding:0;overflow:hidden;border-radius:30px}
-.auth-card::before{content:"CAPPETO\A\AOwner workspace\A\AYour café, organized in one place.\A\A• Products and menu\A• Inventory and availability\A• Orders and customers\A• Business profile\A\AOne focused workspace for running your business.";grid-column:1;grid-row:1/20;min-height:680px;padding:clamp(46px,5vw,72px);white-space:pre-line;background:linear-gradient(150deg,rgba(29,102,75,.98),rgba(25,56,42,.98));color:#fff;font:600 clamp(.95rem,1.25vw,1.08rem)/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
-.auth-card>*{grid-column:2;margin-left:clamp(34px,5vw,64px);margin-right:clamp(34px,5vw,64px)}
-.auth-toolbar{margin-top:clamp(30px,4vw,48px);margin-bottom:24px}
-.auth-card>.auth-eyebrow{margin-top:0}
-.auth h1{font-size:clamp(2.5rem,4.5vw,4rem)}
-.auth-card>#browseButton{margin-bottom:clamp(30px,4vw,48px)}
-[data-theme=light] .auth-card::before{background:linear-gradient(150deg,#1d664b,#284f3c);color:#fff}
-[data-theme=dark] .auth-card::before{background:linear-gradient(150deg,#2a5944,#191f36);color:#fff}
-
-@media(max-width:900px){
-  .auth{place-items:start center;padding:18px}
-  .auth-card{grid-template-columns:minmax(0,1fr);width:min(620px,100%);overflow:visible}
-  .auth-card::before{grid-column:1;grid-row:auto;min-height:0;padding:28px clamp(24px,6vw,38px);border-radius:28px 28px 0 0;font-size:.92rem;line-height:1.55;content:"CAPPETO  •  Owner workspace\AProducts • Inventory • Orders • Business profile"}
-  .auth-card>*{grid-column:1;margin-left:clamp(22px,6vw,40px);margin-right:clamp(22px,6vw,40px)}
-  .auth-toolbar{margin-top:28px}
-  .auth-card>#browseButton{margin-bottom:30px}
-}
-
-@media(max-width:620px){
-  .auth{padding:10px}
-  .auth-card{border-radius:22px}
-  .auth-card::before{padding:22px 20px;border-radius:22px 22px 0 0;content:"CAPPETO  •  Owner workspace\AProducts • Inventory • Orders • Profile"}
-  .auth-card>*{margin-left:18px;margin-right:18px}
-  .auth-toolbar{margin-top:20px;margin-bottom:20px}
-  .auth h1{font-size:clamp(2.15rem,11vw,3rem)}
-  .auth-tabs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-}
-
-/* 250% zoom typically collapses the CSS viewport; force clean reflow rather than horizontal scrolling. */
-@media(max-width:480px){
-  .auth-card::before{font-size:.82rem}
-  .auth-toolbar{gap:10px}
-  .auth-toolbar .preference-buttons{gap:5px}
-  .auth-toolbar .preference-button{padding-inline:10px}
-  .auth-options{display:block}
-  .compact-link{margin:-8px 0 16px}
-}
+.auth-card{display:grid;grid-template-columns:minmax(310px,.78fr) minmax(440px,1.22fr);width:min(1120px,100%);max-width:none;padding:0;overflow:hidden;border-radius:30px}
+.auth-value{display:flex;flex-direction:column;min-width:0;padding:clamp(44px,5vw,68px);background:linear-gradient(150deg,#1d664b,#244936);color:#fff}
+.auth-value-brand{display:flex;align-items:center;gap:11px;margin-bottom:54px;color:#fff;text-decoration:none}.auth-value-brand>span{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.4);border-radius:13px;font:800 1rem Georgia,serif}.auth-value-brand strong{text-transform:uppercase;letter-spacing:.07em}
+.auth-value .eyebrow{color:#d8c57c}.auth-value h2{max-width:13ch;margin:12px 0 30px;font:650 clamp(1.65rem,2.8vw,2.35rem)/1.12 Georgia,serif}
+.auth-benefits{display:grid;gap:19px;margin:0;padding:0;list-style:none}.auth-benefits li{display:grid;grid-template-columns:27px minmax(0,1fr);gap:12px}.auth-benefits li>span{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.14);color:#f4df88;font-weight:900}.auth-benefits div{display:grid;gap:2px}.auth-benefits strong{font-size:.92rem}.auth-benefits small{color:#d7e5dc;font-size:.79rem;line-height:1.45}
+.auth-privacy{display:flex;align-items:flex-start;gap:10px;margin:auto 0 0;padding-top:36px;color:#d7e5dc;font-size:.78rem;line-height:1.5}.auth-privacy>span:first-child{color:#e0c866}
+.auth-form{min-width:0;padding:clamp(32px,4.5vw,58px) clamp(34px,6vw,72px);background:var(--paper);color:var(--ink)}
+.auth-toolbar{margin:0 0 22px}.auth-form .auth-eyebrow{margin-top:0;color:var(--copper)}.auth-form h1{margin:8px 0;font-size:clamp(2.5rem,4.3vw,3.8rem);line-height:1}.auth-intro{max-width:52ch;margin:0 0 24px;color:var(--muted)}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:20px;padding:5px;border-radius:14px;background:color-mix(in srgb,var(--line) 45%,transparent)}.auth-tab{min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--ink);font-weight:800}.auth-tab.active{background:var(--paper);box-shadow:0 3px 12px rgba(19,33,24,.12)}.auth-tab[aria-selected=true]::after{content:"";display:block;width:28px;height:2px;margin:3px auto -5px;border-radius:2px;background:var(--copper)}
+.auth-form .field{margin:14px 0}.auth-form .field>span:first-child{font-size:.88rem;font-weight:800}.auth-form input:not([type=checkbox]){min-height:52px}.signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.signup-grid .field{margin-top:0}
+.password-control{position:relative;display:block}.password-control input{padding-right:74px}.password-toggle{position:absolute;top:6px;right:6px;min-width:60px;height:40px;border:0;border-radius:9px;background:var(--pistachio);color:var(--forest);font-size:.78rem;font-weight:850}.password-help{margin:-7px 0 12px;color:var(--muted);font-size:.76rem}
+.auth-options{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px}.auth-form .consent{min-height:44px;margin:13px 0;color:var(--muted);font-size:.82rem;line-height:1.45}.auth-form .consent input{width:20px;height:20px;min-height:20px}.compact-link{min-height:44px;margin:13px 0 0;padding:8px 0;white-space:nowrap;font-size:.8rem}
+.auth-form .form-message{min-height:24px;margin:5px 0;color:var(--danger);font-weight:650}.auth-form .button-full{display:block;width:100%;max-width:100%;margin:0;overflow:hidden}.auth-form .button-full[aria-busy=true]{cursor:wait;opacity:.78}
+.customer-route{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:18px;color:var(--muted);font-size:.83rem}.customer-route .text-button{min-height:44px;margin:0;padding:8px 4px;font-weight:800}
+[data-theme=dark] .auth-form{background:#151e19}.auth-back{color:var(--ink)}
+@media(max-width:900px){.auth{place-items:start center;padding:18px}.auth-card{grid-template-columns:minmax(0,1fr);width:min(640px,100%);padding:0;overflow:visible}.auth-value{padding:25px clamp(24px,6vw,40px)}.auth-value-brand{margin-bottom:14px}.auth-value h2{max-width:none;margin:7px 0 0;font-size:1.35rem}.auth-benefits,.auth-privacy{display:none}.auth-form{padding:30px clamp(24px,6vw,42px)}}
+@media(max-width:620px){.auth{padding:10px}.auth-card{padding:0;border-radius:22px}.auth-value{padding:18px 20px}.auth-value-brand{margin:0}.auth-value .eyebrow,.auth-value h2{display:none}.auth-form{padding:24px 18px}.auth-toolbar{margin-bottom:20px}.auth-form h1{font-size:clamp(2.15rem,11vw,3rem)}.signup-grid{grid-template-columns:1fr;gap:0}.auth-options{grid-template-columns:1fr;gap:0}.compact-link{justify-self:start;margin-top:-7px}.customer-route{display:grid;text-align:center}}
+@media(max-height:640px) and (min-width:901px){.auth{place-items:start center}.auth-card{margin-block:8px}.auth-value-brand{margin-bottom:28px}.auth-benefits{gap:12px}.auth-form{padding-block:30px}.auth-form h1{font-size:2.7rem}.auth-form .field{margin:9px 0}}
+@media(prefers-reduced-motion:reduce){.auth *{scroll-behavior:auto!important;transition:none!important}}

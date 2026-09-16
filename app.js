@@ -16,6 +16,7 @@ function applyPreferences(){
   document.querySelectorAll('[data-i18n]').forEach(element=>element.textContent=t(element.dataset.i18n));
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>element.placeholder=t(element.dataset.i18nPlaceholder));
   document.querySelectorAll('[data-i18n-aria]').forEach(element=>element.setAttribute('aria-label',t(element.dataset.i18nAria)));
+  if($('passwordToggle'))$('passwordToggle').textContent=t($('authCode').type==='text'?'hidePassword':'showPassword');
   $('skipLink').textContent=preferences.language==='es'?'Ir al contenido principal':'Skip to main content';
   const spanish=preferences.language==='es';
   document.title=spanish?'Cappeto · Menú de café':'Cappeto · Café menu';
@@ -88,8 +89,10 @@ function setAuthMode(mode){
   document.querySelectorAll('.signin-only').forEach(element=>element.classList.toggle('hidden',signup));
   $('signInTab').classList.toggle('active',!signup);$('signUpTab').classList.toggle('active',signup);
   $('signInTab').setAttribute('aria-selected',String(!signup));$('signUpTab').setAttribute('aria-selected',String(signup));
+  $('authFields').setAttribute('aria-labelledby',signup?'signUpTab':'signInTab');
   $('authTitle').textContent=t(signup?'createYourAccount':'welcomeBack');$('authIntro').textContent=t(signup?'signUpIntro':'signInIntro');$('signInButton').textContent=t(signup?'createAccount':'signIn');
-  $('signupBusiness').required=signup;$('confirmPassword').required=signup;$('termsConsent').required=signup;$('consent').required=!signup;
+  $('signupBusiness').required=signup;$('signupOwner').required=signup;$('confirmPassword').required=signup;$('termsConsent').required=signup;$('consent').required=!signup;
+  if(signup){$('authCode').pattern='(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}'}else{$('authCode').removeAttribute('pattern')}
   $('authCode').autocomplete=signup?'new-password':'current-password';$('authForm').dataset.mode=mode;$('authError').textContent='';
 }
 function showStaffControls(enabled){document.querySelectorAll('.staff-only').forEach(el=>el.classList.toggle('hidden',!enabled));$('sessionLabel').classList.toggle('hidden',enabled);$('sessionLabel').textContent=t('customer')}
@@ -121,11 +124,12 @@ function applyBusinessProfile(fillForm=false){$('businessWordmark').textContent=
 async function toBusinessLogo(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,400/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.82)}
 applyBusinessProfile();
 
-$('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);
+$('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);document.querySelectorAll('[data-auth-home]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showLanding()}));
 $('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab').addEventListener('click',()=>setAuthMode('signup'));
+$('passwordToggle').addEventListener('click',()=>{const visible=$('authCode').type==='text';$('authCode').type=visible?'password':'text';$('passwordToggle').textContent=t(visible?'showPassword':'hidePassword');$('passwordToggle').setAttribute('aria-pressed',String(!visible));$('authCode').focus()});
 $('landingBrowse').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('forgotPassword').addEventListener('click',()=>{$('authError').textContent=t('passwordResetInfo')});
-$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';if(event.currentTarget.dataset.mode==='signup'){if($('authCode').value!==$('confirmPassword').value){$('authError').textContent=t('passwordMismatch');return}$('authError').textContent=t('signupBackendRequired');return}try{const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:$('staffEmail').value.trim(),password:$('authCode').value,consent:$('consent').checked})});state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}});
+$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';if(event.currentTarget.dataset.mode==='signup'){if($('authCode').value!==$('confirmPassword').value){$('authError').textContent=t('passwordMismatch');return}$('authError').textContent=t('signupBackendRequired');return}const button=$('signInButton');button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=t('signingIn');try{const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:$('staffEmail').value.trim(),password:$('authCode').value,consent:$('consent').checked})});state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}finally{button.disabled=false;button.removeAttribute('aria-busy');button.textContent=t('signIn')}});
 $('browseButton').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('logoutButton').addEventListener('click',async()=>{await api('/api/auth/logout',{method:'POST',body:'{}'});location.reload()});
 $('categoryRow').addEventListener('click',event=>{const button=event.target.closest('[data-category]');if(!button)return;state.category=button.dataset.category;state.carouselIndex=0;renderCategories();renderProducts()});

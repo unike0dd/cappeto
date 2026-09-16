@@ -62,7 +62,20 @@
   </section>
 
   <section class="auth hidden" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">
-    <form class="auth-card" id="authForm">
+    <div class="auth-card">
+      <aside class="auth-value" aria-labelledby="authValueTitle">
+        <a class="auth-value-brand" href="#" data-auth-home><span>C</span><strong>Cappeto</strong></a>
+        <p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p>
+        <h2 id="authValueTitle" data-i18n="authValueTitle">Your café, organized in one place.</h2>
+        <ul class="auth-benefits">
+          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authProducts">Products and menu</strong><small data-i18n="authProductsCopy">Publish clear products and prices.</small></div></li>
+          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authInventory">Inventory and availability</strong><small data-i18n="authInventoryCopy">Keep stock status easy to understand.</small></div></li>
+          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authOrders">Orders and customers</strong><small data-i18n="authOrdersCopy">Separate customer access from business controls.</small></div></li>
+          <li><span aria-hidden="true">✓</span><div><strong data-i18n="businessProfile">Business profile</strong><small data-i18n="authProfileCopy">Manage the information customers can see.</small></div></li>
+        </ul>
+        <p class="auth-privacy"><span aria-hidden="true">◆</span><span data-i18n="authPrivacy">Your public menu remains separate from private business controls.</span></p>
+      </aside>
+      <form class="auth-form" id="authForm">
       <div class="auth-toolbar">
         <button class="auth-back" id="authBack" type="button" data-i18n-aria="backHome" aria-label="Back to home">←</button>
         <span class="brand-mark" aria-label="Cappeto">C</span>
@@ -75,19 +88,26 @@
       <h1 id="authTitle" data-i18n="welcomeBack" tabindex="-1">Welcome back</h1>
       <p class="auth-intro" id="authIntro" data-i18n="signInIntro">Sign in to manage your products and business profile.</p>
       <div class="auth-tabs" role="tablist" aria-label="Account access">
-        <button class="auth-tab active" id="signInTab" type="button" role="tab" aria-selected="true" data-i18n="signIn">Sign in</button>
-        <button class="auth-tab" id="signUpTab" type="button" role="tab" aria-selected="false" data-i18n="createAccount">Create account</button>
+        <button class="auth-tab active" id="signInTab" type="button" role="tab" aria-selected="true" aria-controls="authFields" data-i18n="signIn">Sign in</button>
+        <button class="auth-tab" id="signUpTab" type="button" role="tab" aria-selected="false" aria-controls="authFields" data-i18n="createAccount">Create account</button>
       </div>
-      <label class="field signup-only hidden"><span data-i18n="businessName">Business name</span><input id="signupBusiness" type="text" autocomplete="organization" maxlength="80"></label>
-      <label class="field email-field"><span data-i18n="emailLabel">Staff email</span><input id="staffEmail" type="email" autocomplete="username" placeholder="staff@business.com" required></label>
-      <label class="field"><span id="passwordLabel" data-i18n="password">Password</span><input id="authCode" type="password" autocomplete="current-password" minlength="8" data-i18n-placeholder="passwordPlaceholder" data-i18n-aria="password" placeholder="Enter your password" aria-label="Password" required></label>
-      <label class="field signup-only hidden"><span data-i18n="confirmPassword">Confirm password</span><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8"></label>
-      <div class="auth-options signin-only"><label class="consent"><input id="consent" type="checkbox" required><span data-i18n="consent">I confirm I am authorized by this business owner</span></label><button class="text-button compact-link" id="forgotPassword" type="button" data-i18n="forgotPassword">Forgot password?</button></div>
-      <label class="consent signup-only hidden"><input id="termsConsent" type="checkbox"><span data-i18n="termsConsent">I agree to the Terms and Privacy Notice.</span></label>
-      <p class="form-message" id="authError" role="alert"></p>
-      <button class="button button-primary button-full" id="signInButton" data-i18n="signIn" type="submit">Sign in</button>
-      <button class="text-button" id="browseButton" data-i18n="browse" type="button">Browse as a customer</button>
-    </form>
+      <div id="authFields" role="tabpanel" aria-labelledby="signInTab">
+        <div class="signup-grid signup-only hidden">
+          <label class="field"><span data-i18n="businessName">Business name</span><input id="signupBusiness" type="text" autocomplete="organization" maxlength="80"></label>
+          <label class="field"><span data-i18n="ownerName">Owner’s full name</span><input id="signupOwner" type="text" autocomplete="name" maxlength="100"></label>
+        </div>
+        <label class="field email-field"><span data-i18n="emailLabel">Business email</span><input id="staffEmail" type="email" autocomplete="username" placeholder="owner@business.com" required></label>
+        <label class="field"><span id="passwordLabel" data-i18n="password">Password</span><span class="password-control"><input id="authCode" type="password" autocomplete="current-password" minlength="8" data-i18n-placeholder="passwordPlaceholder" aria-labelledby="passwordLabel" required><button class="password-toggle" id="passwordToggle" type="button" aria-controls="authCode" aria-pressed="false" data-i18n="showPassword">Show</button></span></label>
+        <p class="password-help signup-only hidden" id="passwordHelp" data-i18n="passwordRequirements">Use at least 8 characters with a number and a symbol.</p>
+        <label class="field signup-only hidden"><span data-i18n="confirmPassword">Confirm password</span><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8"></label>
+        <div class="auth-options signin-only"><label class="consent"><input id="consent" type="checkbox" required><span data-i18n="consentShort">I confirm that I’m authorized to access this business.</span></label><button class="text-button compact-link" id="forgotPassword" type="button" data-i18n="forgotPassword">Forgot password?</button></div>
+        <label class="consent signup-only hidden"><input id="termsConsent" type="checkbox"><span data-i18n="termsConsent">I agree to the Terms and Privacy Notice.</span></label>
+        <p class="form-message" id="authError" role="alert" aria-live="assertive"></p>
+        <button class="button button-primary button-full" id="signInButton" data-i18n="signIn" type="submit">Sign in</button>
+      </div>
+      <div class="customer-route"><span data-i18n="notManaging">Not managing a business?</span><button class="text-button" id="browseButton" data-i18n="browseMenu" type="button">Explore the customer menu</button></div>
+      </form>
+    </div>
   </section>
 
   <main class="app hidden" id="appView" tabindex="-1">

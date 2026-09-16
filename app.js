@@ -32,7 +32,7 @@ function applyPreferences(){
 applyPreferences();
 document.querySelectorAll('[data-language-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.language=preferences.language==='en'?'es':'en';localStorage.setItem('cappeto_language',preferences.language);applyPreferences();if(!$('appView').classList.contains('hidden')){renderAll();renderProductPreview();showStaffControls(Boolean(state.staff))}}));
 document.querySelectorAll('[data-theme-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.theme=preferences.theme==='dark'?'light':'dark';localStorage.setItem('cappeto_theme',preferences.theme);applyPreferences()}));
-const state={products:[],cart:new Map(),category:'All',query:'',manageQuery:'',staff:null,csrf:'',imageData:'',editingProductId:null,carouselIndex:0,quoteVersion:0};
+const state={products:[],cart:new Map(),category:'All',query:'',manageQuery:'',financeView:'inventory',staff:null,csrf:'',imageData:'',editingProductId:null,carouselIndex:0,quoteVersion:0};
 const defaultBusinessProfile={name:'Cappeto',logo:'',address:'',phone:'',email:'',currency:'USD'};
 let businessProfile=loadBusinessProfile();
 let pendingBusinessLogo=businessProfile.logo;
@@ -157,7 +157,7 @@ function setAuthMode(mode){
 function showStaffControls(enabled){document.querySelectorAll('.staff-only').forEach(el=>el.classList.toggle('hidden',!enabled));$('sessionLabel').classList.toggle('hidden',enabled);$('sessionLabel').textContent=t('customer')}
 
 async function loadCatalog(){const data=await api('/api/products');state.products=data.products;state.vatRate=data.vatRate;renderAll()}
-function renderAll(){renderCategories();renderProducts();renderCart();renderManager();}
+function renderAll(){renderCategories();renderProducts();renderCart();renderManager();renderFinancialWorkspace();}
 function renderCategories(){const categories=['All',...new Set(state.products.map(p=>p.category))];$('categoryRow').innerHTML=categories.map(name=>{const translated=name==='All'?t('all'):(preferences.language==='es'?(translations.products[state.products.find(p=>p.category===name)?.id]?.[1]||name):name);return`<button type="button" class="category-button ${state.category===name?'active':''}" data-category="${escapeHtml(name)}">${escapeHtml(translated)}</button>`}).join('')}
 function visibleProducts(){return state.products.filter(product=>(state.category==='All'||product.category===state.category)&&productMatchesSearch(product,state.query))}
 function renderProducts(){const shown=visibleProducts();$('productGrid').innerHTML=shown.length?shown.map((p,index)=>{const copy=productCopy(p);return`<article class="product-card" data-slide="${index}"><div class="product-image"><img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(copy.name)}" loading="lazy"></div><div class="product-content"><div class="product-top"><h2>${escapeHtml(copy.name)}</h2><span class="product-price">${money(p.priceCents)}</span></div><p class="product-description">${escapeHtml(copy.description)}</p><div class="product-footer"><span class="stock">${p.stock>0?`${p.stock} ${t('available')}`:t('soldOut')}</span><button class="add-button" type="button" data-add="${p.id}" ${p.stock<1?'disabled':''}>${t('add')}</button></div></div></article>`}).join(''):`<p class="empty-state">${t('noProducts')}</p>`;state.carouselIndex=Math.min(state.carouselIndex,Math.max(0,shown.length-1));updateCarouselStatus()}
@@ -168,6 +168,41 @@ function updateCarouselStatus(){const shown=visibleProducts();const visible=visi
 function renderCart(){let count=0;const lines=[];for(const [id,quantity] of state.cart){const p=state.products.find(item=>item.id===id);if(!p)continue;const copy=productCopy(p);count+=quantity;lines.push(`<div class="cart-line"><img src="${escapeHtml(p.imageUrl)}" alt=""><div><strong>${escapeHtml(copy.name)}</strong><small>${money(p.priceCents)} ${t('each')}</small></div><div class="qty-controls"><button type="button" data-minus="${id}" aria-label="− ${escapeHtml(copy.name)}">−</button><b>${quantity}</b><button type="button" data-plus="${id}" aria-label="+ ${escapeHtml(copy.name)}">+</button></div></div>`)}$('cartCount').textContent=count;$('cartLines').innerHTML=lines.join('')||`<p class="empty-state">${t('emptyOrder')}</p>`;$('clearOrder').disabled=!count;calculateTotals()}
 async function calculateTotals(){const version=++state.quoteVersion;const items=[...state.cart].map(([productId,quantity])=>({productId,quantity}));try{const totals=items.length?await api('/api/orders/quote',{method:'POST',body:JSON.stringify({items})}):{subtotalCents:0,vatCents:0,totalCents:0,vatRate:state.vatRate||15};if(version!==state.quoteVersion)return;$('subtotal').textContent=money(totals.subtotalCents);$('vat').textContent=money(totals.vatCents);$('total').textContent=money(totals.totalCents);$('vatLabel').textContent=`${preferences.language==='es'?'IVA':'VAT'} (${totals.vatRate}%)`;$('placeOrder').disabled=!items.length}catch(error){if(version===state.quoteVersion)toast(localizeError(error))}}
 function applyInventoryChange(product,action,quantity){if(!Number.isInteger(quantity)||quantity<1||quantity>9999)throw new Error('Enter a valid whole quantity.');product.returned=Number(product.returned||0);product.damaged=Number(product.damaged||0);product.sold=Number(product.sold||0);if(action==='add'||action==='return')product.stock+=quantity;if(action==='return')product.returned+=quantity;if(action==='damage'||action==='sold'){if(quantity>product.stock)throw new Error('Quantity exceeds available inventory.');product.stock-=quantity;product[action==='damage'?'damaged':'sold']+=quantity}}
+function financialSummary(){
+  return state.products.reduce((summary,product)=>{
+    const soldUnits=Math.max(0,Number(product.sold)||0);
+    const salesCents=Math.round((Number(product.priceCents)||0)*soldUnits);
+    const vatRate=Math.max(0,Number(product.vatRate??state.vatRate)||0);
+    const taxCents=Math.round(salesCents*vatRate/100);
+    summary.inventoryUnits+=Math.max(0,Number(product.stock)||0);
+    summary.soldUnits+=soldUnits;
+    summary.salesCents+=salesCents;
+    summary.taxCents+=taxCents;
+    return summary;
+  },{inventoryUnits:0,soldUnits:0,salesCents:0,taxCents:0});
+}
+function renderFinancialWorkspace(){
+  const summary=financialSummary();
+  const grossCollectedCents=summary.salesCents+summary.taxCents;
+  const provisionalNetSalesCents=grossCollectedCents-summary.taxCents;
+  $('inventoryUnits').textContent=t('inventoryUnitCount',{count:summary.inventoryUnits});
+  $('salesValue').textContent=money(summary.salesCents);
+  $('taxesValue').textContent=money(summary.taxCents);
+  $('grossValue').textContent=money(grossCollectedCents);
+  $('netValue').textContent=money(provisionalNetSalesCents);
+  document.querySelectorAll('[data-finance-tab]').forEach(button=>{
+    const active=button.dataset.financeTab===state.financeView;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-selected',String(active));
+    button.tabIndex=active?0:-1;
+  });
+  document.querySelectorAll('[data-finance-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.financePanel!==state.financeView));
+}
+function switchFinanceView(view){
+  if(!['inventory','sales','taxes','gross','net'].includes(view))return;
+  state.financeView=view;
+  renderFinancialWorkspace();
+}
 function renderManager(){const products=state.products.filter(product=>productMatchesSearch(product,state.manageQuery));$('capacityLabel').textContent=`${state.products.length} / 20`;$('manageList').innerHTML=products.map(p=>{const copy=productCopy(p);return`<article class="manage-item"><div class="manage-product"><img src="${escapeHtml(p.imageUrl)}" alt=""><div class="manage-summary"><div><strong>${escapeHtml(copy.name)}</strong><span class="inventory-status ${p.stock<1?'sold-out':''}">${p.stock<1?t('soldOut'):t('inStock')}</span></div><small>${escapeHtml(copy.category)} · ${t('purchased')} ${escapeHtml(p.purchaseDate||t('notRecorded'))}</small></div></div><div class="item-price"><span>${t('price')}</span><strong>${money(p.priceCents)}</strong></div><div class="inventory-actions"><label class="inventory-control"><span>${t('quantity')}</span><input type="number" min="1" max="9999" step="1" value="1" aria-label="${t('quantity')} ${escapeHtml(copy.name)}" data-inventory-quantity="${p.id}"></label><label class="inventory-control inventory-action-select"><span>${t('inventoryAction')}</span><select aria-label="${t('inventoryAction')} ${escapeHtml(copy.name)}" data-inventory-action="${p.id}"><option value="add">${t('addInventory')}</option><option value="return">${t('return')}</option><option value="damage">${t('damage')}</option><option value="sold">${t('sold')}</option></select></label><label class="inventory-control"><span>${t('vatShort')}</span><input type="number" min="0" max="100" step="0.01" value="${Number(p.vatRate??state.vatRate)}" aria-label="${t('vat')} ${escapeHtml(copy.name)}" data-inventory-vat="${p.id}"></label><label class="inventory-control inventory-date"><span>${t('purchaseDate')}</span><input type="date" value="${escapeHtml(p.purchaseDate||'')}" aria-label="${t('purchaseDate')} ${escapeHtml(copy.name)}" data-inventory-date="${p.id}"></label><div class="inventory-action-buttons" aria-label="${t('productActions')} ${escapeHtml(copy.name)}"><button class="button inventory-button" type="button" data-inventory-apply="${p.id}">${t('apply')}</button><button class="button edit-button" type="button" data-edit="${p.id}">${t('edit')}</button><button class="delete-button" type="button" data-delete="${p.id}">${t('delete')}</button></div></div></article>`}).join('')||`<p class="empty-state">${t('noInventory')}</p>`;updateProductAction()}
 function renderProductPreview(){const value=(id,fallback)=>$(id).value.trim()||fallback;$('previewName').textContent=value('productName',t('productName'));$('previewCategory').textContent=value('productCategory',t('category'));$('previewPrice').textContent=money(Math.round((Number($('productPrice').value)||0)*100));$('previewVat').textContent=`${Number($('productVat').value)||0}%`;$('previewStock').textContent=String(Number($('productStock').value)||0);$('previewDate').textContent=$('productPurchaseDate').value||t('notSelected');$('previewDescription').textContent=value('productDescription',t('shortDescription'))}
 function updateProductAction(){const button=$('productSubmitButton');const updateButton=$('updateItemButton');const editing=Boolean(state.editingProductId);const atCapacity=state.products.length>=20;const complete=$('productForm').checkValidity()&&Boolean(state.imageData);button.textContent=editing?t('updateProduct'):t('publishProduct');button.classList.toggle('hidden',!complete||(!editing&&atCapacity));updateButton.disabled=!editing||!complete;$('capacityMessage').classList.toggle('hidden',editing||!atCapacity)}
@@ -214,6 +249,25 @@ $('productForm').addEventListener('input',()=>{renderProductPreview();updateProd
 $('clearProductButton').addEventListener('click',()=>clearProductForm(t('fieldsCleared')));
 async function toWebP(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.84)}
 $('productForm').addEventListener('submit',async event=>{event.preventDefault();if(!event.target.checkValidity()||!state.imageData){$('productMessage').textContent=t('pictureRequired');return}const editingId=state.editingProductId;const payload={name:$('productName').value,category:$('productCategory').value,description:$('productDescription').value,price:Number($('productPrice').value),vatRate:Number($('productVat').value),stock:Number($('productStock').value),purchaseDate:$('productPurchaseDate').value,imageData:state.imageData};try{await api(editingId?`/api/products/${encodeURIComponent(editingId)}`:'/api/products',{method:editingId?'PUT':'POST',body:JSON.stringify(payload)});clearProductForm(t(editingId?'updated':'published'));await loadCatalog();$('manageList').scrollIntoView({behavior:'smooth',block:'start'})}catch(error){$('productMessage').textContent=localizeError(error)}});
+document.querySelector('.finance-tabs').addEventListener('click',event=>{
+  const button=event.target.closest('[data-finance-tab]');
+  if(!button)return;
+  switchFinanceView(button.dataset.financeTab);
+});
+document.querySelector('.finance-tabs').addEventListener('keydown',event=>{
+  const tabs=[...document.querySelectorAll('[data-finance-tab]')];
+  const current=tabs.indexOf(document.activeElement);
+  if(current<0)return;
+  let next=current;
+  if(event.key==='ArrowRight')next=(current+1)%tabs.length;
+  else if(event.key==='ArrowLeft')next=(current-1+tabs.length)%tabs.length;
+  else if(event.key==='Home')next=0;
+  else if(event.key==='End')next=tabs.length-1;
+  else return;
+  event.preventDefault();
+  switchFinanceView(tabs[next].dataset.financeTab);
+  tabs[next].focus();
+});
 $('manageSearch').addEventListener('input',event=>{state.manageQuery=event.target.value;renderManager()});
 $('manageList').addEventListener('click',async event=>{const editId=event.target.closest('[data-edit]')?.dataset.edit;if(editId){const product=state.products.find(item=>item.id===editId);if(product)editProduct(product);return}const applyId=event.target.closest('[data-inventory-apply]')?.dataset.inventoryApply;if(applyId){const escaped=CSS.escape(applyId);const quantity=Number(document.querySelector(`[data-inventory-quantity="${escaped}"]`).value);const action=document.querySelector(`[data-inventory-action="${escaped}"]`).value;const vatRate=Number(document.querySelector(`[data-inventory-vat="${escaped}"]`).value);const purchaseDate=document.querySelector(`[data-inventory-date="${escaped}"]`).value;try{await api(`/api/products/${encodeURIComponent(applyId)}/inventory`,{method:'PATCH',body:JSON.stringify({action,quantity,vatRate,purchaseDate})});await loadCatalog();toast(t('inventoryUpdated'))}catch(error){toast(localizeError(error))}return}const id=event.target.closest('[data-delete]')?.dataset.delete;if(!id||!confirm(t('deleteConfirm')))return;try{await api(`/api/products/${encodeURIComponent(id)}`,{method:'DELETE'});state.cart.delete(id);await loadCatalog();toast(t('productDeleted'))}catch(error){toast(localizeError(error))}});
 $('placeOrder').addEventListener('click',async()=>{const items=[...state.cart].map(([productId,quantity])=>({productId,quantity}));try{const result=await api('/api/orders',{method:'POST',body:JSON.stringify({items})});state.cart.clear();await loadCatalog();openCart(false);toast(t('orderPlaced',{id:result.orderId,total:money(result.totalCents)}))}catch(error){toast(localizeError(error))}});

@@ -23,3 +23,32 @@ Object.assign(window.CAPPETO_I18N.es.ui,{gmail:'Gmail',orEmail:'o use el correo'
 
 Object.assign(window.CAPPETO_I18N.en.ui,{summarySales:'Sales',summaryTaxes:'Taxes',summaryGrossEarnings:'Gross Earnings',summaryNetEarnings:'Net Earnings'});
 Object.assign(window.CAPPETO_I18N.es.ui,{summarySales:'Ventas',summaryTaxes:'Impuestos',summaryGrossEarnings:'Ganancias brutas',summaryNetEarnings:'Ganancias netas'});
+
+Object.assign(window.CAPPETO_I18N.en.ui,{
+  financeWorkspace:'Inventory and financial workspace',
+  inventoryGoods:'Inventory goods for sale',
+  inventoryExplanation:'Products procured by the business and currently available to sell.',
+  salesRevenue:'Sales revenue',
+  salesFormula:'Sold quantity × selling price, before sales tax.',
+  taxCollected:'Taxes collected',
+  taxFormula:'Sales × the authorized VAT rate. This amount is collected for the government and is not business income.',
+  grossCollected:'Gross amount collected',
+  grossFormula:'Sales revenue + taxes collected. This is total cash collected, not accounting profit.',
+  provisionalNetSales:'Provisional net sales',
+  netFormula:'Gross amount collected − taxes collected = net sales. True net earnings also require product costs and operating expenses, which are not recorded yet.',
+  inventoryUnitCount:'{count} units'
+});
+Object.assign(window.CAPPETO_I18N.es.ui,{
+  financeWorkspace:'Área de inventario y finanzas',
+  inventoryGoods:'Inventario de bienes para la venta',
+  inventoryExplanation:'Productos adquiridos por el negocio y actualmente disponibles para vender.',
+  salesRevenue:'Ingresos por ventas',
+  salesFormula:'Cantidad vendida × precio de venta, antes del impuesto.',
+  taxCollected:'Impuestos recaudados',
+  taxFormula:'Ventas × la tasa de IVA autorizada. Este monto se recauda para el gobierno y no es ingreso del negocio.',
+  grossCollected:'Monto bruto recaudado',
+  grossFormula:'Ingresos por ventas + impuestos recaudados. Es el efectivo total cobrado, no la utilidad contable.',
+  provisionalNetSales:'Ventas netas provisionales',
+  netFormula:'Monto bruto recaudado − impuestos recaudados = ventas netas. Las ganancias netas reales también requieren los costos de productos y gastos operativos, que aún no se registran.',
+  inventoryUnitCount:'{count} unidades'
+});

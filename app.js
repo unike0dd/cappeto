@@ -22,6 +22,11 @@ function applyPreferences(){
   document.title=spanish?'Cappeto · Menú de café':'Cappeto · Café menu';
   document.querySelector('meta[name="description"]').content=spanish?'Explore el menú de Cappeto, revise la disponibilidad y prepare un pedido con subtotal, IVA y total claros.':"Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.";
   document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#0d1511':'#f4f6f0';
+  const authValue=document.querySelector('.auth-value');
+  if(authValue){
+    const shopImage=preferences.language==='es'?'assets/branding/cafteria_logo_ES.png':'assets/branding/cafteria_logo_EN.png';
+    authValue.style.setProperty('--auth-shop-image',`url("${shopImage}")`);
+  }
   if($('authForm')?.dataset.mode)setAuthMode($('authForm').dataset.mode);
 }
 applyPreferences();

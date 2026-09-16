@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=landing-auth-1">
-  <script src="i18n/translations.js?v=landing-auth-1" defer></script>
-  <script src="app.js?v=landing-auth-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=welcome-2">
+  <script src="i18n/translations.js?v=welcome-2" defer></script>
+  <script src="app.js?v=welcome-2" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -35,10 +35,26 @@
     <header class="landing-header">
       <a class="landing-brand" href="#" aria-label="Cappeto home"><span>C</span><strong>Cappeto</strong></a>
       <nav class="landing-actions" aria-label="Primary navigation">
-        <div class="preference-buttons"><button class="preference-button" data-language-toggle type="button">EN</button><button class="preference-button" data-theme-toggle type="button">Light</button></div>
         <button class="text-button landing-signin" id="openSignIn" data-i18n="signIn" type="button">Sign in</button>
         <button class="button landing-signup" id="openSignUp" data-i18n="createAccount" type="button">Create account</button>
       </nav>
+      <section class="welcome-preferences" aria-labelledby="preferenceHeading">
+        <h2 id="preferenceHeading" data-i18n="choosePreferences">Choose</h2>
+        <div class="preference-row">
+          <span data-i18n="language">Language</span>
+          <div class="welcome-choice" role="group" data-i18n-aria="languageSelection" aria-label="Choose language">
+            <button data-language-choice="en" type="button" lang="en" aria-pressed="true">EN</button>
+            <button data-language-choice="es" type="button" lang="es" aria-pressed="false">ES</button>
+          </div>
+        </div>
+        <div class="preference-row">
+          <span data-i18n="theme">Theme</span>
+          <div class="welcome-choice" role="group" data-i18n-aria="themeSelection" aria-label="Choose theme">
+            <button data-theme-choice="light" data-i18n="light" type="button" aria-pressed="true">Light</button>
+            <button data-theme-choice="dark" data-i18n="dark" type="button" aria-pressed="false">Dark</button>
+          </div>
+        </div>
+      </section>
     </header>
     <main class="landing-main" id="landingMain">
       <div class="landing-copy">
@@ -50,15 +66,8 @@
       </div>
       <div class="landing-showcase" aria-label="Featured Cappeto products">
         <article class="showcase-card showcase-main"><img src="assets/products/01-cappeto-cafe-latte.webp" alt="Cappeto café latte"><div><span data-i18n="featured">Featured</span><strong>Café Latte</strong></div></article>
-        <article class="showcase-card showcase-small"><img src="assets/products/12-cappeto-butter-croissant.webp" alt="Cappeto butter croissant"><strong data-i18n="freshDaily">Fresh daily</strong></article>
-        <div class="showcase-stat"><strong>20</strong><span data-i18n="productCapacity">product spaces</span></div>
       </div>
     </main>
-    <section class="landing-benefits" aria-label="Cappeto benefits">
-      <article><span>01</span><h2 data-i18n="benefitMenu">Publish your menu</h2><p data-i18n="benefitMenuCopy">Present products and prices clearly to customers.</p></article>
-      <article><span>02</span><h2 data-i18n="benefitStock">Manage inventory</h2><p data-i18n="benefitStockCopy">Track stock, sales, returns, and damaged items.</p></article>
-      <article><span>03</span><h2 data-i18n="benefitBilingual">Serve bilingually</h2><p data-i18n="benefitBilingualCopy">Switch between English and Spanish instantly.</p></article>
-    </section>
   </section>
 
   <section class="auth hidden" id="authView" data-i18n-aria="staffSignIn" aria-label="Staff sign in">

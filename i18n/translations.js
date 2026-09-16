@@ -22,3 +22,5 @@ Object.assign(window.CAPPETO_I18N.en.ui,{gmail:'Gmail',orEmail:'or use email',pr
 Object.assign(window.CAPPETO_I18N.es.ui,{gmail:'Gmail',orEmail:'o use el correo',providerBackendRequired:'El acceso con {provider} se habilitará cuando se conecte su servicio seguro de identidad.'});
 Object.assign(window.CAPPETO_I18N.en.ui,{languageSelection:'Choose language',businessShopAlt:'English Coffee Shop storefront illustration'});
 Object.assign(window.CAPPETO_I18N.es.ui,{languageSelection:'Elegir idioma',businessShopAlt:'Ilustración de una Cafetería en español'});
+Object.assign(window.CAPPETO_I18N.en.ui,{choosePreferences:'Choose',language:'Language',theme:'Theme',themeSelection:'Choose theme',light:'Light',dark:'Dark'});
+Object.assign(window.CAPPETO_I18N.es.ui,{choosePreferences:'Elija',language:'Idioma',theme:'Tema',themeSelection:'Elegir tema',light:'Claro',dark:'Oscuro'});

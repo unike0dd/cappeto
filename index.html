@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=landing-auth-1">
-  <script src="i18n/translations.js?v=landing-auth-1" defer></script>
-  <script src="app.js?v=landing-auth-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=inventory-headings-1">
+  <script src="i18n/translations.js?v=inventory-headings-1" defer></script>
+  <script src="app.js?v=inventory-headings-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -179,7 +179,15 @@
           <button class="button preview-publish hidden" id="productSubmitButton" data-i18n="publishProduct" type="submit">Publish product</button>
         </aside>
       </form>
-      <h2 class="inventory-title" data-i18n="inventoryProducts">Inventory products</h2>
+      <div class="inventory-summary-heading">
+        <h2 class="inventory-title" data-i18n="inventoryProducts">Inventory</h2>
+        <ul class="inventory-summary-labels">
+          <li data-i18n="summarySales">Sales</li>
+          <li data-i18n="summaryTaxes">Taxes</li>
+          <li data-i18n="summaryGrossEarnings">Gross Earnings</li>
+          <li data-i18n="summaryNetEarnings">Net Earnings</li>
+        </ul>
+      </div>
       <div class="manage-list" id="manageList"></div>
     </section>
 

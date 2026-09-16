@@ -65,24 +65,21 @@
     <div class="auth-card">
       <aside class="auth-value" aria-labelledby="authValueTitle">
         <a class="auth-value-brand" href="#" data-auth-home><span>C</span><strong>Cappeto</strong></a>
-        <div class="shop-illustration" aria-hidden="true">
-          <svg viewBox="0 0 120 104" focusable="false"><path fill="#f4e5b8" d="M22 40h76v52H22z"/><path fill="#fff" d="M29 49h25v22H29zm37 0h25v22H66z"/><path fill="#5a3fb5" d="M54 40h12v52H54z"/><path fill="#1d664b" d="M14 32h92L94 10H26z"/><path fill="#e5c36a" d="m26 10-4 22h16l3-22zm30 0-2 22h14l-2-22zm25 0 3 22h16L94 10z"/><path fill="#432c91" d="M15 91h90v7H15z"/><circle cx="63" cy="67" r="2.5" fill="#e5c36a"/></svg>
+        <img class="auth-shop-art" id="authShopArt" src="assets/branding/business-shop-en.svg" alt="English Coffee Shop storefront illustration">
+        <div class="auth-value-copy">
+          <p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p>
+          <h2 id="authValueTitle" data-i18n="authValueTitle">Your café, organized in one place.</h2>
         </div>
-        <p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p>
-        <h2 id="authValueTitle" data-i18n="authValueTitle">Your café, organized in one place.</h2>
-        <ul class="auth-benefits">
-          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authProducts">Products and menu</strong><small data-i18n="authProductsCopy">Publish clear products and prices.</small></div></li>
-          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authInventory">Inventory and availability</strong><small data-i18n="authInventoryCopy">Keep stock status easy to understand.</small></div></li>
-          <li><span aria-hidden="true">✓</span><div><strong data-i18n="authOrders">Orders and customers</strong><small data-i18n="authOrdersCopy">Separate customer access from business controls.</small></div></li>
-          <li><span aria-hidden="true">✓</span><div><strong data-i18n="businessProfile">Business profile</strong><small data-i18n="authProfileCopy">Manage the information customers can see.</small></div></li>
-        </ul>
       </aside>
       <form class="auth-form" id="authForm">
       <div class="auth-toolbar">
         <button class="auth-back" id="authBack" type="button" data-i18n-aria="backHome" aria-label="Back to home">←</button>
         <span class="brand-mark" aria-label="Cappeto">C</span>
         <div class="preference-buttons">
-          <button class="preference-button" id="languageToggle" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button>
+          <div class="language-options" role="group" data-i18n-aria="languageSelection" aria-label="Choose language">
+            <button class="language-option" data-language-choice="en" type="button" lang="en" aria-pressed="true">EN</button>
+            <button class="language-option" data-language-choice="es" type="button" lang="es" aria-pressed="false">ES</button>
+          </div>
           <button class="preference-button" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button>
         </div>
       </div>

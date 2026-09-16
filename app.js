@@ -126,6 +126,7 @@ applyBusinessProfile();
 
 $('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);document.querySelectorAll('[data-auth-home]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showLanding()}));
 $('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab').addEventListener('click',()=>setAuthMode('signup'));
+$('gmailButton').addEventListener('click',()=>{$('authError').textContent=t('gmailBackendRequired')});
 $('passwordToggle').addEventListener('click',()=>{const visible=$('authCode').type==='text';$('authCode').type=visible?'password':'text';$('passwordToggle').textContent=t(visible?'showPassword':'hidePassword');$('passwordToggle').setAttribute('aria-pressed',String(!visible));$('authCode').focus()});
 $('landingBrowse').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('forgotPassword').addEventListener('click',()=>{$('authError').textContent=t('passwordResetInfo')});

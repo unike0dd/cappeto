@@ -39,7 +39,7 @@ const server=createServer(async(req,res)=>{try{
   const url=new URL(req.url,'http://local');
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){
     if(!adminEmail||!adminPassword)return json(res,503,{error:'Staff sign-in is not configured yet.'});
-    const body=await readBody(req);if(body.consent!==true)return json(res,400,{error:'Authorization and consent are required.'});
+    const body=await readBody(req);
     const email=clean(body.email,160).toLowerCase();const password=String(body.password||'');
     const expected=scryptSync(adminPassword,'cappeto-login-v1',64);const received=scryptSync(password,'cappeto-login-v1',64);
     if(email!==adminEmail||!timingSafeEqual(expected,received))return json(res,401,{error:'Email or password is incorrect.'});

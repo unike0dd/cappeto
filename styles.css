@@ -24,6 +24,9 @@
 @media(max-height:640px) and (min-width:901px){.auth{place-items:start center}.auth-card{margin-block:8px}.auth-value-brand{margin-bottom:28px}.auth-benefits{gap:12px}.auth-form{padding-block:30px}.auth-form h1{font-size:2.7rem}.auth-form .field{margin:9px 0}}
 @media(prefers-reduced-motion:reduce){.auth *{scroll-behavior:auto!important;transition:none!important}}
 
+/* Keep the catalog search compact beside the introduction copy. */
+@media(min-width:761px){.intro-row .search{width:min(280px,100%);border-radius:12px}.intro-row .search input{min-height:42px}}
+
 /* Calm, low-friction welcome experience. */
 .landing{background:linear-gradient(135deg,color-mix(in srgb,var(--cream) 94%,var(--pistachio)),var(--cream));color:var(--ink)}
 .landing-header{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:24px;min-height:132px;padding:20px clamp(20px,5vw,72px);border-bottom:1px solid color-mix(in srgb,var(--line) 65%,transparent)}

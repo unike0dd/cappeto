@@ -38,6 +38,60 @@ let businessProfile=loadBusinessProfile();
 let pendingBusinessLogo=businessProfile.logo;
 const money=cents=>new Intl.NumberFormat(preferences.language==='es'?'es-EC':'en-US',{style:'currency',currency:'USD'}).format(cents/100);
 const escapeHtml=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const searchSynonyms=[
+  ['coffee','cafe','café'],
+  ['juice','jugo','zumo'],
+  ['soda','gaseosa','refresco'],
+  ['bread','pan'],
+  ['milk','leche'],
+  ['chicken','pollo'],
+  ['turkey','pavo'],
+  ['strawberry','fresa','frutilla'],
+  ['watermelon','sandia','sandía'],
+  ['orange','naranja'],
+  ['cinnamon','canela'],
+  ['cheese','queso'],
+  ['burger','hamburger','hamburguesa'],
+  ['wrap','tortilla','envuelto'],
+  ['hotdog','salchicha'],
+  ['soldout','agotado']
+].map(group=>group.map(value=>value.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase()));
+const normalizeSearch=value=>String(value??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const searchTokens=value=>normalizeSearch(value).split(/\\s+/).filter(Boolean);
+function editDistanceWithin(left,right,limit){
+  if(Math.abs(left.length-right.length)>limit)return false;
+  let previous=Array.from({length:right.length+1},(_,index)=>index);
+  for(let row=1;row<=left.length;row++){
+    const current=[row];let rowMinimum=row;
+    for(let column=1;column<=right.length;column++){
+      current[column]=Math.min(current[column-1]+1,previous[column]+1,previous[column-1]+(left[row-1]===right[column-1]?0:1));
+      rowMinimum=Math.min(rowMinimum,current[column]);
+    }
+    if(rowMinimum>limit)return false;
+    previous=current;
+  }
+  return previous[right.length]<=limit;
+}
+function tokenMatches(queryToken,candidate){
+  if(candidate.includes(queryToken)||queryToken.includes(candidate))return true;
+  if(queryToken.length<4||candidate.length<4)return false;
+  const limit=Math.max(queryToken.length,candidate.length)>=8?2:1;
+  return editDistanceWithin(queryToken,candidate,limit);
+}
+function productSearchText(product){
+  const spanish=translations.products[product.id]||[];
+  return [product.id,product.name,product.category,product.description,...spanish].join(' ');
+}
+function productMatchesSearch(product,query){
+  const requested=searchTokens(query);
+  if(!requested.length)return true;
+  const available=searchTokens(productSearchText(product));
+  return requested.every(token=>{
+    const synonymGroup=searchSynonyms.find(group=>group.includes(token));
+    const alternatives=synonymGroup||[token];
+    return alternatives.some(alternative=>available.some(candidate=>tokenMatches(alternative,candidate)));
+  });
+}
 const staticPrototype=location.hostname.endsWith('github.io');
 let staticCatalog=null;
 
@@ -105,7 +159,7 @@ function showStaffControls(enabled){document.querySelectorAll('.staff-only').for
 async function loadCatalog(){const data=await api('/api/products');state.products=data.products;state.vatRate=data.vatRate;renderAll()}
 function renderAll(){renderCategories();renderProducts();renderCart();renderManager();}
 function renderCategories(){const categories=['All',...new Set(state.products.map(p=>p.category))];$('categoryRow').innerHTML=categories.map(name=>{const translated=name==='All'?t('all'):(preferences.language==='es'?(translations.products[state.products.find(p=>p.category===name)?.id]?.[1]||name):name);return`<button type="button" class="category-button ${state.category===name?'active':''}" data-category="${escapeHtml(name)}">${escapeHtml(translated)}</button>`}).join('')}
-function visibleProducts(){const query=state.query.toLowerCase();return state.products.filter(p=>{const copy=productCopy(p);return(state.category==='All'||p.category===state.category)&&(`${p.name} ${p.description} ${copy.name} ${copy.description}`.toLowerCase().includes(query))})}
+function visibleProducts(){return state.products.filter(product=>(state.category==='All'||product.category===state.category)&&productMatchesSearch(product,state.query))}
 function renderProducts(){const shown=visibleProducts();$('productGrid').innerHTML=shown.length?shown.map((p,index)=>{const copy=productCopy(p);return`<article class="product-card" data-slide="${index}"><div class="product-image"><img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(copy.name)}" loading="lazy"></div><div class="product-content"><div class="product-top"><h2>${escapeHtml(copy.name)}</h2><span class="product-price">${money(p.priceCents)}</span></div><p class="product-description">${escapeHtml(copy.description)}</p><div class="product-footer"><span class="stock">${p.stock>0?`${p.stock} ${t('available')}`:t('soldOut')}</span><button class="add-button" type="button" data-add="${p.id}" ${p.stock<1?'disabled':''}>${t('add')}</button></div></div></article>`}).join(''):`<p class="empty-state">${t('noProducts')}</p>`;state.carouselIndex=Math.min(state.carouselIndex,Math.max(0,shown.length-1));updateCarouselStatus()}
 function carouselStep(){const first=$('productGrid').querySelector('.product-card');return first?first.getBoundingClientRect().width+18:0}
 function visibleCarouselCards(){const step=carouselStep();return step?Math.max(1,Math.floor(($('productGrid').clientWidth+18)/step)):1}
@@ -114,7 +168,7 @@ function updateCarouselStatus(){const shown=visibleProducts();const visible=visi
 function renderCart(){let count=0;const lines=[];for(const [id,quantity] of state.cart){const p=state.products.find(item=>item.id===id);if(!p)continue;const copy=productCopy(p);count+=quantity;lines.push(`<div class="cart-line"><img src="${escapeHtml(p.imageUrl)}" alt=""><div><strong>${escapeHtml(copy.name)}</strong><small>${money(p.priceCents)} ${t('each')}</small></div><div class="qty-controls"><button type="button" data-minus="${id}" aria-label="− ${escapeHtml(copy.name)}">−</button><b>${quantity}</b><button type="button" data-plus="${id}" aria-label="+ ${escapeHtml(copy.name)}">+</button></div></div>`)}$('cartCount').textContent=count;$('cartLines').innerHTML=lines.join('')||`<p class="empty-state">${t('emptyOrder')}</p>`;$('clearOrder').disabled=!count;calculateTotals()}
 async function calculateTotals(){const version=++state.quoteVersion;const items=[...state.cart].map(([productId,quantity])=>({productId,quantity}));try{const totals=items.length?await api('/api/orders/quote',{method:'POST',body:JSON.stringify({items})}):{subtotalCents:0,vatCents:0,totalCents:0,vatRate:state.vatRate||15};if(version!==state.quoteVersion)return;$('subtotal').textContent=money(totals.subtotalCents);$('vat').textContent=money(totals.vatCents);$('total').textContent=money(totals.totalCents);$('vatLabel').textContent=`${preferences.language==='es'?'IVA':'VAT'} (${totals.vatRate}%)`;$('placeOrder').disabled=!items.length}catch(error){if(version===state.quoteVersion)toast(localizeError(error))}}
 function applyInventoryChange(product,action,quantity){if(!Number.isInteger(quantity)||quantity<1||quantity>9999)throw new Error('Enter a valid whole quantity.');product.returned=Number(product.returned||0);product.damaged=Number(product.damaged||0);product.sold=Number(product.sold||0);if(action==='add'||action==='return')product.stock+=quantity;if(action==='return')product.returned+=quantity;if(action==='damage'||action==='sold'){if(quantity>product.stock)throw new Error('Quantity exceeds available inventory.');product.stock-=quantity;product[action==='damage'?'damaged':'sold']+=quantity}}
-function renderManager(){const query=state.manageQuery.toLowerCase();const products=state.products.filter(p=>{const copy=productCopy(p);return`${p.name} ${p.category} ${copy.name} ${copy.category}`.toLowerCase().includes(query)});$('capacityLabel').textContent=`${state.products.length} / 20`;$('manageList').innerHTML=products.map(p=>{const copy=productCopy(p);return`<article class="manage-item"><div class="manage-product"><img src="${escapeHtml(p.imageUrl)}" alt=""><div class="manage-summary"><div><strong>${escapeHtml(copy.name)}</strong><span class="inventory-status ${p.stock<1?'sold-out':''}">${p.stock<1?t('soldOut'):t('inStock')}</span></div><small>${escapeHtml(copy.category)} · ${t('purchased')} ${escapeHtml(p.purchaseDate||t('notRecorded'))}</small></div></div><div class="item-price"><span>${t('price')}</span><strong>${money(p.priceCents)}</strong></div><div class="inventory-actions"><label class="inventory-control"><span>${t('quantity')}</span><input type="number" min="1" max="9999" step="1" value="1" aria-label="${t('quantity')} ${escapeHtml(copy.name)}" data-inventory-quantity="${p.id}"></label><label class="inventory-control inventory-action-select"><span>${t('inventoryAction')}</span><select aria-label="${t('inventoryAction')} ${escapeHtml(copy.name)}" data-inventory-action="${p.id}"><option value="add">${t('addInventory')}</option><option value="return">${t('return')}</option><option value="damage">${t('damage')}</option><option value="sold">${t('sold')}</option></select></label><label class="inventory-control"><span>${t('vatShort')}</span><input type="number" min="0" max="100" step="0.01" value="${Number(p.vatRate??state.vatRate)}" aria-label="${t('vat')} ${escapeHtml(copy.name)}" data-inventory-vat="${p.id}"></label><label class="inventory-control inventory-date"><span>${t('purchaseDate')}</span><input type="date" value="${escapeHtml(p.purchaseDate||'')}" aria-label="${t('purchaseDate')} ${escapeHtml(copy.name)}" data-inventory-date="${p.id}"></label><div class="inventory-action-buttons" aria-label="${t('productActions')} ${escapeHtml(copy.name)}"><button class="button inventory-button" type="button" data-inventory-apply="${p.id}">${t('apply')}</button><button class="button edit-button" type="button" data-edit="${p.id}">${t('edit')}</button><button class="delete-button" type="button" data-delete="${p.id}">${t('delete')}</button></div></div></article>`}).join('')||`<p class="empty-state">${t('noInventory')}</p>`;updateProductAction()}
+function renderManager(){const products=state.products.filter(product=>productMatchesSearch(product,state.manageQuery));$('capacityLabel').textContent=`${state.products.length} / 20`;$('manageList').innerHTML=products.map(p=>{const copy=productCopy(p);return`<article class="manage-item"><div class="manage-product"><img src="${escapeHtml(p.imageUrl)}" alt=""><div class="manage-summary"><div><strong>${escapeHtml(copy.name)}</strong><span class="inventory-status ${p.stock<1?'sold-out':''}">${p.stock<1?t('soldOut'):t('inStock')}</span></div><small>${escapeHtml(copy.category)} · ${t('purchased')} ${escapeHtml(p.purchaseDate||t('notRecorded'))}</small></div></div><div class="item-price"><span>${t('price')}</span><strong>${money(p.priceCents)}</strong></div><div class="inventory-actions"><label class="inventory-control"><span>${t('quantity')}</span><input type="number" min="1" max="9999" step="1" value="1" aria-label="${t('quantity')} ${escapeHtml(copy.name)}" data-inventory-quantity="${p.id}"></label><label class="inventory-control inventory-action-select"><span>${t('inventoryAction')}</span><select aria-label="${t('inventoryAction')} ${escapeHtml(copy.name)}" data-inventory-action="${p.id}"><option value="add">${t('addInventory')}</option><option value="return">${t('return')}</option><option value="damage">${t('damage')}</option><option value="sold">${t('sold')}</option></select></label><label class="inventory-control"><span>${t('vatShort')}</span><input type="number" min="0" max="100" step="0.01" value="${Number(p.vatRate??state.vatRate)}" aria-label="${t('vat')} ${escapeHtml(copy.name)}" data-inventory-vat="${p.id}"></label><label class="inventory-control inventory-date"><span>${t('purchaseDate')}</span><input type="date" value="${escapeHtml(p.purchaseDate||'')}" aria-label="${t('purchaseDate')} ${escapeHtml(copy.name)}" data-inventory-date="${p.id}"></label><div class="inventory-action-buttons" aria-label="${t('productActions')} ${escapeHtml(copy.name)}"><button class="button inventory-button" type="button" data-inventory-apply="${p.id}">${t('apply')}</button><button class="button edit-button" type="button" data-edit="${p.id}">${t('edit')}</button><button class="delete-button" type="button" data-delete="${p.id}">${t('delete')}</button></div></div></article>`}).join('')||`<p class="empty-state">${t('noInventory')}</p>`;updateProductAction()}
 function renderProductPreview(){const value=(id,fallback)=>$(id).value.trim()||fallback;$('previewName').textContent=value('productName',t('productName'));$('previewCategory').textContent=value('productCategory',t('category'));$('previewPrice').textContent=money(Math.round((Number($('productPrice').value)||0)*100));$('previewVat').textContent=`${Number($('productVat').value)||0}%`;$('previewStock').textContent=String(Number($('productStock').value)||0);$('previewDate').textContent=$('productPurchaseDate').value||t('notSelected');$('previewDescription').textContent=value('productDescription',t('shortDescription'))}
 function updateProductAction(){const button=$('productSubmitButton');const updateButton=$('updateItemButton');const editing=Boolean(state.editingProductId);const atCapacity=state.products.length>=20;const complete=$('productForm').checkValidity()&&Boolean(state.imageData);button.textContent=editing?t('updateProduct'):t('publishProduct');button.classList.toggle('hidden',!complete||(!editing&&atCapacity));updateButton.disabled=!editing||!complete;$('capacityMessage').classList.toggle('hidden',editing||!atCapacity)}
 function clearProductForm(message=''){state.editingProductId=null;state.imageData='';$('productForm').reset();$('productVat').value='15';for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage='';$(id).classList.remove('has-image')}renderProductPreview();updateProductAction();$('productMessage').textContent=message}

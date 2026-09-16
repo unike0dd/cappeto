@@ -12,9 +12,7 @@ function applyPreferences(){
   document.documentElement.lang=preferences.language;
   document.documentElement.dataset.theme=preferences.theme;
   document.querySelectorAll('[data-language-toggle]').forEach(button=>{button.textContent=preferences.language==='en'?'EN':'ES';button.setAttribute('aria-label',t('languageLabel'));button.setAttribute('aria-pressed',String(preferences.language==='es'))});
-  document.querySelectorAll('[data-language-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.languageChoice===preferences.language)));
   document.querySelectorAll('[data-theme-toggle]').forEach(button=>{button.textContent=preferences.theme==='light'?'Light':'Dark';button.setAttribute('aria-label',preferences.theme==='dark'?t('themeLight'):t('themeDark'));button.setAttribute('aria-pressed',String(preferences.theme==='light'))});
-  document.querySelectorAll('[data-theme-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===preferences.theme)));
   document.querySelectorAll('[data-i18n]').forEach(element=>element.textContent=t(element.dataset.i18n));
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>element.placeholder=t(element.dataset.i18nPlaceholder));
   document.querySelectorAll('[data-i18n-aria]').forEach(element=>element.setAttribute('aria-label',t(element.dataset.i18nAria)));
@@ -25,16 +23,10 @@ function applyPreferences(){
   document.querySelector('meta[name="description"]').content=spanish?'Explore el menú de Cappeto, revise la disponibilidad y prepare un pedido con subtotal, IVA y total claros.':"Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.";
   document.querySelector('meta[name="theme-color"]').content=preferences.theme==='dark'?'#0d1511':'#f4f6f0';
   if($('authForm')?.dataset.mode)setAuthMode($('authForm').dataset.mode);
-  if($('authShopArt')){
-    $('authShopArt').src=`assets/branding/business-shop-${preferences.language}.svg`;
-    $('authShopArt').alt=t('businessShopAlt');
-  }
 }
 applyPreferences();
 document.querySelectorAll('[data-language-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.language=preferences.language==='en'?'es':'en';localStorage.setItem('cappeto_language',preferences.language);applyPreferences();if(!$('appView').classList.contains('hidden')){renderAll();renderProductPreview();showStaffControls(Boolean(state.staff))}}));
-document.querySelectorAll('[data-language-choice]').forEach(button=>button.addEventListener('click',()=>{preferences.language=button.dataset.languageChoice;localStorage.setItem('cappeto_language',preferences.language);applyPreferences()}));
 document.querySelectorAll('[data-theme-toggle]').forEach(button=>button.addEventListener('click',()=>{preferences.theme=preferences.theme==='dark'?'light':'dark';localStorage.setItem('cappeto_theme',preferences.theme);applyPreferences()}));
-document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{preferences.theme=button.dataset.themeChoice;localStorage.setItem('cappeto_theme',preferences.theme);applyPreferences()}));
 const state={products:[],cart:new Map(),category:'All',query:'',manageQuery:'',staff:null,csrf:'',imageData:'',editingProductId:null,carouselIndex:0,quoteVersion:0};
 const defaultBusinessProfile={name:'Cappeto',logo:'',address:'',phone:'',email:'',currency:'USD'};
 let businessProfile=loadBusinessProfile();

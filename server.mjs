@@ -20,7 +20,7 @@ if(!adminEmail||!adminPassword)console.warn('Staff sign-in is disabled until CAP
 await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true});
 if(!existsSync(runtimeFile))await writeFile(runtimeFile,await readFile(dataFile));
 const sessions=new Map();
-const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.webp':'image/webp','.svg':'image/svg+xml','.json':'application/json; charset=utf-8'};
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.webp':'image/webp','.json':'application/json; charset=utf-8'};
 const securityHeaders={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Permissions-Policy':'camera=(), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"};
 const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8',...securityHeaders,...extra});res.end(JSON.stringify(body))};
 const readBody=async req=>{let size=0;const chunks=[];for await(const chunk of req){size+=chunk.length;if(size>4_000_000)throw Object.assign(new Error('Request is too large'),{status:413});chunks.push(chunk)}return JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}')};
@@ -70,7 +70,7 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
   let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const publicTopLevel=new Set(['/index.html','/styles.css','/app.js']);
-  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/')&&!pathname.startsWith('/assets/products/')&&!pathname.startsWith('/assets/branding/')&&!pathname.startsWith('/i18n/'))return json(res,404,{error:'Not found'});
+  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/')&&!pathname.startsWith('/assets/products/')&&!pathname.startsWith('/i18n/'))return json(res,404,{error:'Not found'});
   const file=join(root,pathname);if(!file.startsWith(root)||!existsSync(file))return json(res,404,{error:'Not found'});const extension=extname(file);const cacheControl=['.html','.js','.css'].includes(extension)?'no-store':'public, max-age=3600';res.writeHead(200,{'Content-Type':mime[extension]||'application/octet-stream','Cache-Control':cacheControl,...securityHeaders});createReadStream(file).pipe(res)
 }catch(error){console.error(error);json(res,error.status||500,{error:error.status?error.message:'The server could not complete this request.'})}});
 server.listen(port,'0.0.0.0',()=>console.log(`Cappeto ready on http://localhost:${port}`));

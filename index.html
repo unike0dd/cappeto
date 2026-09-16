@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=inventory-headings-1">
-  <script src="i18n/translations.js?v=inventory-headings-1" defer></script>
-  <script src="app.js?v=inventory-headings-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=finance-tabs-1">
+  <script src="i18n/translations.js?v=finance-tabs-1" defer></script>
+  <script src="app.js?v=finance-tabs-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -179,16 +179,36 @@
           <button class="button preview-publish hidden" id="productSubmitButton" data-i18n="publishProduct" type="submit">Publish product</button>
         </aside>
       </form>
-      <div class="inventory-summary-heading">
-        <h2 class="inventory-title" data-i18n="inventoryProducts">Inventory</h2>
-        <ul class="inventory-summary-labels">
-          <li data-i18n="summarySales">Sales</li>
-          <li data-i18n="summaryTaxes">Taxes</li>
-          <li data-i18n="summaryGrossEarnings">Gross Earnings</li>
-          <li data-i18n="summaryNetEarnings">Net Earnings</li>
-        </ul>
+      <div class="finance-workspace">
+        <nav class="finance-tabs" data-i18n-aria="financeWorkspace" aria-label="Inventory and financial workspace" role="tablist">
+          <button class="finance-tab active" type="button" role="tab" aria-selected="true" aria-controls="financeInventory" data-finance-tab="inventory" data-i18n="inventoryProducts">Inventory</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeSales" data-finance-tab="sales" data-i18n="summarySales">Sales</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeTaxes" data-finance-tab="taxes" data-i18n="summaryTaxes">Taxes</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeGross" data-finance-tab="gross" data-i18n="summaryGrossEarnings">Gross Earnings</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeNet" data-finance-tab="net" data-i18n="summaryNetEarnings">Net Earnings</button>
+        </nav>
+
+        <section class="finance-panel" id="financeInventory" role="tabpanel" data-finance-panel="inventory">
+          <div class="finance-panel-heading"><div><h2 data-i18n="inventoryGoods">Inventory goods for sale</h2><p data-i18n="inventoryExplanation">Products procured by the business and currently available to sell.</p></div><strong class="finance-value" id="inventoryUnits">0</strong></div>
+          <div class="manage-list" id="manageList"></div>
+        </section>
+
+        <section class="finance-panel hidden" id="financeSales" role="tabpanel" data-finance-panel="sales">
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="salesRevenue">Sales revenue</p><strong class="finance-total" id="salesValue">$0.00</strong><p data-i18n="salesFormula">Sold quantity × selling price, before sales tax.</p></article>
+        </section>
+
+        <section class="finance-panel hidden" id="financeTaxes" role="tabpanel" data-finance-panel="taxes">
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="taxCollected">Taxes collected</p><strong class="finance-total" id="taxesValue">$0.00</strong><p data-i18n="taxFormula">Sales × the authorized VAT rate. This amount is collected for the government and is not business income.</p></article>
+        </section>
+
+        <section class="finance-panel hidden" id="financeGross" role="tabpanel" data-finance-panel="gross">
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="grossCollected">Gross amount collected</p><strong class="finance-total" id="grossValue">$0.00</strong><p data-i18n="grossFormula">Sales revenue + taxes collected. This is total cash collected, not accounting profit.</p></article>
+        </section>
+
+        <section class="finance-panel hidden" id="financeNet" role="tabpanel" data-finance-panel="net">
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="provisionalNetSales">Provisional net sales</p><strong class="finance-total" id="netValue">$0.00</strong><p data-i18n="netFormula">Gross amount collected − taxes collected = net sales. True net earnings also require product costs and operating expenses, which are not recorded yet.</p></article>
+        </section>
       </div>
-      <div class="manage-list" id="manageList"></div>
     </section>
 
     <section class="settings-view hidden" id="settingsView" aria-labelledby="settingsTitle">

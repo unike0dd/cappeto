@@ -127,7 +127,7 @@ const rememberedEmail=localStorage.getItem('cappeto_remembered_email')||'';if(re
 
 $('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);document.querySelectorAll('[data-auth-home]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showLanding()}));
 $('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab').addEventListener('click',()=>setAuthMode('signup'));
-[['gmailButton','Gmail'],['appleButton','Apple'],['githubButton','GitHub'],['ssoButton','SSO']].forEach(([id,provider])=>$(id).addEventListener('click',()=>{$('authError').textContent=t('providerBackendRequired',{provider})}));
+[['gmailButton','Gmail'],['appleButton','Apple']].forEach(([id,provider])=>$(id).addEventListener('click',()=>{$('authError').textContent=t('providerBackendRequired',{provider})}));
 $('passwordToggle').addEventListener('click',()=>{const visible=$('authCode').type==='text';$('authCode').type=visible?'password':'text';$('passwordToggle').textContent=t(visible?'showPassword':'hidePassword');$('passwordToggle').setAttribute('aria-pressed',String(!visible));$('authCode').focus()});
 $('landingBrowse').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('forgotPassword').addEventListener('click',()=>{$('authError').textContent=t('passwordResetInfo')});

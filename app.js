@@ -108,6 +108,12 @@ async function staticApi(path,options={}){
   if(path==='/api/auth/logout'){sessionStorage.removeItem('cappeto_demo_session');return{ok:true}}
   if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store'}).then(response=>response.json());
   if(path==='/api/products'&&method==='GET')return staticCatalog;
+  if(path==='/api/inventory/reset'&&method==='POST'){
+    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
+    const resetCount=staticCatalog.products.filter(product=>Number(product.stock)>0).length;
+    staticCatalog.products.forEach(product=>{product.stock=0});
+    return{ok:true,resetCount};
+  }
   if(path==='/api/products'&&method==='POST'){
     if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
     if(staticCatalog.products.length>=20)throw new Error('The 20-product limit has been reached.');
@@ -190,6 +196,7 @@ function renderFinancialWorkspace(){
   $('taxesValue').textContent=money(summary.taxCents);
   $('grossValue').textContent=money(grossCollectedCents);
   $('netValue').textContent=money(provisionalNetSalesCents);
+  $('resetInventoryButton').disabled=summary.inventoryUnits===0;
   document.querySelectorAll('[data-finance-tab]').forEach(button=>{
     const active=button.dataset.financeTab===state.financeView;
     button.classList.toggle('active',active);
@@ -249,6 +256,23 @@ $('productForm').addEventListener('input',()=>{renderProductPreview();updateProd
 $('clearProductButton').addEventListener('click',()=>clearProductForm(t('fieldsCleared')));
 async function toWebP(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.84)}
 $('productForm').addEventListener('submit',async event=>{event.preventDefault();if(!event.target.checkValidity()||!state.imageData){$('productMessage').textContent=t('pictureRequired');return}const editingId=state.editingProductId;const payload={name:$('productName').value,category:$('productCategory').value,description:$('productDescription').value,price:Number($('productPrice').value),vatRate:Number($('productVat').value),stock:Number($('productStock').value),purchaseDate:$('productPurchaseDate').value,imageData:state.imageData};try{await api(editingId?`/api/products/${encodeURIComponent(editingId)}`:'/api/products',{method:editingId?'PUT':'POST',body:JSON.stringify(payload)});clearProductForm(t(editingId?'updated':'published'));await loadCatalog();$('manageList').scrollIntoView({behavior:'smooth',block:'start'})}catch(error){$('productMessage').textContent=localizeError(error)}});
+$('resetInventoryButton').addEventListener('click',async()=>{
+  const button=$('resetInventoryButton');
+  if(financialSummary().inventoryUnits===0){toast(t('inventoryAlreadyZero'));return}
+  if(!confirm(t('resetInventoryConfirm')))return;
+  button.disabled=true;
+  button.setAttribute('aria-busy','true');
+  try{
+    await api('/api/inventory/reset',{method:'POST',body:'{}'});
+    await loadCatalog();
+    toast(t('inventoryReset'));
+  }catch(error){
+    button.disabled=false;
+    toast(localizeError(error));
+  }finally{
+    button.removeAttribute('aria-busy');
+  }
+});
 document.querySelector('.finance-tabs').addEventListener('click',event=>{
   const button=event.target.closest('[data-finance-tab]');
   if(!button)return;

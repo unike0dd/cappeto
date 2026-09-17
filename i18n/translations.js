@@ -52,3 +52,16 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
   netFormula:'Monto bruto recaudado − impuestos recaudados = ventas netas. Las ganancias netas reales también requieren los costos de productos y gastos operativos, que aún no se registran.',
   inventoryUnitCount:'{count} unidades'
 });
+
+Object.assign(window.CAPPETO_I18N.en.ui,{
+  resetInventory:'RESET',
+  resetInventoryConfirm:'Set every product’s available inventory quantity to zero? Product records, prices, pictures, and sales history will remain.',
+  inventoryReset:'All available inventory quantities were reset to zero.',
+  inventoryAlreadyZero:'Inventory is already at zero.'
+});
+Object.assign(window.CAPPETO_I18N.es.ui,{
+  resetInventory:'REINICIAR',
+  resetInventoryConfirm:'¿Establecer en cero la cantidad disponible de inventario de todos los productos? Se conservarán los registros, precios, imágenes e historial de ventas.',
+  inventoryReset:'Todas las cantidades disponibles del inventario se restablecieron a cero.',
+  inventoryAlreadyZero:'El inventario ya está en cero.'
+});

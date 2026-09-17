@@ -1,5 +1,20 @@
 @import url("./styles-base.css?v=split-auth-2");
 
+/* Shared main navigation: always above page content and available on every screen. */
+.topbar,.landing-header{position:sticky;top:0;z-index:3500}
+.landing-header{background:color-mix(in srgb,var(--cream) 94%,transparent);backdrop-filter:blur(14px)}
+.auth-toolbar{position:relative;z-index:3500;display:flex;align-items:center;gap:10px}
+.site-menu-button{display:grid;flex:0 0 auto;place-content:center;gap:4px;width:44px;height:44px;padding:0;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink)}
+.site-menu-button span{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;transition:transform .2s,opacity .2s}
+.site-menu-button[aria-expanded=true] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.site-menu-button[aria-expanded=true] span:nth-child(2){opacity:0}
+.site-menu-button[aria-expanded=true] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.site-menu-scrim{position:fixed;z-index:3499;inset:0;background:rgba(8,18,12,.48);backdrop-filter:blur(3px)}
+.site-menu{position:fixed;z-index:3500;top:0;right:0;width:min(360px,calc(100% - 24px));height:100dvh;padding:20px;background:var(--paper);box-shadow:-24px 0 60px rgba(9,20,13,.24);transform:translateX(105%);transition:transform .24s ease;overflow-y:auto}
+.site-menu.open{transform:none}.site-menu-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);font:800 1.35rem Georgia,serif}.site-menu-close{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);border-radius:13px;background:var(--cream);color:var(--ink);font-size:1.6rem}.site-menu nav{display:grid;gap:8px;padding-top:18px}.site-menu nav button{min-height:48px;padding:10px 14px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--ink);font-weight:800;text-align:left}.site-menu nav button:hover,.site-menu nav button:focus-visible{border-color:var(--line);background:var(--pistachio)}
+body.site-menu-open{overflow:hidden}
+@media(max-width:760px){.landing-signin,.landing-signup{display:none}.top-actions>.customer-preferences,.top-actions>.session-label,.top-actions>.owner-profile-button,.top-actions>.icon-button{display:none!important}.topbar{grid-template-columns:minmax(0,1fr) auto}.view-switcher{display:none}.site-menu-button{width:46px;height:46px}}
+
 .auth{min-height:100dvh;display:grid;place-items:center;padding:clamp(18px,3vw,42px)}
 .auth-card{display:grid;grid-template-columns:minmax(310px,.78fr) minmax(440px,1.22fr);width:min(1120px,100%);max-width:none;padding:0;overflow:hidden;border-radius:30px}
 .auth-value{--auth-shop-image:url("assets/branding/cafteria_logo_EN.png");position:relative;isolation:isolate;display:flex;flex-direction:column;min-width:0;padding:clamp(44px,5vw,68px);overflow:hidden;background-color:#1d664b;background-image:linear-gradient(150deg,rgba(14,92,62,.78),rgba(20,61,43,.9)),var(--auth-shop-image);background-position:center;background-repeat:no-repeat;background-size:cover;color:#fff}

@@ -38,6 +38,7 @@
         <div class="preference-buttons"><button class="preference-button" data-language-toggle type="button">EN</button><button class="preference-button" data-theme-toggle type="button">Light</button></div>
         <button class="text-button landing-signin" id="openSignIn" data-i18n="signIn" type="button">Sign in</button>
         <button class="button landing-signup" id="openSignUp" data-i18n="createAccount" type="button">Create account</button>
+        <button class="site-menu-button" data-site-menu-toggle type="button" aria-controls="siteMenu" aria-expanded="false" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
       </nav>
     </header>
     <main class="landing-main" id="landingMain">
@@ -82,6 +83,7 @@
           <button class="preference-button" id="languageToggle" data-language-toggle type="button" aria-label="Cambiar idioma a español">EN</button>
           <button class="preference-button" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Light</button>
         </div>
+        <button class="site-menu-button" data-site-menu-toggle type="button" aria-controls="siteMenu" aria-expanded="false" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
       </div>
       <p class="eyebrow auth-eyebrow" data-i18n="ownerAccess">Owner access</p>
       <h1 id="authTitle" data-i18n="welcomeBack" tabindex="-1">Welcome back</h1>
@@ -126,6 +128,7 @@
         <span class="session-label" id="sessionLabel">Customer view</span><button class="owner-profile-button staff-only hidden" id="ownerSettingsButton" data-i18n="ownerProfile" type="button">Cappeto owner</button>
         <button class="icon-button staff-only hidden" id="logoutButton" data-i18n-aria="signOut" type="button" aria-label="Sign out" title="Sign out">↗</button>
         <button class="cart-button" id="cartButton" data-i18n-aria="openOrder" type="button" aria-label="Open order"><span id="orderButtonLabel" data-i18n="order">Order</span><b id="cartCount">0</b></button>
+        <button class="site-menu-button" data-site-menu-toggle type="button" aria-controls="siteMenu" aria-expanded="false" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
       </div>
     </header>
 
@@ -287,6 +290,19 @@
       </form>
     </section>
   </main>
+
+  <div class="site-menu-scrim" id="siteMenuScrim" hidden></div>
+  <aside class="site-menu" id="siteMenu" aria-label="Main navigation" aria-hidden="true">
+    <div class="site-menu-heading"><strong>Cappeto</strong><button class="site-menu-close" id="siteMenuClose" type="button" aria-label="Close navigation menu">×</button></div>
+    <nav>
+      <button type="button" data-site-route="home" data-i18n="home">Home</button>
+      <button type="button" data-site-route="catalog" data-i18n="menu">Menu</button>
+      <button class="staff-only hidden" type="button" data-site-route="manage" data-i18n="manage">Manage products</button>
+      <button class="staff-only hidden" type="button" data-site-route="settings" data-i18n="businessProfile">Business profile</button>
+      <button class="guest-only" type="button" data-site-route="signin" data-i18n="signIn">Sign in</button>
+      <button class="guest-only" type="button" data-site-route="signup" data-i18n="createAccount">Create account</button>
+    </nav>
+  </aside>
 
   <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
     <div class="drawer-heading"><div><p class="eyebrow" id="cartEyebrow" data-i18n="currentOrder">Current order</p><h2 id="cartTitle" data-i18n="selection">Your selection</h2></div><div class="drawer-actions"><button class="clear-order-button" id="clearOrder" data-i18n="clear" type="button">Clear</button><button class="icon-button" id="closeCart" data-i18n-aria="closeOrder" type="button" aria-label="Close order">×</button></div></div>

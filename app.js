@@ -163,7 +163,7 @@ function setAuthMode(mode){
   if(signup){$('authCode').pattern='(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}'}else{$('authCode').removeAttribute('pattern')}
   $('authCode').autocomplete=signup?'new-password':'current-password';$('authForm').dataset.mode=mode;$('authError').textContent='';
 }
-function showStaffControls(enabled){document.querySelectorAll('.staff-only').forEach(el=>el.classList.toggle('hidden',!enabled));$('sessionLabel').classList.toggle('hidden',enabled);$('sessionLabel').textContent=t('customer')}
+function showStaffControls(enabled){document.querySelectorAll('.staff-only').forEach(el=>el.classList.toggle('hidden',!enabled));document.querySelectorAll('.guest-only').forEach(el=>el.classList.toggle('hidden',enabled));$('sessionLabel').classList.toggle('hidden',enabled);$('sessionLabel').textContent=t('customer')}
 
 async function loadCatalog(){const data=await api('/api/products');state.products=data.products;state.vatRate=data.vatRate;renderAll()}
 function renderAll(){renderCategories();renderProducts();renderCart();renderManager();renderFinancialWorkspace();}
@@ -266,6 +266,28 @@ function clearProductForm(message=''){state.editingProductId=null;state.imageDat
 function editProduct(product){$('productEntrySection').open=true;state.editingProductId=product.id;$('productName').value=product.name;$('productCategory').value=product.category;$('productPrice').value=(product.priceCents/100).toFixed(2);$('productProcurementCost').value=product.procurementCostCents?((product.procurementCostCents/100).toFixed(2)):'';$('productPurchaseTax').value=product.purchaseTaxRate||'';$('productPurchaseDelivery').value=product.purchaseDeliveryCents?((product.purchaseDeliveryCents/100).toFixed(2)):'';$('productVat').value=Number(product.vatRate??state.vatRate);$('productStock').value=product.stock;$('productPurchaseDate').value=product.purchaseDate||'';$('productDescription').value=product.description;state.imageData=product.imageUrl;for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage=`url(${product.imageUrl})`;$(id).classList.add('has-image')}renderProductPreview();updateProductAction();$('productForm').scrollIntoView({behavior:'smooth',block:'start'});$('productMessage').textContent=t('editing',{name:productCopy(product).name})}
 function openCart(open){$('cartDrawer').classList.toggle('open',open);$('scrim').classList.toggle('open',open);$('cartDrawer').setAttribute('aria-hidden',String(!open))}
 function switchView(view){$('catalogView').classList.toggle('hidden',view!=='catalog');$('manageView').classList.toggle('hidden',view!=='manage');$('settingsView').classList.toggle('hidden',view!=='settings');document.querySelectorAll('.nav-button').forEach(button=>{const active=button.dataset.view===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});$('ownerSettingsButton').classList.toggle('active',view==='settings');$('ownerSettingsButton').setAttribute('aria-pressed',String(view==='settings'))}
+
+function openSiteMenu(open){
+  $('siteMenu').classList.toggle('open',open);
+  $('siteMenu').setAttribute('aria-hidden',String(!open));
+  $('siteMenuScrim').hidden=!open;
+  document.body.classList.toggle('site-menu-open',open);
+  document.querySelectorAll('[data-site-menu-toggle]').forEach(button=>button.setAttribute('aria-expanded',String(open)));
+  if(open)$('siteMenuClose').focus();
+}
+
+document.querySelectorAll('[data-site-menu-toggle]').forEach(button=>button.addEventListener('click',()=>openSiteMenu(button.getAttribute('aria-expanded')!=='true')));
+$('siteMenuClose').addEventListener('click',()=>openSiteMenu(false));
+$('siteMenuScrim').addEventListener('click',()=>openSiteMenu(false));
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('siteMenu').classList.contains('open'))openSiteMenu(false)});
+document.querySelectorAll('[data-site-route]').forEach(button=>button.addEventListener('click',async()=>{
+  const route=button.dataset.siteRoute;
+  openSiteMenu(false);
+  if(route==='home')showLanding();
+  else if(route==='signin')showAuth('signin');
+  else if(route==='signup')showAuth('signup');
+  else{if(!state.products.length)await loadCatalog();enterApp();switchView(route)}
+}));
 
 
 function loadBusinessProfile(){try{return{...defaultBusinessProfile,...JSON.parse(localStorage.getItem('cappeto_business_profile')||'{}')}}catch{return{...defaultBusinessProfile}}}

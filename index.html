@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=inventory-reset-1">
-  <script src="i18n/translations.js?v=inventory-reset-1" defer></script>
-  <script src="app.js?v=inventory-reset-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=basic-accounting-1">
+  <script src="i18n/translations.js?v=basic-accounting-1" defer></script>
+  <script src="app.js?v=basic-accounting-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -156,6 +156,7 @@
           <label class="field"><span data-i18n="productName">Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
           <label class="field"><span data-i18n="category">Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
           <label class="field"><span data-i18n="price">Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
+          <label class="field"><span data-i18n="procurementCost">Unit procurement cost (USD)</span><input id="productProcurementCost" type="number" min="0.01" max="9999" step="0.01" required placeholder="2.00"></label>
           <label class="field"><span data-i18n="vat">VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
           <label class="field"><span data-i18n="quantity">Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
           <label class="field"><span data-i18n="purchaseDate">Purchase date</span><input id="productPurchaseDate" type="date" required></label>
@@ -184,12 +185,13 @@
           <button class="finance-tab active" type="button" role="tab" aria-selected="true" aria-controls="financeInventory" data-finance-tab="inventory" data-i18n="inventoryProducts">Inventory</button>
           <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeSales" data-finance-tab="sales" data-i18n="summarySales">Sales</button>
           <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeTaxes" data-finance-tab="taxes" data-i18n="summaryTaxes">Taxes</button>
-          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeGross" data-finance-tab="gross" data-i18n="summaryGrossEarnings">Gross Earnings</button>
-          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeNet" data-finance-tab="net" data-i18n="summaryNetEarnings">Net Earnings</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeGross" data-finance-tab="gross" data-i18n="grossProfit">Gross Profit</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeNet" data-finance-tab="net" data-i18n="netProductProfit">Net Product Profit</button>
+          <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeSummary" data-finance-tab="summary" data-i18n="accountingSummary">Summary</button>
         </nav>
 
         <section class="finance-panel" id="financeInventory" role="tabpanel" data-finance-panel="inventory">
-          <div class="finance-panel-heading"><div><h2 data-i18n="inventoryGoods">Inventory goods for sale</h2><p data-i18n="inventoryExplanation">Products procured by the business and currently available to sell.</p></div><div class="inventory-heading-actions"><button class="inventory-reset-button" id="resetInventoryButton" type="button" data-i18n="resetInventory">RESET</button><strong class="finance-value" id="inventoryUnits">0</strong></div></div>
+          <div class="finance-panel-heading"><div><h2 data-i18n="inventoryGoods">Inventory goods for sale</h2><p data-i18n="inventoryExplanation">Products procured by the business and currently available to sell.</p></div><div class="inventory-heading-actions"><button class="inventory-reset-button" id="resetInventoryButton" type="button" data-i18n="resetInventory">RESET</button><span class="finance-value-pair"><strong class="finance-value" id="inventoryUnits">0 units</strong><strong class="finance-value" id="inventoryValue">$0.00</strong></span></div></div>
           <div class="manage-list" id="manageList"></div>
         </section>
 
@@ -198,15 +200,30 @@
         </section>
 
         <section class="finance-panel hidden" id="financeTaxes" role="tabpanel" data-finance-panel="taxes">
-          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="taxCollected">Taxes collected</p><strong class="finance-total" id="taxesValue">$0.00</strong><p data-i18n="taxFormula">Sales × the authorized VAT rate. This amount is collected for the government and is not business income.</p></article>
+          <article class="finance-calculation-card tax-card"><p class="eyebrow"><span data-i18n="taxCollected">Taxes collected</span> <button class="tax-disclosure-button" type="button" aria-expanded="false" aria-controls="taxDisclosure">?</button></p><strong class="finance-total tax-amount" id="taxesValue">$0.00</strong><p class="tax-disclosure hidden" id="taxDisclosure" data-i18n="paidToGovernment">Paid to Government</p></article>
         </section>
 
         <section class="finance-panel hidden" id="financeGross" role="tabpanel" data-finance-panel="gross">
-          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="grossCollected">Gross amount collected</p><strong class="finance-total" id="grossValue">$0.00</strong><p data-i18n="grossFormula">Sales revenue + taxes collected. This is total cash collected, not accounting profit.</p></article>
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="grossProfit">Gross Profit</p><strong class="finance-total" id="grossValue">$0.00</strong><p data-i18n="grossProfitFormula">Sales revenue − cost of goods sold.</p><div class="finance-breakdown"><span data-i18n="costOfGoodsSold">Cost of goods sold</span><strong id="cogsValue">$0.00</strong></div></article>
         </section>
 
         <section class="finance-panel hidden" id="financeNet" role="tabpanel" data-finance-panel="net">
-          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="provisionalNetSales">Provisional net sales</p><strong class="finance-total" id="netValue">$0.00</strong><p data-i18n="netFormula">Gross amount collected − taxes collected = net sales. True net earnings also require product costs and operating expenses, which are not recorded yet.</p></article>
+          <article class="finance-calculation-card"><p class="eyebrow" data-i18n="netProductProfit">Net Product Profit</p><strong class="finance-total" id="netValue">$0.00</strong><div class="finance-breakdown"><span data-i18n="damagedProductCost">Damaged product cost</span><strong id="damagedValue">$0.00</strong></div></article>
+        </section>
+
+        <section class="finance-panel hidden" id="financeSummary" role="tabpanel" data-finance-panel="summary">
+          <div class="finance-summary-heading"><h2 data-i18n="accountingSummary">Accounting Summary</h2><p data-i18n="summaryExplanation">Inventory, customer collections, and product profitability in one view.</p></div>
+          <div class="finance-table-wrap"><table class="finance-summary-table"><thead><tr><th data-i18n="summarySection">Section</th><th data-i18n="summaryConnection">How it connects</th><th data-i18n="summaryAmount">Amount</th></tr></thead><tbody>
+            <tr><td data-i18n="inventoryProducts">Inventory</td><td data-i18n="inventorySummaryConnection">Available units × unit procurement cost</td><td id="inventorySummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="summarySales">Sales</td><td data-i18n="salesSummaryConnection">Units sold × selling price</td><td id="salesSummaryValue">$0.00</td></tr>
+            <tr class="tax-summary-row"><td><span data-i18n="summaryTaxes">Taxes</span> <button class="tax-disclosure-button" type="button" aria-expanded="false" aria-controls="summaryTaxDisclosure">?</button></td><td data-i18n="taxSummaryConnection">Sales × VAT rate</td><td id="taxesSummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="customerTotalCollected">Customer total collected</td><td data-i18n="customerTotalConnection">Sales + taxes</td><td id="customerCollectedValue">$0.00</td></tr>
+            <tr><td data-i18n="costOfGoodsSold">Cost of goods sold</td><td data-i18n="cogsSummaryConnection">Units sold × unit procurement cost</td><td id="cogsSummaryValue">$0.00</td></tr>
+            <tr class="profit-summary-row"><td data-i18n="grossProfit">Gross Profit</td><td data-i18n="grossSummaryConnection">Sales − cost of goods sold</td><td id="grossSummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="damagedProductCost">Damaged product cost</td><td data-i18n="damagedSummaryConnection">Damaged units × unit procurement cost</td><td id="damagedSummaryValue">$0.00</td></tr>
+            <tr class="profit-summary-row"><td data-i18n="netProductProfit">Net Product Profit</td><td data-i18n="netSummaryConnection">Product result after damaged inventory</td><td id="netSummaryValue">$0.00</td></tr>
+          </tbody></table></div>
+          <p class="tax-disclosure hidden" id="summaryTaxDisclosure" data-i18n="taxesPaidToGovernment">Taxes: Paid to Government</p>
         </section>
       </div>
     </section>

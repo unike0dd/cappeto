@@ -107,7 +107,10 @@ async function staticApi(path,options={}){
   }
   if(path==='/api/auth/logout'){sessionStorage.removeItem('cappeto_demo_session');return{ok:true}}
   if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store'}).then(response=>response.json());
-  if(path==='/api/products'&&method==='GET')return staticCatalog;
+  if(path==='/api/products'&&method==='GET'){
+    if(sessionStorage.getItem('cappeto_demo_session'))return staticCatalog;
+    return{...staticCatalog,products:staticCatalog.products.map(({procurementCostCents,returned,damaged,sold,purchaseDate,...product})=>product)};
+  }
   if(path==='/api/inventory/reset'&&method==='POST'){
     if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
     const resetCount=staticCatalog.products.filter(product=>Number(product.stock)>0).length;
@@ -117,13 +120,13 @@ async function staticApi(path,options={}){
   if(path==='/api/products'&&method==='POST'){
     if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
     if(staticCatalog.products.length>=20)throw new Error('The 20-product limit has been reached.');
-    const product={id:`demo-${Date.now()}`,name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,returned:0,damaged:0,sold:0,imageUrl:body.imageData};
+    const product={id:`demo-${Date.now()}`,name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost)*100),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,returned:0,damaged:0,sold:0,imageUrl:body.imageData};
     staticCatalog.products.push(product);return{product};
   }
   if(path.startsWith('/api/products/')&&method==='PUT'){
     if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
     const id=decodeURIComponent(path.slice(14));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
-    Object.assign(product,{name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,imageUrl:body.imageData||product.imageUrl});return{product};
+    Object.assign(product,{name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost)*100),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,imageUrl:body.imageData||product.imageUrl});return{product};
   }
   if(path.endsWith('/inventory')&&path.startsWith('/api/products/')&&method==='PATCH'){
     const id=decodeURIComponent(path.slice(14,-10));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
@@ -176,26 +179,45 @@ async function calculateTotals(){const version=++state.quoteVersion;const items=
 function applyInventoryChange(product,action,quantity){if(!Number.isInteger(quantity)||quantity<1||quantity>9999)throw new Error('Enter a valid whole quantity.');product.returned=Number(product.returned||0);product.damaged=Number(product.damaged||0);product.sold=Number(product.sold||0);if(action==='add'||action==='return')product.stock+=quantity;if(action==='return')product.returned+=quantity;if(action==='damage'||action==='sold'){if(quantity>product.stock)throw new Error('Quantity exceeds available inventory.');product.stock-=quantity;product[action==='damage'?'damaged':'sold']+=quantity}}
 function financialSummary(){
   return state.products.reduce((summary,product)=>{
+    const availableUnits=Math.max(0,Number(product.stock)||0);
     const soldUnits=Math.max(0,Number(product.sold)||0);
-    const salesCents=Math.round((Number(product.priceCents)||0)*soldUnits);
+    const damagedUnits=Math.max(0,Number(product.damaged)||0);
+    const sellingPriceCents=Math.max(0,Number(product.priceCents)||0);
+    const procurementCostCents=Math.max(0,Number(product.procurementCostCents)||0);
+    const salesCents=Math.round(sellingPriceCents*soldUnits);
     const vatRate=Math.max(0,Number(product.vatRate??state.vatRate)||0);
     const taxCents=Math.round(salesCents*vatRate/100);
-    summary.inventoryUnits+=Math.max(0,Number(product.stock)||0);
+    summary.inventoryUnits+=availableUnits;
+    summary.inventoryValueCents+=availableUnits*procurementCostCents;
     summary.soldUnits+=soldUnits;
     summary.salesCents+=salesCents;
     summary.taxCents+=taxCents;
+    summary.cogsCents+=soldUnits*procurementCostCents;
+    summary.damagedCostCents+=damagedUnits*procurementCostCents;
     return summary;
-  },{inventoryUnits:0,soldUnits:0,salesCents:0,taxCents:0});
+  },{inventoryUnits:0,inventoryValueCents:0,soldUnits:0,salesCents:0,taxCents:0,cogsCents:0,damagedCostCents:0});
 }
 function renderFinancialWorkspace(){
   const summary=financialSummary();
-  const grossCollectedCents=summary.salesCents+summary.taxCents;
-  const provisionalNetSalesCents=grossCollectedCents-summary.taxCents;
+  const customerCollectedCents=summary.salesCents+summary.taxCents;
+  const grossProfitCents=summary.salesCents-summary.cogsCents;
+  const netProductProfitCents=grossProfitCents-summary.damagedCostCents;
   $('inventoryUnits').textContent=t('inventoryUnitCount',{count:summary.inventoryUnits});
+  $('inventoryValue').textContent=money(summary.inventoryValueCents);
   $('salesValue').textContent=money(summary.salesCents);
   $('taxesValue').textContent=money(summary.taxCents);
-  $('grossValue').textContent=money(grossCollectedCents);
-  $('netValue').textContent=money(provisionalNetSalesCents);
+  $('grossValue').textContent=money(grossProfitCents);
+  $('cogsValue').textContent=money(summary.cogsCents);
+  $('netValue').textContent=money(netProductProfitCents);
+  $('damagedValue').textContent=money(summary.damagedCostCents);
+  $('inventorySummaryValue').textContent=money(summary.inventoryValueCents);
+  $('salesSummaryValue').textContent=money(summary.salesCents);
+  $('taxesSummaryValue').textContent=money(summary.taxCents);
+  $('customerCollectedValue').textContent=money(customerCollectedCents);
+  $('cogsSummaryValue').textContent=money(summary.cogsCents);
+  $('grossSummaryValue').textContent=money(grossProfitCents);
+  $('damagedSummaryValue').textContent=money(summary.damagedCostCents);
+  $('netSummaryValue').textContent=money(netProductProfitCents);
   $('resetInventoryButton').disabled=summary.inventoryUnits===0;
   document.querySelectorAll('[data-finance-tab]').forEach(button=>{
     const active=button.dataset.financeTab===state.financeView;
@@ -206,7 +228,7 @@ function renderFinancialWorkspace(){
   document.querySelectorAll('[data-finance-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.financePanel!==state.financeView));
 }
 function switchFinanceView(view){
-  if(!['inventory','sales','taxes','gross','net'].includes(view))return;
+  if(!['inventory','sales','taxes','gross','net','summary'].includes(view))return;
   state.financeView=view;
   renderFinancialWorkspace();
 }
@@ -214,7 +236,7 @@ function renderManager(){const products=state.products.filter(product=>productMa
 function renderProductPreview(){const value=(id,fallback)=>$(id).value.trim()||fallback;$('previewName').textContent=value('productName',t('productName'));$('previewCategory').textContent=value('productCategory',t('category'));$('previewPrice').textContent=money(Math.round((Number($('productPrice').value)||0)*100));$('previewVat').textContent=`${Number($('productVat').value)||0}%`;$('previewStock').textContent=String(Number($('productStock').value)||0);$('previewDate').textContent=$('productPurchaseDate').value||t('notSelected');$('previewDescription').textContent=value('productDescription',t('shortDescription'))}
 function updateProductAction(){const button=$('productSubmitButton');const updateButton=$('updateItemButton');const editing=Boolean(state.editingProductId);const atCapacity=state.products.length>=20;const complete=$('productForm').checkValidity()&&Boolean(state.imageData);button.textContent=editing?t('updateProduct'):t('publishProduct');button.classList.toggle('hidden',!complete||(!editing&&atCapacity));updateButton.disabled=!editing||!complete;$('capacityMessage').classList.toggle('hidden',editing||!atCapacity)}
 function clearProductForm(message=''){state.editingProductId=null;state.imageData='';$('productForm').reset();$('productVat').value='15';for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage='';$(id).classList.remove('has-image')}renderProductPreview();updateProductAction();$('productMessage').textContent=message}
-function editProduct(product){state.editingProductId=product.id;$('productName').value=product.name;$('productCategory').value=product.category;$('productPrice').value=(product.priceCents/100).toFixed(2);$('productVat').value=Number(product.vatRate??state.vatRate);$('productStock').value=product.stock;$('productPurchaseDate').value=product.purchaseDate||'';$('productDescription').value=product.description;state.imageData=product.imageUrl;for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage=`url(${product.imageUrl})`;$(id).classList.add('has-image')}renderProductPreview();updateProductAction();$('productForm').scrollIntoView({behavior:'smooth',block:'start'});$('productMessage').textContent=t('editing',{name:productCopy(product).name})}
+function editProduct(product){state.editingProductId=product.id;$('productName').value=product.name;$('productCategory').value=product.category;$('productPrice').value=(product.priceCents/100).toFixed(2);$('productProcurementCost').value=product.procurementCostCents?((product.procurementCostCents/100).toFixed(2)):'';$('productVat').value=Number(product.vatRate??state.vatRate);$('productStock').value=product.stock;$('productPurchaseDate').value=product.purchaseDate||'';$('productDescription').value=product.description;state.imageData=product.imageUrl;for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage=`url(${product.imageUrl})`;$(id).classList.add('has-image')}renderProductPreview();updateProductAction();$('productForm').scrollIntoView({behavior:'smooth',block:'start'});$('productMessage').textContent=t('editing',{name:productCopy(product).name})}
 function openCart(open){$('cartDrawer').classList.toggle('open',open);$('scrim').classList.toggle('open',open);$('cartDrawer').setAttribute('aria-hidden',String(!open))}
 function switchView(view){$('catalogView').classList.toggle('hidden',view!=='catalog');$('manageView').classList.toggle('hidden',view!=='manage');$('settingsView').classList.toggle('hidden',view!=='settings');document.querySelectorAll('.nav-button').forEach(button=>{const active=button.dataset.view===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});$('ownerSettingsButton').classList.toggle('active',view==='settings');$('ownerSettingsButton').setAttribute('aria-pressed',String(view==='settings'))}
 
@@ -255,7 +277,7 @@ $('removePictureButton').addEventListener('click',()=>{state.imageData='';$('pro
 $('productForm').addEventListener('input',()=>{renderProductPreview();updateProductAction()});
 $('clearProductButton').addEventListener('click',()=>clearProductForm(t('fieldsCleared')));
 async function toWebP(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,1200/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.84)}
-$('productForm').addEventListener('submit',async event=>{event.preventDefault();if(!event.target.checkValidity()||!state.imageData){$('productMessage').textContent=t('pictureRequired');return}const editingId=state.editingProductId;const payload={name:$('productName').value,category:$('productCategory').value,description:$('productDescription').value,price:Number($('productPrice').value),vatRate:Number($('productVat').value),stock:Number($('productStock').value),purchaseDate:$('productPurchaseDate').value,imageData:state.imageData};try{await api(editingId?`/api/products/${encodeURIComponent(editingId)}`:'/api/products',{method:editingId?'PUT':'POST',body:JSON.stringify(payload)});clearProductForm(t(editingId?'updated':'published'));await loadCatalog();$('manageList').scrollIntoView({behavior:'smooth',block:'start'})}catch(error){$('productMessage').textContent=localizeError(error)}});
+$('productForm').addEventListener('submit',async event=>{event.preventDefault();if(!event.target.checkValidity()||!state.imageData){$('productMessage').textContent=t('pictureRequired');return}const editingId=state.editingProductId;const payload={name:$('productName').value,category:$('productCategory').value,description:$('productDescription').value,price:Number($('productPrice').value),procurementCost:Number($('productProcurementCost').value),vatRate:Number($('productVat').value),stock:Number($('productStock').value),purchaseDate:$('productPurchaseDate').value,imageData:state.imageData};try{await api(editingId?`/api/products/${encodeURIComponent(editingId)}`:'/api/products',{method:editingId?'PUT':'POST',body:JSON.stringify(payload)});clearProductForm(t(editingId?'updated':'published'));await loadCatalog();$('manageList').scrollIntoView({behavior:'smooth',block:'start'})}catch(error){$('productMessage').textContent=localizeError(error)}});
 $('resetInventoryButton').addEventListener('click',async()=>{
   const button=$('resetInventoryButton');
   if(financialSummary().inventoryUnits===0){toast(t('inventoryAlreadyZero'));return}
@@ -273,6 +295,12 @@ $('resetInventoryButton').addEventListener('click',async()=>{
     button.removeAttribute('aria-busy');
   }
 });
+document.querySelectorAll('.tax-disclosure-button').forEach(button=>button.addEventListener('click',()=>{
+  const disclosure=$(button.getAttribute('aria-controls'));
+  const open=button.getAttribute('aria-expanded')==='true';
+  button.setAttribute('aria-expanded',String(!open));
+  disclosure.classList.toggle('hidden',open);
+}));
 document.querySelector('.finance-tabs').addEventListener('click',event=>{
   const button=event.target.closest('[data-finance-tab]');
   if(!button)return;

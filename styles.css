@@ -46,3 +46,10 @@
 .finance-calculation-card>p:last-child{max-width:62ch;margin:0;color:var(--muted);line-height:1.65}
 [data-theme=dark] .finance-tab.active{color:#fff}
 @media(max-width:700px){.finance-workspace{margin-top:34px}.finance-tabs{margin-inline:-2px}.finance-tab{min-width:132px}.finance-panel-heading{align-items:flex-start;flex-direction:column}.finance-value{align-self:stretch}}
+
+/* Destructive inventory reset control. */
+.inventory-heading-actions{display:flex;align-items:center;justify-content:flex-end;gap:20px;flex:0 0 auto}
+.inventory-reset-button{min-width:156px;min-height:48px;padding:10px 20px;border:2px solid var(--danger);border-radius:10px;background:transparent;color:var(--danger);font-weight:900;letter-spacing:.05em}
+.inventory-reset-button:hover{background:var(--danger);color:var(--paper)}
+.inventory-reset-button:disabled{cursor:not-allowed;opacity:.55}
+@media(max-width:700px){.inventory-heading-actions{width:100%;justify-content:space-between}.inventory-reset-button{flex:1 1 auto;min-width:0}.inventory-heading-actions .finance-value{flex:0 0 auto}}

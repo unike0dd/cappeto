@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=library-sections-1">
-  <script src="i18n/translations.js?v=library-sections-1" defer></script>
-  <script src="app.js?v=library-sections-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=collapsed-library-1">
+  <script src="i18n/translations.js?v=collapsed-library-1" defer></script>
+  <script src="app.js?v=collapsed-library-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -146,7 +146,7 @@
     <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
       <div class="manage-heading"><div><p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p><h1 id="manageTitle" data-i18n="productLibrary">Product library</h1><p data-i18n="managerIntro">Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
       <p class="limit-message hidden" id="capacityMessage" data-i18n="capacity" role="status">The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.</p>
-      <details class="library-disclosure product-entry-section" id="productEntrySection" open>
+      <details class="library-disclosure product-entry-section" id="productEntrySection">
         <summary><span data-i18n="productEntrySection">Product image, costs, and details</span></summary>
         <div class="library-disclosure-content">
       <form class="product-form" id="productForm">
@@ -209,7 +209,7 @@
         </div>
       </details>
 
-      <details class="library-disclosure finance-menu-section" id="financeMenuSection" open>
+      <details class="library-disclosure finance-menu-section" id="financeMenuSection">
         <summary><span data-i18n="horizontalMenuSection">Horizontal financial menu</span></summary>
         <div class="library-disclosure-content finance-menu-content">
         <nav class="finance-tabs" data-i18n-aria="financeWorkspace" aria-label="Inventory and financial workspace" role="tablist">
@@ -253,7 +253,7 @@
         </div>
       </details>
 
-      <details class="library-disclosure inventory-goods-section" id="inventoryGoodsSection" open>
+      <details class="library-disclosure inventory-goods-section" id="inventoryGoodsSection">
         <summary><span data-i18n="inventoryGoods">Inventory goods for sale</span></summary>
         <div class="library-disclosure-content">
       <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" data-i18n-placeholder="inventorySearch" data-i18n-aria="inventorySearch" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>

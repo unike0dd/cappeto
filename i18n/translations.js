@@ -116,3 +116,34 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
   damagedSummaryConnection:'Unidades dañadas × costo unitario de adquisición',
   netSummaryConnection:'Resultado del producto después del inventario dañado'
 });
+
+Object.assign(window.CAPPETO_I18N.en.ui,{
+  yourPurchaseCost:'Your Purchase Cost',
+  purchaseOptional:'Optional procurement details entered by the business owner.',
+  procurementCost:'Unit purchase cost (USD)',
+  purchaseTaxRate:'Purchase tax (%)',
+  purchaseDeliveryCost:'Purchase delivery cost (USD)',
+  purchaseSubtotal:'Subtotal',
+  purchaseTaxAmount:'Tax',
+  purchaseTotal:'Total',
+  yourSellingPrice:'Your Selling Price',
+  sellingPrompt:'How much do you want to sell your product for?',
+  price:'Selling price (USD)',
+  vat:'Sales VAT (%)',
+  notAvailableShort:'—'
+});
+Object.assign(window.CAPPETO_I18N.es.ui,{
+  yourPurchaseCost:'Costo de su compra',
+  purchaseOptional:'Datos opcionales de adquisición ingresados por el propietario del negocio.',
+  procurementCost:'Costo unitario de compra (USD)',
+  purchaseTaxRate:'Impuesto de su compra (%)',
+  purchaseDeliveryCost:'Costo de entrega de su compra (USD)',
+  purchaseSubtotal:'Subtotal',
+  purchaseTaxAmount:'Impuesto',
+  purchaseTotal:'Total',
+  yourSellingPrice:'Su precio de venta',
+  sellingPrompt:'¿En cuánto desea vender su producto?',
+  price:'Precio de venta (USD)',
+  vat:'IVA de venta (%)',
+  notAvailableShort:'—'
+});

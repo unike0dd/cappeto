@@ -82,8 +82,8 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname==='/api/orders'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();const lines=validItems(body.items,data.products);const amount=totals(lines,data.vatRate);for(const line of lines)applyInventoryChange(line.product,'sold',line.quantity);await saveCatalog(data);return json(res,201,{orderId:randomUUID().slice(0,8).toUpperCase(),...amount})}
   if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
   let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
-  const publicTopLevel=new Set(['/index.html','/styles.css','/app.js']);
-  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/')&&!pathname.startsWith('/assets/products/')&&!pathname.startsWith('/i18n/'))return json(res,404,{error:'Not found'});
+  const publicTopLevel=new Set(['/index.html','/styles.css','/styles-base.css','/app.js']);
+  if(!publicTopLevel.has(pathname)&&!pathname.startsWith('/uploads/')&&!pathname.startsWith('/assets/products/')&&!pathname.startsWith('/assets/branding/')&&!pathname.startsWith('/i18n/'))return json(res,404,{error:'Not found'});
   const file=join(root,pathname);if(!file.startsWith(root)||!existsSync(file))return json(res,404,{error:'Not found'});const extension=extname(file);const cacheControl=['.html','.js','.css'].includes(extension)?'no-store':'public, max-age=3600';res.writeHead(200,{'Content-Type':mime[extension]||'application/octet-stream','Cache-Control':cacheControl,...securityHeaders});createReadStream(file).pipe(res)
 }catch(error){console.error(error);json(res,error.status||500,{error:error.status?error.message:'The server could not complete this request.'})}});
 server.listen(port,'0.0.0.0',()=>console.log(`Cappeto ready on http://localhost:${port}`));

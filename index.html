@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=plain-summary-1">
-  <script src="i18n/translations.js?v=plain-summary-1" defer></script>
-  <script src="app.js?v=plain-summary-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=library-sections-1">
+  <script src="i18n/translations.js?v=library-sections-1" defer></script>
+  <script src="app.js?v=library-sections-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -146,7 +146,9 @@
     <section class="manage-view hidden" id="manageView" aria-labelledby="manageTitle">
       <div class="manage-heading"><div><p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p><h1 id="manageTitle" data-i18n="productLibrary">Product library</h1><p data-i18n="managerIntro">Publish up to 20 products. Images are optimized to WebP before upload.</p></div><span class="capacity" id="capacityLabel">0 / 20</span></div>
       <p class="limit-message hidden" id="capacityMessage" data-i18n="capacity" role="status">The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.</p>
-      <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" data-i18n-placeholder="inventorySearch" data-i18n-aria="inventorySearch" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
+      <details class="library-disclosure product-entry-section" id="productEntrySection" open>
+        <summary><span data-i18n="productEntrySection">Product image, costs, and details</span></summary>
+        <div class="library-disclosure-content">
       <form class="product-form" id="productForm">
         <div class="upload-column">
           <label class="file-button"><span data-i18n="choosePicture">Choose picture</span><input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
@@ -204,7 +206,12 @@
           <button class="button preview-publish hidden" id="productSubmitButton" data-i18n="publishProduct" type="submit">Publish product</button>
         </aside>
       </form>
-      <div class="finance-workspace">
+        </div>
+      </details>
+
+      <details class="library-disclosure finance-menu-section" id="financeMenuSection" open>
+        <summary><span data-i18n="horizontalMenuSection">Horizontal financial menu</span></summary>
+        <div class="library-disclosure-content finance-menu-content">
         <nav class="finance-tabs" data-i18n-aria="financeWorkspace" aria-label="Inventory and financial workspace" role="tablist">
           <button class="finance-tab active" type="button" role="tab" aria-selected="true" aria-controls="financeInventory" data-finance-tab="inventory" data-i18n="inventoryProducts">Inventory</button>
           <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeSales" data-finance-tab="sales" data-i18n="summarySales">Sales</button>
@@ -213,12 +220,6 @@
           <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeNet" data-finance-tab="net" data-i18n="netProductProfit">Net Product Profit</button>
           <button class="finance-tab" type="button" role="tab" aria-selected="false" aria-controls="financeSummary" data-finance-tab="summary" data-i18n="accountingSummary">Summary</button>
         </nav>
-
-        <section class="finance-panel" id="financeInventory" role="tabpanel" data-finance-panel="inventory">
-          <div class="finance-panel-heading"><div><h2 data-i18n="inventoryGoods">Inventory goods for sale</h2><p data-i18n="inventoryExplanation">Products procured by the business and currently available to sell.</p></div><div class="inventory-heading-actions"><button class="inventory-reset-button" id="resetInventoryButton" type="button" data-i18n="resetInventory">RESET</button><span class="finance-value-pair"><strong class="finance-value" id="inventoryUnits">0 units</strong><strong class="finance-value" id="inventoryValue">$0.00</strong></span></div></div>
-          <div class="manage-list" id="manageList"></div>
-        </section>
-
         <section class="finance-panel hidden" id="financeSales" role="tabpanel" data-finance-panel="sales">
           <article class="finance-calculation-card"><p class="eyebrow" data-i18n="salesRevenue">Sales revenue</p><strong class="finance-total" id="salesValue">$0.00</strong><p data-i18n="salesFormula">Sold quantity × selling price, before sales tax.</p></article>
         </section>
@@ -249,7 +250,19 @@
           </tbody></table></div>
           <p class="tax-disclosure hidden" id="summaryTaxDisclosure" data-i18n="taxesPaidToGovernment">Taxes: Paid to Government</p>
         </section>
-      </div>
+        </div>
+      </details>
+
+      <details class="library-disclosure inventory-goods-section" id="inventoryGoodsSection" open>
+        <summary><span data-i18n="inventoryGoods">Inventory goods for sale</span></summary>
+        <div class="library-disclosure-content">
+      <label class="inventory-search search"><span aria-hidden="true">⌕</span><input id="manageSearch" type="search" data-i18n-placeholder="inventorySearch" data-i18n-aria="inventorySearch" placeholder="Search inventory by product or category" aria-label="Search inventory by product or category"></label>
+        <section class="finance-panel" id="financeInventory" role="tabpanel" data-finance-panel="inventory">
+          <div class="finance-panel-heading"><div><h2 data-i18n="inventoryGoods">Inventory goods for sale</h2><p data-i18n="inventoryExplanation">Products procured by the business and currently available to sell.</p></div><div class="inventory-heading-actions"><button class="inventory-reset-button" id="resetInventoryButton" type="button" data-i18n="resetInventory">RESET</button><span class="finance-value-pair"><strong class="finance-value" id="inventoryUnits">0 units</strong><strong class="finance-value" id="inventoryValue">$0.00</strong></span></div></div>
+          <div class="manage-list" id="manageList"></div>
+        </section>
+        </div>
+      </details>
     </section>
 
     <section class="settings-view hidden" id="settingsView" aria-labelledby="settingsTitle">

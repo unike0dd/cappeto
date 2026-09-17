@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=basic-accounting-1">
-  <script src="i18n/translations.js?v=basic-accounting-1" defer></script>
-  <script src="app.js?v=basic-accounting-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=purchase-selling-1">
+  <script src="i18n/translations.js?v=purchase-selling-1" defer></script>
+  <script src="app.js?v=purchase-selling-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -152,15 +152,39 @@
           <label class="file-button"><span data-i18n="choosePicture">Choose picture</span><input id="productImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
           <div class="upload-preview" id="uploadPreview"><span data-i18n="productImage">Product image</span><small data-i18n="uploadHelp">Upload JPG, PNG, or WebP. Converted to optimized WebP.</small></div>
         </div>
-        <div class="product-entry-fields"><div class="form-grid">
-          <label class="field"><span data-i18n="productName">Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
-          <label class="field"><span data-i18n="category">Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
-          <label class="field"><span data-i18n="price">Price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
-          <label class="field"><span data-i18n="procurementCost">Unit procurement cost (USD)</span><input id="productProcurementCost" type="number" min="0.01" max="9999" step="0.01" required placeholder="2.00"></label>
-          <label class="field"><span data-i18n="vat">VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
-          <label class="field"><span data-i18n="quantity">Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
-          <label class="field"><span data-i18n="purchaseDate">Purchase date</span><input id="productPurchaseDate" type="date" required></label>
-        </div>
+        <div class="product-entry-fields">
+          <div class="form-grid product-basics">
+            <label class="field"><span data-i18n="productName">Product name</span><input id="productName" maxlength="80" required placeholder="Cinnamon cappuccino"></label>
+            <label class="field"><span data-i18n="category">Category</span><input id="productCategory" maxlength="40" required placeholder="Coffee"></label>
+            <label class="field"><span data-i18n="quantity">Quantity</span><input id="productStock" type="number" min="0" max="9999" step="1" required placeholder="20"></label>
+            <label class="field"><span data-i18n="purchaseDate">Purchase date</span><input id="productPurchaseDate" type="date" required></label>
+          </div>
+          <details class="pricing-disclosure purchase-disclosure" open>
+            <summary data-i18n="yourPurchaseCost">Your Purchase Cost</summary>
+            <div class="pricing-disclosure-content">
+              <p class="pricing-help" data-i18n="purchaseOptional">Optional procurement details entered by the business owner.</p>
+              <div class="form-grid purchase-fields">
+                <label class="field"><span data-i18n="procurementCost">Unit purchase cost (USD)</span><input id="productProcurementCost" type="number" min="0" max="9999" step="0.01" placeholder="2.00"></label>
+                <label class="field"><span data-i18n="purchaseTaxRate">Purchase tax (%)</span><input id="productPurchaseTax" type="number" min="0" max="100" step="0.01" placeholder="15"></label>
+                <label class="field"><span data-i18n="purchaseDeliveryCost">Purchase delivery cost (USD)</span><input id="productPurchaseDelivery" type="number" min="0" max="9999" step="0.01" placeholder="0.00"></label>
+              </div>
+              <div class="purchase-totals" aria-live="polite">
+                <label><span data-i18n="purchaseSubtotal">Subtotal</span><output id="purchaseSubtotal">$0.00</output></label>
+                <label><span data-i18n="purchaseTaxAmount">Tax</span><output id="purchaseTaxAmount">$0.00</output></label>
+                <label><span data-i18n="purchaseTotal">Total</span><output id="purchaseTotal">$0.00</output></label>
+              </div>
+            </div>
+          </details>
+          <details class="pricing-disclosure selling-disclosure" open>
+            <summary data-i18n="yourSellingPrice">Your Selling Price</summary>
+            <div class="pricing-disclosure-content">
+              <p class="pricing-help" data-i18n="sellingPrompt">How much do you want to sell your product for?</p>
+              <div class="form-grid selling-fields">
+                <label class="field"><span data-i18n="price">Selling price (USD)</span><input id="productPrice" type="number" min="0.01" max="9999" step="0.01" required placeholder="4.50"></label>
+                <label class="field"><span data-i18n="vat">Sales VAT (%)</span><input id="productVat" type="number" min="0" max="100" step="0.01" value="15" required></label>
+              </div>
+            </div>
+          </details>
           <label class="field description-field"><span data-i18n="shortDescription">Short description</span><textarea id="productDescription" maxlength="140" required placeholder="Espresso, steamed milk and cinnamon"></textarea></label>
           <p class="form-message" id="productMessage" role="status"></p>
           <div class="product-edit-actions" aria-label="Product editing actions">

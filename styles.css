@@ -72,3 +72,18 @@
 .finance-summary-table th:last-child,.finance-summary-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
 .profit-summary-row td{color:var(--forest);font-weight:850}
 @media(max-width:700px){.finance-value-pair{width:100%;justify-content:space-between}.finance-value-pair .finance-value{flex:1 1 120px}.finance-breakdown{align-items:flex-start;flex-direction:column;gap:5px}}
+
+/* Expandable purchase and selling sections. */
+.pricing-disclosure{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}
+.pricing-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;padding:12px 16px;color:var(--ink);font-weight:850;list-style:none}
+.pricing-disclosure>summary::-webkit-details-marker{display:none}
+.pricing-disclosure>summary::after{content:'⌄';display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--pistachio);color:var(--forest);font-size:1.15rem;transition:transform .18s}
+.pricing-disclosure[open]>summary::after{transform:rotate(180deg)}
+.pricing-disclosure-content{padding:4px 16px 18px;border-top:1px solid var(--line)}
+.pricing-help{margin:12px 0;color:var(--muted)}
+.purchase-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+.selling-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.purchase-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.purchase-totals label{display:grid;gap:6px;color:var(--muted);font-size:.82rem;font-weight:750}
+.purchase-totals output{display:flex;align-items:center;min-height:48px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink);font-size:1rem;font-weight:850;font-variant-numeric:tabular-nums}
+@media(max-width:760px){.purchase-fields,.selling-fields,.purchase-totals{grid-template-columns:1fr}}

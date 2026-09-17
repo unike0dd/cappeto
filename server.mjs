@@ -49,6 +49,14 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=sessionFor(req);return json(res,200,session?{authenticated:true,user:{email:session.email,role:'owner'},csrfToken:session.csrf}:{authenticated:false})}
   if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'})}
   if(url.pathname==='/api/products'&&req.method==='GET'){const data=await catalog();return json(res,200,data)}
+  if(url.pathname==='/api/inventory/reset'&&req.method==='POST'){
+    if(!requireStaff(req,res))return;
+    const data=await catalog();
+    const resetCount=data.products.filter(product=>Number(product.stock)>0).length;
+    data.products.forEach(product=>{product.stock=0});
+    await saveCatalog(data);
+    return json(res,200,{ok:true,resetCount});
+  }
   if(url.pathname==='/api/products'&&req.method==='POST'){
     if(!requireStaff(req,res))return;const body=await readBody(req);const data=await catalog();if(data.products.length>=20)return json(res,409,{error:'The 20-product limit has been reached.'});
     const name=clean(body.name,80),category=clean(body.category,40),description=clean(body.description,140),priceCents=Math.round(Number(body.price)*100),vatRate=Number(body.vatRate),stock=Number(body.stock),purchaseDate=clean(body.purchaseDate,10);

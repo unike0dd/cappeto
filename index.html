@@ -24,9 +24,9 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Café counter</title>
-  <link rel="stylesheet" href="styles.css?v=purchase-selling-1">
-  <script src="i18n/translations.js?v=purchase-selling-1" defer></script>
-  <script src="app.js?v=purchase-selling-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=plain-summary-1">
+  <script src="i18n/translations.js?v=plain-summary-1" defer></script>
+  <script src="app.js?v=plain-summary-1" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
 </head>
 <body>
@@ -237,15 +237,15 @@
 
         <section class="finance-panel hidden" id="financeSummary" role="tabpanel" data-finance-panel="summary">
           <div class="finance-summary-heading"><h2 data-i18n="accountingSummary">Accounting Summary</h2><p data-i18n="summaryExplanation">Inventory, customer collections, and product profitability in one view.</p></div>
-          <div class="finance-table-wrap"><table class="finance-summary-table"><thead><tr><th data-i18n="summarySection">Section</th><th data-i18n="summaryConnection">How it connects</th><th data-i18n="summaryAmount">Amount</th></tr></thead><tbody>
-            <tr><td data-i18n="inventoryProducts">Inventory</td><td data-i18n="inventorySummaryConnection">Available units × unit procurement cost</td><td id="inventorySummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="summarySales">Sales</td><td data-i18n="salesSummaryConnection">Units sold × selling price</td><td id="salesSummaryValue">$0.00</td></tr>
-            <tr class="tax-summary-row"><td><span data-i18n="summaryTaxes">Taxes</span> <button class="tax-disclosure-button" type="button" aria-expanded="false" aria-controls="summaryTaxDisclosure">?</button></td><td data-i18n="taxSummaryConnection">Sales × VAT rate</td><td id="taxesSummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="customerTotalCollected">Customer total collected</td><td data-i18n="customerTotalConnection">Sales + taxes</td><td id="customerCollectedValue">$0.00</td></tr>
-            <tr><td data-i18n="costOfGoodsSold">Cost of goods sold</td><td data-i18n="cogsSummaryConnection">Units sold × unit procurement cost</td><td id="cogsSummaryValue">$0.00</td></tr>
-            <tr class="profit-summary-row"><td data-i18n="grossProfit">Gross Profit</td><td data-i18n="grossSummaryConnection">Sales − cost of goods sold</td><td id="grossSummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="damagedProductCost">Damaged product cost</td><td data-i18n="damagedSummaryConnection">Damaged units × unit procurement cost</td><td id="damagedSummaryValue">$0.00</td></tr>
-            <tr class="profit-summary-row"><td data-i18n="netProductProfit">Net Product Profit</td><td data-i18n="netSummaryConnection">Product result after damaged inventory</td><td id="netSummaryValue">$0.00</td></tr>
+          <div class="finance-table-wrap"><table class="finance-summary-table"><thead><tr><th data-i18n="summarySection">What this means</th><th data-i18n="summaryConnection">Simple calculation</th><th data-i18n="summaryAmount">Amount</th></tr></thead><tbody>
+            <tr><td data-i18n="summaryProductsAvailable">Products still available</td><td data-i18n="inventorySummaryConnection">Available quantity × what you paid for each product</td><td id="inventorySummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="summaryMoneyFromSales">Money from products sold</td><td data-i18n="salesSummaryConnection">Quantity sold × your selling price</td><td id="salesSummaryValue">$0.00</td></tr>
+            <tr class="tax-summary-row"><td><span data-i18n="summaryTaxesCollected">Taxes collected</span> <button class="tax-disclosure-button" type="button" aria-expanded="false" aria-controls="summaryTaxDisclosure">?</button></td><td data-i18n="taxSummaryConnection">Money from sales × tax percentage</td><td id="taxesSummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="summaryCustomerPaid">Total paid by customers</td><td data-i18n="customerTotalConnection">Money from sales + taxes collected</td><td id="customerCollectedValue">$0.00</td></tr>
+            <tr><td data-i18n="summarySoldProductsCost">What the sold products cost you</td><td data-i18n="cogsSummaryConnection">Quantity sold × what you paid for each product</td><td id="cogsSummaryValue">$0.00</td></tr>
+            <tr class="profit-summary-row"><td data-i18n="summaryMoneyBeforeDamage">Money earned before damaged products</td><td data-i18n="grossSummaryConnection">Money from sales − what the sold products cost you</td><td id="grossSummaryValue">$0.00</td></tr>
+            <tr><td data-i18n="summaryDamagedCost">What the damaged products cost you</td><td data-i18n="damagedSummaryConnection">Damaged quantity × what you paid for each product</td><td id="damagedSummaryValue">$0.00</td></tr>
+            <tr class="profit-summary-row"><td data-i18n="summaryMoneyLeft">Money left from product sales</td><td data-i18n="netSummaryConnection">Money earned − what the damaged products cost you</td><td id="netSummaryValue">$0.00</td></tr>
           </tbody></table></div>
           <p class="tax-disclosure hidden" id="summaryTaxDisclosure" data-i18n="taxesPaidToGovernment">Taxes: Paid to Government</p>
         </section>

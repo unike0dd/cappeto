@@ -147,3 +147,48 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
   vat:'IVA de venta (%)',
   notAvailableShort:'—'
 });
+
+Object.assign(window.CAPPETO_I18N.en.ui,{
+  summaryExplanation:'See what you have, what you sold, taxes collected, and money left.',
+  summarySection:'What this means',
+  summaryConnection:'Simple calculation',
+  summaryAmount:'Amount',
+  summaryProductsAvailable:'Products still available',
+  summaryMoneyFromSales:'Money from products sold',
+  summaryTaxesCollected:'Taxes collected',
+  summaryCustomerPaid:'Total paid by customers',
+  summarySoldProductsCost:'What the sold products cost you',
+  summaryMoneyBeforeDamage:'Money earned before damaged products',
+  summaryDamagedCost:'What the damaged products cost you',
+  summaryMoneyLeft:'Money left from product sales',
+  inventorySummaryConnection:'Available quantity × what you paid for each product',
+  salesSummaryConnection:'Quantity sold × your selling price',
+  taxSummaryConnection:'Money from sales × tax percentage',
+  customerTotalConnection:'Money from sales + taxes collected',
+  cogsSummaryConnection:'Quantity sold × what you paid for each product',
+  grossSummaryConnection:'Money from sales − what the sold products cost you',
+  damagedSummaryConnection:'Damaged quantity × what you paid for each product',
+  netSummaryConnection:'Money earned − what the damaged products cost you'
+});
+Object.assign(window.CAPPETO_I18N.es.ui,{
+  summaryExplanation:'Vea lo que tiene, lo que vendió, los impuestos cobrados y el dinero restante.',
+  summarySection:'Qué significa',
+  summaryConnection:'Cálculo sencillo',
+  summaryAmount:'Valor',
+  summaryProductsAvailable:'Productos que todavía tiene disponibles',
+  summaryMoneyFromSales:'Dinero por productos vendidos',
+  summaryTaxesCollected:'Impuestos cobrados',
+  summaryCustomerPaid:'Total pagado por los clientes',
+  summarySoldProductsCost:'Lo que le costaron los productos vendidos',
+  summaryMoneyBeforeDamage:'Dinero ganado antes de productos dañados',
+  summaryDamagedCost:'Lo que le costaron los productos dañados',
+  summaryMoneyLeft:'Dinero restante de las ventas de productos',
+  inventorySummaryConnection:'Cantidad disponible × lo que pagó por cada producto',
+  salesSummaryConnection:'Cantidad vendida × su precio de venta',
+  taxSummaryConnection:'Dinero de ventas × porcentaje de impuesto',
+  customerTotalConnection:'Dinero de ventas + impuestos cobrados',
+  cogsSummaryConnection:'Cantidad vendida × lo que pagó por cada producto',
+  grossSummaryConnection:'Dinero de ventas − lo que le costaron los productos vendidos',
+  damagedSummaryConnection:'Cantidad dañada × lo que pagó por cada producto',
+  netSummaryConnection:'Dinero ganado − lo que le costaron los productos dañados'
+});

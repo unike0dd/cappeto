@@ -303,6 +303,18 @@
         </div>
       </form>
     </section>
+
+    <section class="tutorial-view hidden" id="tutorialView" aria-labelledby="tutorialTitle">
+      <header class="tutorial-hero"><p class="eyebrow" data-i18n="tutorialEyebrow">Cappeto guide</p><h1 id="tutorialTitle" data-i18n="tutorialTitle" tabindex="-1">How to use Cappeto</h1><p data-i18n="tutorialIntro">Follow these short steps to browse, sell, manage inventory, and understand your reports.</p></header>
+      <nav class="tutorial-jumps" data-i18n-aria="tutorialSections" aria-label="Tutorial sections"><a href="#tutorialCustomer" data-i18n="tutorialCustomerLink">Customer</a><a href="#tutorialOwner" data-i18n="tutorialOwnerLink">Business owner</a><a href="#tutorialReports" data-i18n="tutorialReportsLink">Reports</a><a href="#tutorialWeb3" data-i18n="tutorialWeb3Link">Future Web3</a></nav>
+      <div class="tutorial-grid">
+        <article class="tutorial-card" id="tutorialCustomer"><span class="tutorial-number">01</span><h2 data-i18n="tutorialCustomerTitle">Browse and prepare an order</h2><ol><li data-i18n="tutorialCustomerStep1">Use Search or a category to find a product.</li><li data-i18n="tutorialCustomerStep2">Select Add to place a product in Pedido/Order.</li><li data-i18n="tutorialCustomerStep3">Open Pedido/Order, adjust quantities, review tax and total, then place the order.</li></ol></article>
+        <article class="tutorial-card owner-tutorial-card" id="tutorialOwner"><span class="tutorial-number">02</span><h2 data-i18n="tutorialOwnerTitle">Manage products and inventory</h2><ol><li data-i18n="tutorialOwnerStep1">Sign in as the business owner and open Manage products.</li><li data-i18n="tutorialOwnerStep2">Add the picture, purchase cost, selling price, tax, quantity, date, and description.</li><li data-i18n="tutorialOwnerStep3">Use inventory actions to record added stock, returns, damage, or sold units.</li><li data-i18n="tutorialOwnerStep4">Use Cappeto owner to update the business name, logo, address, phone, email, and currency.</li></ol></article>
+        <article class="tutorial-card" id="tutorialReports"><span class="tutorial-number">03</span><h2 data-i18n="tutorialReportsTitle">Read and download reports</h2><ol><li data-i18n="tutorialReportsStep1">Open Manage products, then Horizontal financial menu and Summary.</li><li data-i18n="tutorialReportsStep2">Review Purchases, Sales, Damaged Goods & Returns, Taxes, and Totals separately.</li><li data-i18n="tutorialReportsStep3">Choose a date and download the one-day snapshot or the 10-day CSV report.</li></ol><p class="tutorial-note" data-i18n="tutorialReportsNote">Freemium reports are daily snapshots saved by this browser. Blank days mean no snapshot was saved.</p></article>
+        <article class="tutorial-card web3-tutorial-card" id="tutorialWeb3"><span class="tutorial-number">04</span><div class="future-badge" data-i18n="futureLabel">Future—not active</div><h2 data-i18n="tutorialWeb3Title">Future Web3 possibilities</h2><p data-i18n="tutorialWeb3Intro">Cappeto does not currently use wallets, tokens, blockchain payments, or smart contracts.</p><ul><li data-i18n="tutorialWeb3Item1">Optional wallet sign-in could be evaluated without replacing normal accounts.</li><li data-i18n="tutorialWeb3Item2">Receipts or loyalty rewards could use verifiable records only when they add clear value.</li><li data-i18n="tutorialWeb3Item3">Any future blockchain payment must show fees, refunds, taxes, privacy, and consumer protections clearly.</li></ul></article>
+      </div>
+      <section class="tutorial-foundation" aria-labelledby="tutorialFoundationTitle"><h2 id="tutorialFoundationTitle" data-i18n="tutorialFoundationTitle">How the current HTML5 app works</h2><dl><div><dt>HTML5</dt><dd data-i18n="tutorialHtml">Provides the semantic screens, forms, navigation, tables, dialogs, and accessibility structure.</dd></div><div><dt>CSS</dt><dd data-i18n="tutorialCss">Controls responsive layouts, light and dark themes, contrast, and support for enlarged views.</dd></div><div><dt>JavaScript</dt><dd data-i18n="tutorialJs">Controls language switching, catalog search, orders, inventory calculations, views, and CSV downloads.</dd></div><div><dt data-i18n="tutorialServerLabel">Server</dt><dd data-i18n="tutorialServer">Provides the local API, owner authentication, catalog updates, inventory changes, and order calculations.</dd></div></dl></section>
+    </section>
   </main>
 
   <div class="site-menu-scrim" id="siteMenuScrim" hidden></div>
@@ -311,6 +323,7 @@
     <nav>
       <button type="button" data-site-route="home" data-i18n="home">Home</button>
       <button type="button" data-site-route="catalog" data-i18n="menu">Menu</button>
+      <button type="button" data-site-route="tutorial" data-i18n="tutorialMenu">Tutorial</button>
       <button class="staff-only hidden" type="button" data-site-route="manage" data-i18n="manage">Manage products</button>
       <button class="staff-only hidden" type="button" data-site-route="settings" data-i18n="ownerProfile">Cappeto owner</button>
       <button class="staff-only hidden" type="button" data-site-route="logout" data-i18n="signOut">Sign out</button>

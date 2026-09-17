@@ -272,7 +272,7 @@ function openSiteMenu(open){
   $('siteMenu').setAttribute('aria-hidden',String(!open));
   $('siteMenuScrim').hidden=!open;
   document.body.classList.toggle('site-menu-open',open);
-  document.querySelectorAll('[data-site-menu-toggle]').forEach(button=>button.setAttribute('aria-expanded',String(open)));
+  document.querySelectorAll('[data-site-menu-toggle]').forEach(button=>{button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',t(open?'closeNavigation':'openNavigation'))});
   if(open)$('siteMenuClose').focus();
 }
 
@@ -286,6 +286,7 @@ document.querySelectorAll('[data-site-route]').forEach(button=>button.addEventLi
   if(route==='home')showLanding();
   else if(route==='signin')showAuth('signin');
   else if(route==='signup')showAuth('signup');
+  else if(route==='logout')$('logoutButton').click();
   else{if(!state.products.length)await loadCatalog();enterApp();switchView(route)}
 }));
 

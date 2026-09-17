@@ -21,6 +21,9 @@ Object.assign(window.CAPPETO_I18N.es.ui,{emailLabel:'Correo del negocio',authVal
 Object.assign(window.CAPPETO_I18N.en.ui,{gmail:'Gmail',orEmail:'or use email',providerBackendRequired:'{provider} access will be enabled when its secure identity service is connected.'});
 Object.assign(window.CAPPETO_I18N.es.ui,{gmail:'Gmail',orEmail:'o use el correo',providerBackendRequired:'El acceso con {provider} se habilitará cuando se conecte su servicio seguro de identidad.'});
 
+Object.assign(window.CAPPETO_I18N.en.ui,{home:'Home',mainNavigation:'Main navigation',openNavigation:'Open navigation menu',closeNavigation:'Close navigation menu'});
+Object.assign(window.CAPPETO_I18N.es.ui,{home:'Inicio',mainNavigation:'Navegación principal',openNavigation:'Abrir menú de navegación',closeNavigation:'Cerrar menú de navegación'});
+
 Object.assign(window.CAPPETO_I18N.en.ui,{summarySales:'Sales',summaryTaxes:'Taxes',summaryGrossEarnings:'Gross Earnings',summaryNetEarnings:'Net Earnings'});
 Object.assign(window.CAPPETO_I18N.es.ui,{summarySales:'Ventas',summaryTaxes:'Impuestos',summaryGrossEarnings:'Ganancias brutas',summaryNetEarnings:'Ganancias netas'});
 

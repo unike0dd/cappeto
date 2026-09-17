@@ -192,3 +192,12 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
   damagedSummaryConnection:'Cantidad dañada × lo que pagó por cada producto',
   netSummaryConnection:'Dinero ganado − lo que le costaron los productos dañados'
 });
+
+Object.assign(window.CAPPETO_I18N.en.ui,{
+  productEntrySection:'Product image, costs, and details',
+  horizontalMenuSection:'Horizontal financial menu'
+});
+Object.assign(window.CAPPETO_I18N.es.ui,{
+  productEntrySection:'Imagen, costos y datos del producto',
+  horizontalMenuSection:'Menú financiero horizontal'
+});

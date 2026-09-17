@@ -90,13 +90,25 @@ body.cart-open{overflow:hidden}
 .tax-disclosure{margin-top:14px;padding:12px 14px;border-left:4px solid var(--danger);background:var(--cream);color:var(--danger)!important;font-weight:850}
 .finance-summary-heading h2{margin:0;font:600 clamp(1.35rem,3vw,1.7rem) Georgia,serif}
 .finance-summary-heading p{margin:5px 0 0;color:var(--muted)}
+.finance-summary-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.summary-report-tools{display:flex;align-items:end;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.summary-report-tools label{display:grid;gap:5px;color:var(--muted);font-size:.76rem;font-weight:850}
+.summary-report-tools input,.summary-download-icon,.summary-download-button{min-height:44px;border:2px solid #6b35d4;border-radius:10px;background:var(--paper);color:var(--ink)}
+.summary-report-tools input{padding:8px 11px}.summary-download-icon{display:grid;place-items:center;width:46px;padding:0;color:#5b27bf;font-size:1.4rem;font-weight:900}.summary-download-button{display:flex;align-items:center;gap:8px;padding:8px 14px;color:#5b27bf;font-weight:900}.summary-download-icon:hover,.summary-download-button:hover{background:#6b35d4;color:#fff}
+.summary-snapshot-note{margin:14px 0 0;padding:10px 12px;border-left:4px solid #6b35d4;background:color-mix(in srgb,#6b35d4 7%,var(--paper));color:var(--muted);font-size:.8rem}
 .finance-table-wrap{overflow-x:auto;margin-top:18px}
 .finance-summary-table{width:100%;min-width:680px;border-collapse:collapse;background:var(--paper)}
 .finance-summary-table th,.finance-summary-table td{padding:13px 14px;border-bottom:1px solid var(--line);text-align:left}
 .finance-summary-table th{color:var(--muted);font-size:.82rem}
 .finance-summary-table th:last-child,.finance-summary-table td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
 .profit-summary-row td{color:var(--forest);font-weight:850}
+.inventory-summary-table{width:max-content;min-width:100%;table-layout:fixed}
+.inventory-summary-table th{width:210px;min-width:210px;max-width:210px;vertical-align:top;color:var(--ink);white-space:normal}
+.inventory-summary-table th span{display:block;font-weight:900}.inventory-summary-table th small{display:block;margin-top:7px;color:var(--muted);font-size:.72rem;font-weight:600;line-height:1.4}
+.inventory-summary-table td{text-align:right;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.inventory-summary-table .summary-group-row th{width:auto;max-width:none;padding-block:11px;background:var(--pistachio);color:var(--forest);text-align:center;font-size:.9rem;text-transform:uppercase;letter-spacing:.04em}
 @media(max-width:700px){.finance-value-pair{width:100%;justify-content:space-between}.finance-value-pair .finance-value{flex:1 1 120px}.finance-breakdown{align-items:flex-start;flex-direction:column;gap:5px}}
+@media(max-width:700px){.finance-summary-top{align-items:stretch}.summary-report-tools{display:grid;grid-template-columns:minmax(0,1fr) 46px}.summary-report-tools label{min-width:0}.summary-report-tools input{width:100%}.summary-download-button{grid-column:1/-1;justify-content:center}.inventory-summary-table th{width:180px;min-width:180px;max-width:180px}}
 
 /* Expandable purchase and selling sections. */
 .pricing-disclosure{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}

@@ -240,18 +240,30 @@
         </section>
 
         <section class="finance-panel hidden" id="financeSummary" role="tabpanel" data-finance-panel="summary">
-          <div class="finance-summary-heading"><h2 data-i18n="accountingSummary">Accounting Summary</h2><p data-i18n="summaryExplanation">Inventory, customer collections, and product profitability in one view.</p></div>
-          <div class="finance-table-wrap"><table class="finance-summary-table"><thead><tr><th data-i18n="summarySection">What this means</th><th data-i18n="summaryConnection">Simple calculation</th><th data-i18n="summaryAmount">Amount</th></tr></thead><tbody>
-            <tr><td data-i18n="summaryProductsAvailable">Products still available</td><td data-i18n="inventorySummaryConnection">Available quantity × what you paid for each product</td><td id="inventorySummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="summaryMoneyFromSales">Money from products sold</td><td data-i18n="salesSummaryConnection">Quantity sold × your selling price</td><td id="salesSummaryValue">$0.00</td></tr>
-            <tr class="tax-summary-row"><td><span data-i18n="summaryTaxesCollected">Taxes collected</span> <button class="tax-disclosure-button" type="button" aria-expanded="false" aria-controls="summaryTaxDisclosure">?</button></td><td data-i18n="taxSummaryConnection">Money from sales × tax percentage</td><td id="taxesSummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="summaryCustomerPaid">Total paid by customers</td><td data-i18n="customerTotalConnection">Money from sales + taxes collected</td><td id="customerCollectedValue">$0.00</td></tr>
-            <tr><td data-i18n="summarySoldProductsCost">What the sold products cost you</td><td data-i18n="cogsSummaryConnection">Quantity sold × what you paid for each product</td><td id="cogsSummaryValue">$0.00</td></tr>
-            <tr class="profit-summary-row"><td data-i18n="summaryMoneyBeforeDamage">Money earned before damaged products</td><td data-i18n="grossSummaryConnection">Money from sales − what the sold products cost you</td><td id="grossSummaryValue">$0.00</td></tr>
-            <tr><td data-i18n="summaryDamagedCost">What the damaged products cost you</td><td data-i18n="damagedSummaryConnection">Damaged quantity × what you paid for each product</td><td id="damagedSummaryValue">$0.00</td></tr>
-            <tr class="profit-summary-row"><td data-i18n="summaryMoneyLeft">Money left from product sales</td><td data-i18n="netSummaryConnection">Money earned − what the damaged products cost you</td><td id="netSummaryValue">$0.00</td></tr>
-          </tbody></table></div>
-          <p class="tax-disclosure hidden" id="summaryTaxDisclosure" data-i18n="taxesPaidToGovernment">Taxes: Paid to Government</p>
+          <div class="finance-summary-top"><div class="finance-summary-heading"><h2 data-i18n="inventorySummaryTitle">Inventory Summary</h2><p data-i18n="inventorySummaryIntro">Purchases, available inventory, sales, taxes, damaged products, and totals in one view.</p></div><div class="summary-report-tools"><label><span data-i18n="oneDaySnapshot">1-day snapshot</span><input id="summaryReportDate" type="date"></label><button class="summary-download-icon" id="downloadDaySummary" data-i18n-aria="downloadSelectedDay" type="button" aria-label="Download selected day"><span aria-hidden="true">⇩</span></button><button class="summary-download-button" id="downloadTenDaySummary" type="button"><span aria-hidden="true">⇩</span><span data-i18n="tenDaySummary">10-day summary</span></button></div></div>
+          <p class="summary-snapshot-note" data-i18n="snapshotMvpNote">Freemium MVP: reports contain saved daily snapshots. Days without a saved snapshot remain blank.</p>
+          <div class="finance-table-wrap" tabindex="0" data-i18n-aria="scrollSummaryTable" aria-label="Scrollable inventory summary table"><table class="finance-summary-table inventory-summary-table"><thead><tr class="summary-group-row"><th colspan="5" data-i18n="purchasedProducts">Purchased products</th><th colspan="6" data-i18n="productsForSale">Products for sale</th><th colspan="7" data-i18n="damageAndTotals">Damaged products and totals</th></tr><tr>
+            <th><span data-i18n="purchasedUnits">Products purchased</span><small data-i18n="purchasedUnitsFormula">Total units entered when products were purchased</small></th>
+            <th><span data-i18n="purchasePayment">Total product purchase payment</span><small data-i18n="purchasePaymentFormula">Product cost + purchase tax + delivery</small></th>
+            <th><span data-i18n="purchaseVatPaid">Purchase tax paid</span><small data-i18n="purchaseVatPaidFormula">Purchase subtotal × purchase tax rate</small></th>
+            <th><span data-i18n="purchaseDeliveryPaid">Purchase delivery paid</span><small data-i18n="purchaseDeliveryFormula">Delivery entered for each purchase</small></th>
+            <th><span data-i18n="unitCostBeforeTax">Unit cost before tax</span><small data-i18n="unitCostFormula">Purchase subtotal ÷ purchased units</small></th>
+            <th><span data-i18n="availableInventoryValue">Available inventory value</span><small data-i18n="availableInventoryFormula">Available quantity × full unit purchase cost</small></th>
+            <th><span data-i18n="averageSalePerUnit">Average selling price per unit</span><small data-i18n="averageSaleFormula">Sales before tax ÷ units sold</small></th>
+            <th><span data-i18n="salesTaxPerUnit">Sales tax per unit</span><small data-i18n="salesTaxPerUnitFormula">Sales tax collected ÷ units sold</small></th>
+            <th><span data-i18n="salesBeforeTax">Sales before tax</span><small data-i18n="salesBeforeTaxFormula">Units sold × selling price</small></th>
+            <th><span data-i18n="salesTaxCollected">Sales tax collected</span><small data-i18n="salesTaxCollectedFormula">Sales before tax × sales tax rate</small></th>
+            <th><span data-i18n="customerPayments">Total paid by customers</span><small data-i18n="customerPaymentsFormula">Sales before tax + sales tax collected</small></th>
+            <th><span data-i18n="damagedCostBeforeTax">Damaged-product cost before tax</span><small data-i18n="damagedCostBeforeTaxFormula">Damaged quantity × unit purchase cost before tax</small></th>
+            <th><span data-i18n="damagedPurchaseTax">Purchase tax on damaged products</span><small data-i18n="damagedPurchaseTaxFormula">Damaged cost × purchase tax rate</small></th>
+            <th><span data-i18n="salesLessDamage">Sales less damaged-product cost</span><small data-i18n="salesLessDamageFormula">Sales before tax − damaged cost before tax</small></th>
+            <th><span data-i18n="estimatedTaxBalance">Estimated tax balance</span><small data-i18n="estimatedTaxBalanceFormula">Sales tax collected − purchase tax on damaged products</small></th>
+            <th><span data-i18n="totalCollectedBeforeTax">Total collected before sales tax</span><small data-i18n="totalCollectedBeforeTaxFormula">Sales before sales tax</small></th>
+            <th><span data-i18n="totalSalesTax">Total sales tax collected</span><small data-i18n="totalSalesTaxFormula">Sales tax collected from customers</small></th>
+            <th><span data-i18n="grandCustomerTotal">Total</span><small data-i18n="grandCustomerTotalFormula">Sales before tax + sales tax</small></th>
+          </tr></thead><tbody><tr>
+            <td id="summaryPurchasedUnits">0</td><td id="summaryPurchasePayment">$0.00</td><td id="summaryPurchaseVat">$0.00</td><td id="summaryPurchaseDelivery">$0.00</td><td id="summaryUnitCost">—</td><td id="inventorySummaryValue">$0.00</td><td id="summaryAverageSale">—</td><td id="summarySalesTaxUnit">—</td><td id="salesSummaryValue">$0.00</td><td id="taxesSummaryValue">$0.00</td><td id="customerCollectedValue">$0.00</td><td id="summaryDamagedBase">$0.00</td><td id="summaryDamagedTax">$0.00</td><td id="summarySalesLessDamage">$0.00</td><td id="summaryTaxBalance">$0.00</td><td id="summaryCollectedBeforeTax">$0.00</td><td id="summaryTotalSalesTax">$0.00</td><td id="summaryGrandTotal">$0.00</td>
+          </tr></tbody></table></div>
         </section>
         </div>
       </details>

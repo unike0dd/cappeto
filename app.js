@@ -193,6 +193,12 @@ function financialSummary(){
     const soldUnits=Math.max(0,Number(product.sold)||0);
     const damagedUnits=Math.max(0,Number(product.damaged)||0);
     const sellingPriceCents=Math.max(0,Number(product.priceCents)||0);
+    const baseCostCents=Math.max(0,Number(product.procurementCostCents)||0);
+    const purchaseTaxRate=Math.max(0,Number(product.purchaseTaxRate)||0);
+    const purchaseDeliveryCents=Math.max(0,Number(product.purchaseDeliveryCents)||0);
+    const purchasedUnits=Math.max(0,Number(product.procurementQuantity)||availableUnits+soldUnits+damagedUnits);
+    const purchaseSubtotalCents=baseCostCents*purchasedUnits;
+    const purchaseTaxCents=Math.round(purchaseSubtotalCents*purchaseTaxRate/100);
     const unitCostCents=effectiveUnitProcurementCostCents(product);
     const missingCost=unitCostCents===0;
     const salesCents=Math.round(sellingPriceCents*soldUnits);
@@ -200,16 +206,31 @@ function financialSummary(){
     const taxCents=Math.round(salesCents*vatRate/100);
     summary.inventoryUnits+=availableUnits;
     summary.inventoryValueCents+=availableUnits*unitCostCents;
+    summary.purchasedUnits+=purchasedUnits;
+    summary.purchaseSubtotalCents+=purchaseSubtotalCents;
+    summary.purchaseTaxCents+=purchaseTaxCents;
+    summary.purchaseDeliveryCents+=purchaseDeliveryCents;
+    summary.purchasePaymentCents+=purchaseSubtotalCents+purchaseTaxCents+purchaseDeliveryCents;
     summary.soldUnits+=soldUnits;
     summary.salesCents+=salesCents;
     summary.taxCents+=taxCents;
     summary.cogsCents+=soldUnits*unitCostCents;
     summary.damagedCostCents+=damagedUnits*unitCostCents;
+    summary.damagedBaseCostCents+=damagedUnits*baseCostCents;
+    summary.damagedPurchaseTaxCents+=Math.round(damagedUnits*baseCostCents*purchaseTaxRate/100);
     if(availableUnits&&missingCost)summary.inventoryCostComplete=false;
     if((soldUnits||damagedUnits)&&missingCost)summary.profitCostComplete=false;
     return summary;
-  },{inventoryUnits:0,inventoryValueCents:0,soldUnits:0,salesCents:0,taxCents:0,cogsCents:0,damagedCostCents:0,inventoryCostComplete:true,profitCostComplete:true});
+  },{inventoryUnits:0,inventoryValueCents:0,purchasedUnits:0,purchaseSubtotalCents:0,purchaseTaxCents:0,purchaseDeliveryCents:0,purchasePaymentCents:0,soldUnits:0,salesCents:0,taxCents:0,cogsCents:0,damagedCostCents:0,damagedBaseCostCents:0,damagedPurchaseTaxCents:0,inventoryCostComplete:true,profitCostComplete:true});
 }
+function localDateKey(date=new Date()){const local=new Date(date.getTime()-date.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}
+function summarySnapshot(summary){return{purchasedUnits:summary.purchasedUnits,purchasePaymentCents:summary.purchasePaymentCents,purchaseTaxCents:summary.purchaseTaxCents,purchaseDeliveryCents:summary.purchaseDeliveryCents,unitCostCents:summary.purchasedUnits?Math.round(summary.purchaseSubtotalCents/summary.purchasedUnits):null,inventoryValueCents:summary.inventoryValueCents,averageSaleCents:summary.soldUnits?Math.round(summary.salesCents/summary.soldUnits):null,salesTaxPerUnitCents:summary.soldUnits?Math.round(summary.taxCents/summary.soldUnits):null,salesCents:summary.salesCents,salesTaxCents:summary.taxCents,customerPaymentsCents:summary.salesCents+summary.taxCents,damagedBaseCostCents:summary.damagedBaseCostCents,damagedPurchaseTaxCents:summary.damagedPurchaseTaxCents,salesLessDamageCents:summary.salesCents-summary.damagedBaseCostCents,estimatedTaxBalanceCents:summary.taxCents-summary.damagedPurchaseTaxCents,totalCollectedBeforeTaxCents:summary.salesCents,totalSalesTaxCents:summary.taxCents,grandTotalCents:summary.salesCents+summary.taxCents}}
+function readSummaryHistory(){try{return JSON.parse(localStorage.getItem('cappeto_summary_snapshots')||'{}')}catch{return{}}}
+function saveSummarySnapshot(snapshot){const history=readSummaryHistory();history[localDateKey()]=snapshot;const keys=Object.keys(history).sort().slice(-31);localStorage.setItem('cappeto_summary_snapshots',JSON.stringify(Object.fromEntries(keys.map(key=>[key,history[key]]))))}
+const summaryCsvFields=[['purchasedUnits','purchasedUnits',false],['purchasePayment','purchasePaymentCents',true],['purchaseVatPaid','purchaseTaxCents',true],['purchaseDeliveryPaid','purchaseDeliveryCents',true],['unitCostBeforeTax','unitCostCents',true],['availableInventoryValue','inventoryValueCents',true],['averageSalePerUnit','averageSaleCents',true],['salesTaxPerUnit','salesTaxPerUnitCents',true],['salesBeforeTax','salesCents',true],['salesTaxCollected','salesTaxCents',true],['customerPayments','customerPaymentsCents',true],['damagedCostBeforeTax','damagedBaseCostCents',true],['damagedPurchaseTax','damagedPurchaseTaxCents',true],['salesLessDamage','salesLessDamageCents',true],['estimatedTaxBalance','estimatedTaxBalanceCents',true],['totalCollectedBeforeTax','totalCollectedBeforeTaxCents',true],['totalSalesTax','totalSalesTaxCents',true],['grandCustomerTotal','grandTotalCents',true]];
+function csvCell(value){return`"${String(value??'').replaceAll('"','""')}"`}
+function snapshotCsvRow(date,snapshot){return[date,...summaryCsvFields.map(([,key,currency])=>snapshot?.[key]===null||snapshot?.[key]===undefined?'':currency?(snapshot[key]/100).toFixed(2):snapshot[key])].map(csvCell).join(',')}
+function downloadSummaryCsv(days){const selected=$('summaryReportDate').value||localDateKey();const history=readSummaryHistory();const dates=[];const end=new Date(`${selected}T12:00:00`);for(let offset=days-1;offset>=0;offset--){const date=new Date(end);date.setDate(end.getDate()-offset);dates.push(localDateKey(date))}if(days===1&&!history[selected]){toast(t('snapshotUnavailable'));return}const header=[t('reportDate'),...summaryCsvFields.map(([label])=>t(label))].map(csvCell).join(',');const note=csvCell(t('snapshotCsvNote'));const csv=`\uFEFF${note}\n${header}\n${dates.map(date=>snapshotCsvRow(date,history[date])).join('\n')}`;const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`cappeto-${days===1?'1-day':'10-day'}-${selected}.csv`;document.body.append(link);link.click();link.remove();URL.revokeObjectURL(link.href)}
 function renderFinancialWorkspace(){
   const summary=financialSummary();
   const customerCollectedCents=summary.salesCents+summary.taxCents;
@@ -224,14 +245,26 @@ function renderFinancialWorkspace(){
   $('cogsValue').textContent=costValue(summary.cogsCents,summary.profitCostComplete);
   $('netValue').textContent=costValue(netProductProfitCents,summary.profitCostComplete);
   $('damagedValue').textContent=costValue(summary.damagedCostCents,summary.profitCostComplete);
-  $('inventorySummaryValue').textContent=costValue(summary.inventoryValueCents,summary.inventoryCostComplete);
-  $('salesSummaryValue').textContent=money(summary.salesCents);
-  $('taxesSummaryValue').textContent=money(summary.taxCents);
-  $('customerCollectedValue').textContent=money(customerCollectedCents);
-  $('cogsSummaryValue').textContent=costValue(summary.cogsCents,summary.profitCostComplete);
-  $('grossSummaryValue').textContent=costValue(grossProfitCents,summary.profitCostComplete);
-  $('damagedSummaryValue').textContent=costValue(summary.damagedCostCents,summary.profitCostComplete);
-  $('netSummaryValue').textContent=costValue(netProductProfitCents,summary.profitCostComplete);
+  const snapshot=summarySnapshot(summary);
+  $('summaryPurchasedUnits').textContent=String(snapshot.purchasedUnits);
+  $('summaryPurchasePayment').textContent=money(snapshot.purchasePaymentCents);
+  $('summaryPurchaseVat').textContent=money(snapshot.purchaseTaxCents);
+  $('summaryPurchaseDelivery').textContent=money(snapshot.purchaseDeliveryCents);
+  $('summaryUnitCost').textContent=snapshot.unitCostCents===null?t('notAvailableShort'):money(snapshot.unitCostCents);
+  $('inventorySummaryValue').textContent=costValue(snapshot.inventoryValueCents,summary.inventoryCostComplete);
+  $('summaryAverageSale').textContent=snapshot.averageSaleCents===null?t('notAvailableShort'):money(snapshot.averageSaleCents);
+  $('summarySalesTaxUnit').textContent=snapshot.salesTaxPerUnitCents===null?t('notAvailableShort'):money(snapshot.salesTaxPerUnitCents);
+  $('salesSummaryValue').textContent=money(snapshot.salesCents);
+  $('taxesSummaryValue').textContent=money(snapshot.salesTaxCents);
+  $('customerCollectedValue').textContent=money(snapshot.customerPaymentsCents);
+  $('summaryDamagedBase').textContent=money(snapshot.damagedBaseCostCents);
+  $('summaryDamagedTax').textContent=money(snapshot.damagedPurchaseTaxCents);
+  $('summarySalesLessDamage').textContent=money(snapshot.salesLessDamageCents);
+  $('summaryTaxBalance').textContent=money(snapshot.estimatedTaxBalanceCents);
+  $('summaryCollectedBeforeTax').textContent=money(snapshot.totalCollectedBeforeTaxCents);
+  $('summaryTotalSalesTax').textContent=money(snapshot.totalSalesTaxCents);
+  $('summaryGrandTotal').textContent=money(snapshot.grandTotalCents);
+  saveSummarySnapshot(snapshot);
   $('resetInventoryButton').disabled=summary.inventoryUnits===0;
   document.querySelectorAll('[data-finance-tab]').forEach(button=>{
     const active=button.dataset.financeTab===state.financeView;
@@ -297,6 +330,9 @@ function applyBusinessProfile(fillForm=false){$('businessWordmark').textContent=
 async function toBusinessLogo(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,400/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.82)}
 applyBusinessProfile();
 const rememberedEmail=localStorage.getItem('cappeto_remembered_email')||'';if(rememberedEmail){$('staffEmail').value=rememberedEmail;$('rememberMe').checked=true}
+const summaryToday=localDateKey();$('summaryReportDate').max=summaryToday;$('summaryReportDate').value=summaryToday;
+$('downloadDaySummary').addEventListener('click',()=>downloadSummaryCsv(1));
+$('downloadTenDaySummary').addEventListener('click',()=>downloadSummaryCsv(10));
 
 $('openSignIn').addEventListener('click',()=>showAuth('signin'));$('openSignUp').addEventListener('click',()=>showAuth('signup'));$('landingCreateAccount').addEventListener('click',()=>showAuth('signup'));$('authBack').addEventListener('click',showLanding);document.querySelectorAll('[data-auth-home]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showLanding()}));
 $('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab').addEventListener('click',()=>setAuthMode('signup'));

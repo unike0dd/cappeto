@@ -1,6 +1,6 @@
 window.CAPPETO_I18N={
-en:{ui:{staffSignIn:'Staff sign in',cappetoHome:'Cappeto home',workspace:'Workspace',signOut:'Sign out',productCategories:'Product categories',productCarousel:'Product carousel',previousProducts:'Previous products',nextProducts:'Next products',password:'Password',passwordPlaceholder:'Enter your password',emailLabel:'Staff email',consent:'I confirm I am authorized by this business owner',signIn:'Sign in',browse:'Browse as a customer',languageLabel:'Cambiar idioma a español',themeLight:'Switch to light theme',themeDark:'Switch to dark theme',menu:'Menu',manage:'Manage products',customer:'Customer view',order:'Order',openOrder:'Open order',fresh:'Freshly prepared',title:'Simple café pleasures.',description:'Choose a favorite, set the quantity, and review the order.',search:'Search the menu',carousel:'Swipe or use the arrows',all:'All',available:'available',soldOut:'Sold out',add:'Add',noProducts:'No products match this view.',each:'each',emptyOrder:'Your order is empty.',currentOrder:'Current order',selection:'Your selection',clear:'Clear',closeOrder:'Close order',subtotal:'Subtotal',total:'Total',placeOrder:'Place order',ownerWorkspace:'Owner workspace',productLibrary:'Product library',managerIntro:'Publish up to 20 products. Images are optimized to WebP before upload.',capacity:'The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.',inventorySearch:'Search inventory by product or category',choosePicture:'Choose picture',productImage:'Product image',uploadHelp:'Upload JPG, PNG, or WebP. Converted to optimized WebP.',productName:'Product name',category:'Category',price:'Price (USD)',vat:'VAT (%)',quantity:'Quantity',purchaseDate:'Purchase date',shortDescription:'Short description',descriptionLabel:'Description',customerPreview:'Customer preview',product:'Product',availableLabel:'Available',purchased:'Purchased',notSelected:'Not selected',clearFields:'Clear fields',publishProduct:'Publish product',updateProduct:'Update product',inventoryProducts:'Inventory',inStock:'In stock',notRecorded:'Not recorded',sold:'Sold',returns:'Returns',damage:'Damage',addInventory:'Add inventory',return:'Return',apply:'Apply',edit:'Edit',delete:'Delete',noInventory:'No product matches your search.',editing:'Editing {name}. Complete the fields, then accept the update.',fieldsCleared:'Fields cleared.',pictureRequired:'Choose a product picture first.',chooseImage:'Choose a JPG, PNG, or WebP image.',imageSize:'The source picture must be 8 MB or smaller.',published:'Product published and added to inventory.',updated:'Product update accepted and saved.',inventoryUpdated:'Inventory updated',deleteConfirm:'Delete this product from the catalog?',productDeleted:'Product deleted',orderCleared:'Order cleared',productAdded:'{name} added',orderPlaced:'Order {id} placed · {total}',wholeQuantity:'Enter a valid whole quantity.',quantityExceeded:'Quantity exceeds available inventory.',signInAgain:'Please sign in again.',limitReached:'The 20-product limit has been reached.',productNotFound:'Product not found.',actionUnavailable:'This action is unavailable.',unexpectedResponse:'Unexpected server response',requestFailed:'Request failed',invalidCredentials:'Email or password is incorrect.'}},
-es:{ui:{staffSignIn:'Inicio de sesión del personal',cappetoHome:'Inicio de Cappeto',workspace:'Área de trabajo',signOut:'Cerrar sesión',productCategories:'Categorías de productos',productCarousel:'Carrusel de productos',previousProducts:'Productos anteriores',nextProducts:'Productos siguientes',password:'Contraseña',passwordPlaceholder:'Ingrese su contraseña',emailLabel:'Correo del personal',consent:'Confirmo que estoy autorizado por el propietario del negocio',signIn:'Iniciar sesión',browse:'Explorar como cliente',languageLabel:'Change language to English',themeLight:'Cambiar al tema claro',themeDark:'Cambiar al tema oscuro',menu:'Menú',manage:'Gestionar productos',customer:'Vista del cliente',order:'Pedido',openOrder:'Abrir pedido',fresh:'Recién preparado',title:'Placeres sencillos de café.',description:'Elija su favorito, indique la cantidad y revise el pedido.',search:'Buscar en el menú',carousel:'Deslice o use las flechas',all:'Todos',available:'disponibles',soldOut:'Agotado',add:'Agregar',noProducts:'Ningún producto coincide con esta vista.',each:'cada uno',emptyOrder:'Su pedido está vacío.',currentOrder:'Pedido actual',selection:'Su selección',clear:'Vaciar',closeOrder:'Cerrar pedido',subtotal:'Subtotal',total:'Total',placeOrder:'Realizar pedido',ownerWorkspace:'Área del propietario',productLibrary:'Biblioteca de productos',managerIntro:'Publique hasta 20 productos. Las imágenes se optimizan a WebP antes de cargarse.',capacity:'Se alcanzó el límite de 20 productos. Elimine un producto antes de agregar uno nuevo. Los productos existentes aún se pueden editar.',inventorySearch:'Buscar inventario por producto o categoría',choosePicture:'Elegir imagen',productImage:'Imagen del producto',uploadHelp:'Cargue JPG, PNG o WebP. Se convierte a WebP optimizado.',productName:'Nombre del producto',category:'Categoría',price:'Precio (USD)',vat:'IVA (%)',quantity:'Cantidad',purchaseDate:'Fecha de compra',shortDescription:'Descripción breve',descriptionLabel:'Descripción',customerPreview:'Vista del cliente',product:'Producto',availableLabel:'Disponible',purchased:'Comprado',notSelected:'No seleccionada',clearFields:'Limpiar campos',publishProduct:'Publicar producto',updateProduct:'Actualizar producto',inventoryProducts:'Inventario',inStock:'Disponible',notRecorded:'No registrada',sold:'Vendido',returns:'Devoluciones',damage:'Dañado',addInventory:'Agregar inventario',return:'Devolución',apply:'Aplicar',edit:'Editar',delete:'Eliminar',noInventory:'Ningún producto coincide con su búsqueda.',editing:'Editando {name}. Complete los campos y acepte la actualización.',fieldsCleared:'Campos limpiados.',pictureRequired:'Primero elija una imagen del producto.',chooseImage:'Elija una imagen JPG, PNG o WebP.',imageSize:'La imagen original debe medir 8 MB o menos.',published:'Producto publicado y agregado al inventario.',updated:'Actualización del producto aceptada y guardada.',inventoryUpdated:'Inventario actualizado',deleteConfirm:'¿Eliminar este producto del catálogo?',productDeleted:'Producto eliminado',orderCleared:'Pedido vaciado',productAdded:'{name} agregado',orderPlaced:'Pedido {id} realizado · {total}',wholeQuantity:'Ingrese una cantidad entera válida.',quantityExceeded:'La cantidad supera el inventario disponible.',signInAgain:'Vuelva a iniciar sesión.',limitReached:'Se alcanzó el límite de 20 productos.',productNotFound:'Producto no encontrado.',actionUnavailable:'Esta acción no está disponible.',unexpectedResponse:'Respuesta inesperada del servidor',requestFailed:'La solicitud falló',invalidCredentials:'El correo o la contraseña son incorrectos.'}},
+en:{ui:{staffSignIn:'Staff sign in',cappetoHome:'Cappeto home',workspace:'Workspace',signOut:'Sign out',productCategories:'Product categories',productCarousel:'Product carousel',previousProducts:'Previous products',nextProducts:'Next products',password:'Password',passwordPlaceholder:'Enter your password',emailLabel:'Staff email',consent:'I confirm I am authorized by this business owner',signIn:'Sign in',languageLabel:'Cambiar idioma a español',themeLight:'Switch to light theme',themeDark:'Switch to dark theme',menu:'Menu',manage:'Manage products',customer:'Customer view',order:'Order',openOrder:'Open order',fresh:'Freshly prepared',title:'Simple café pleasures.',description:'Choose a favorite, set the quantity, and review the order.',search:'Search the menu',carousel:'Swipe or use the arrows',all:'All',available:'available',soldOut:'Sold out',add:'Add',noProducts:'No products match this view.',each:'each',emptyOrder:'Your order is empty.',currentOrder:'Current order',selection:'Your selection',clear:'Clear',closeOrder:'Close order',subtotal:'Subtotal',total:'Total',placeOrder:'Place order',ownerWorkspace:'Owner workspace',productLibrary:'Product library',managerIntro:'Publish up to 20 products. Images are optimized to WebP before upload.',capacity:'The 20-product limit has been reached. Delete a product before adding a new one. Existing products can still be edited.',inventorySearch:'Search inventory by product or category',choosePicture:'Choose picture',productImage:'Product image',uploadHelp:'Upload JPG, PNG, or WebP. Converted to optimized WebP.',productName:'Product name',category:'Category',price:'Price (USD)',vat:'VAT (%)',quantity:'Quantity',purchaseDate:'Purchase date',shortDescription:'Short description',descriptionLabel:'Description',customerPreview:'Customer preview',product:'Product',availableLabel:'Available',purchased:'Purchased',notSelected:'Not selected',clearFields:'Clear fields',publishProduct:'Publish product',updateProduct:'Update product',inventoryProducts:'Inventory',inStock:'In stock',notRecorded:'Not recorded',sold:'Sold',damage:'Damage',addInventory:'Add inventory',return:'Return',apply:'Apply',edit:'Edit',delete:'Delete',noInventory:'No product matches your search.',editing:'Editing {name}. Complete the fields, then accept the update.',fieldsCleared:'Fields cleared.',pictureRequired:'Choose a product picture first.',chooseImage:'Choose a JPG, PNG, or WebP image.',imageSize:'The source picture must be 8 MB or smaller.',published:'Product published and added to inventory.',updated:'Product update accepted and saved.',inventoryUpdated:'Inventory updated',deleteConfirm:'Delete this product from the catalog?',productDeleted:'Product deleted',orderCleared:'Order cleared',productAdded:'{name} added',orderPlaced:'Order {id} placed · {total}',wholeQuantity:'Enter a valid whole quantity.',quantityExceeded:'Quantity exceeds available inventory.',signInAgain:'Please sign in again.',limitReached:'The 20-product limit has been reached.',productNotFound:'Product not found.',actionUnavailable:'This action is unavailable.',unexpectedResponse:'Unexpected server response',requestFailed:'Request failed',invalidCredentials:'Email or password is incorrect.'}},
+es:{ui:{staffSignIn:'Inicio de sesión del personal',cappetoHome:'Inicio de Cappeto',workspace:'Área de trabajo',signOut:'Cerrar sesión',productCategories:'Categorías de productos',productCarousel:'Carrusel de productos',previousProducts:'Productos anteriores',nextProducts:'Productos siguientes',password:'Contraseña',passwordPlaceholder:'Ingrese su contraseña',emailLabel:'Correo del personal',consent:'Confirmo que estoy autorizado por el propietario del negocio',signIn:'Iniciar sesión',languageLabel:'Change language to English',themeLight:'Cambiar al tema claro',themeDark:'Cambiar al tema oscuro',menu:'Menú',manage:'Gestionar productos',customer:'Vista del cliente',order:'Pedido',openOrder:'Abrir pedido',fresh:'Recién preparado',title:'Placeres sencillos de café.',description:'Elija su favorito, indique la cantidad y revise el pedido.',search:'Buscar en el menú',carousel:'Deslice o use las flechas',all:'Todos',available:'disponibles',soldOut:'Agotado',add:'Agregar',noProducts:'Ningún producto coincide con esta vista.',each:'cada uno',emptyOrder:'Su pedido está vacío.',currentOrder:'Pedido actual',selection:'Su selección',clear:'Vaciar',closeOrder:'Cerrar pedido',subtotal:'Subtotal',total:'Total',placeOrder:'Realizar pedido',ownerWorkspace:'Área del propietario',productLibrary:'Biblioteca de productos',managerIntro:'Publique hasta 20 productos. Las imágenes se optimizan a WebP antes de cargarse.',capacity:'Se alcanzó el límite de 20 productos. Elimine un producto antes de agregar uno nuevo. Los productos existentes aún se pueden editar.',inventorySearch:'Buscar inventario por producto o categoría',choosePicture:'Elegir imagen',productImage:'Imagen del producto',uploadHelp:'Cargue JPG, PNG o WebP. Se convierte a WebP optimizado.',productName:'Nombre del producto',category:'Categoría',price:'Precio (USD)',vat:'IVA (%)',quantity:'Cantidad',purchaseDate:'Fecha de compra',shortDescription:'Descripción breve',descriptionLabel:'Descripción',customerPreview:'Vista del cliente',product:'Producto',availableLabel:'Disponible',purchased:'Comprado',notSelected:'No seleccionada',clearFields:'Limpiar campos',publishProduct:'Publicar producto',updateProduct:'Actualizar producto',inventoryProducts:'Inventario',inStock:'Disponible',notRecorded:'No registrada',sold:'Vendido',damage:'Dañado',addInventory:'Agregar inventario',return:'Devolución',apply:'Aplicar',edit:'Editar',delete:'Eliminar',noInventory:'Ningún producto coincide con su búsqueda.',editing:'Editando {name}. Complete los campos y acepte la actualización.',fieldsCleared:'Campos limpiados.',pictureRequired:'Primero elija una imagen del producto.',chooseImage:'Elija una imagen JPG, PNG o WebP.',imageSize:'La imagen original debe medir 8 MB o menos.',published:'Producto publicado y agregado al inventario.',updated:'Actualización del producto aceptada y guardada.',inventoryUpdated:'Inventario actualizado',deleteConfirm:'¿Eliminar este producto del catálogo?',productDeleted:'Producto eliminado',orderCleared:'Pedido vaciado',productAdded:'{name} agregado',orderPlaced:'Pedido {id} realizado · {total}',wholeQuantity:'Ingrese una cantidad entera válida.',quantityExceeded:'La cantidad supera el inventario disponible.',signInAgain:'Vuelva a iniciar sesión.',limitReached:'Se alcanzó el límite de 20 productos.',productNotFound:'Producto no encontrado.',actionUnavailable:'Esta acción no está disponible.',unexpectedResponse:'Respuesta inesperada del servidor',requestFailed:'La solicitud falló',invalidCredentials:'El correo o la contraseña son incorrectos.'}},
 errors:{'Authorization and consent are required.':'Se requieren autorización y consentimiento.','Check the product details and try again.':'Revise los datos del producto e inténtelo nuevamente.','Not found':'No encontrado.','Security token is missing or expired.':'El token de seguridad falta o venció.','Staff sign-in is not configured yet.':'El inicio de sesión del personal aún no está configurado.','The WebP image is invalid or larger than 2.5 MB.':'La imagen WebP no es válida o supera los 2,5 MB.','The uploaded picture must be a valid WebP image.':'La imagen cargada debe ser un archivo WebP válido.','VAT or purchase date is invalid.':'El IVA o la fecha de compra no son válidos.','A product or quantity is no longer available.':'Un producto o la cantidad solicitada ya no están disponibles.','Inventory adjustment is invalid.':'El ajuste de inventario no es válido.','Order items are invalid.':'Los artículos del pedido no son válidos.','Request is too large':'La solicitud es demasiado grande.'},
 products:{
 'cafe-latte':['Café Latte','Café','Espresso suavizado con leche cremosa al vapor.'],'double-espresso':['Espresso doble','Café','Dos intensas dosis con un profundo final acaramelado.'],'iced-cappuccino':['Capuchino helado','Café','Espresso frío, leche fría y una nube de espuma.'],'cafe-mocha':['Café moca','Café','Espresso y chocolate terminados con leche al vapor.'],'caramel-macchiato':['Macchiato de caramelo','Café','Leche con vainilla, espresso y un delicado toque de caramelo.'],'cola-lime':['Cola con lima','Bebidas gaseosas','Cola con gas servida fría con lima fresca.'],'citrus-mint-soda':['Soda cítrica con menta','Bebidas gaseosas','Burbujas cítricas realzadas con menta fresca.'],'berry-rosemary-soda':['Soda de frutos rojos y romero','Bebidas gaseosas','Frutos rojos, agua con gas y aroma de romero.'],'fresh-orange-juice':['Jugo de naranja fresco','Jugos','Naranjas recién exprimidas servidas naturalmente frías.'],'mango-passion-juice':['Jugo de mango y maracuyá','Jugos','Mango maduro mezclado con maracuyá.'],'strawberry-watermelon-juice':['Jugo de fresa y sandía','Jugos','Sandía refrescante mezclada con fresas maduras.'],'butter-croissant':['Croissant de mantequilla','Panadería','Capas doradas y hojaldradas con aroma a mantequilla.'],'cinnamon-roll':['Rollo de canela','Panadería','Espirales suaves de canela con un glaseado ligero.'],'banana-walnut-bread':['Pan de banano y nuez','Panadería','Pan húmedo de banano con trozos de nuez tostada.'],'chicken-avocado-wrap':['Wrap de pollo y aguacate','Wraps','Pollo sazonado, aguacate cremoso y vegetales crujientes.'],'roasted-vegetable-wrap':['Wrap de vegetales asados','Wraps','Vegetales asados, hojas frescas y aderezo sabroso.'],'chicken-pesto-ciabatta':['Ciabatta de pollo al pesto','Sándwiches','Pollo a la parrilla, pesto de albahaca y tomate en ciabatta.'],'turkey-avocado-club':['Club de pavo y aguacate','Sándwiches','Pavo, aguacate y vegetales crujientes en capas.'],'gourmet-cheeseburger':['Hamburguesa gourmet con queso','Comida caliente','Carne, queso derretido y vegetales frescos en pan tostado.'],'gourmet-hot-dog':['Hot dog gourmet','Comida caliente','Salchicha a la parrilla con ingredientes de la casa en pan suave.']
@@ -24,8 +24,8 @@ Object.assign(window.CAPPETO_I18N.es.ui,{gmail:'Gmail',orEmail:'o use el correo'
 Object.assign(window.CAPPETO_I18N.en.ui,{home:'Home',mainNavigation:'Main navigation',openNavigation:'Open navigation menu',closeNavigation:'Close navigation menu'});
 Object.assign(window.CAPPETO_I18N.es.ui,{home:'Inicio',mainNavigation:'Navegación principal',openNavigation:'Abrir menú de navegación',closeNavigation:'Cerrar menú de navegación'});
 
-Object.assign(window.CAPPETO_I18N.en.ui,{summarySales:'Sales',summaryTaxes:'Taxes',summaryGrossEarnings:'Gross Earnings',summaryNetEarnings:'Net Earnings'});
-Object.assign(window.CAPPETO_I18N.es.ui,{summarySales:'Ventas',summaryTaxes:'Impuestos',summaryGrossEarnings:'Ganancias brutas',summaryNetEarnings:'Ganancias netas'});
+Object.assign(window.CAPPETO_I18N.en.ui,{summarySales:'Sales',summaryTaxes:'Taxes'});
+Object.assign(window.CAPPETO_I18N.es.ui,{summarySales:'Ventas',summaryTaxes:'Impuestos'});
 
 Object.assign(window.CAPPETO_I18N.en.ui,{
   financeWorkspace:'Inventory and financial workspace',
@@ -34,11 +34,6 @@ Object.assign(window.CAPPETO_I18N.en.ui,{
   salesRevenue:'Sales revenue',
   salesFormula:'Sold quantity × selling price, before sales tax.',
   taxCollected:'Taxes collected',
-  taxFormula:'Sales × the authorized VAT rate. This amount is collected for the government and is not business income.',
-  grossCollected:'Gross amount collected',
-  grossFormula:'Sales revenue + taxes collected. This is total cash collected, not accounting profit.',
-  provisionalNetSales:'Provisional net sales',
-  netFormula:'Gross amount collected − taxes collected = net sales. True net earnings also require product costs and operating expenses, which are not recorded yet.',
   inventoryUnitCount:'{count} units'
 });
 Object.assign(window.CAPPETO_I18N.es.ui,{
@@ -48,11 +43,6 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
   salesRevenue:'Ingresos por ventas',
   salesFormula:'Cantidad vendida × precio de venta, antes del impuesto.',
   taxCollected:'Impuestos recaudados',
-  taxFormula:'Ventas × la tasa de IVA autorizada. Este monto se recauda para el gobierno y no es ingreso del negocio.',
-  grossCollected:'Monto bruto recaudado',
-  grossFormula:'Ingresos por ventas + impuestos recaudados. Es el efectivo total cobrado, no la utilidad contable.',
-  provisionalNetSales:'Ventas netas provisionales',
-  netFormula:'Monto bruto recaudado − impuestos recaudados = ventas netas. Las ganancias netas reales también requieren los costos de productos y gastos operativos, que aún no se registran.',
   inventoryUnitCount:'{count} unidades'
 });
 
@@ -71,53 +61,23 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
 
 Object.assign(window.CAPPETO_I18N.en.ui,{
   procurementCost:'Unit procurement cost (USD)',
-  procurementCostShort:'Procurement cost',
   grossProfit:'Gross Profit',
   netProductProfit:'Net Product Profit',
   accountingSummary:'Summary',
   paidToGovernment:'Paid to Government',
-  taxesPaidToGovernment:'Taxes: Paid to Government',
   costOfGoodsSold:'Cost of goods sold',
   damagedProductCost:'Damaged product cost',
-  grossProfitFormula:'Sales revenue − cost of goods sold.',
-  summaryExplanation:'Inventory, customer collections, and product profitability in one view.',
-  summarySection:'Section',
-  summaryConnection:'How it connects',
-  summaryAmount:'Amount',
-  inventorySummaryConnection:'Available units × unit procurement cost',
-  salesSummaryConnection:'Units sold × selling price',
-  taxSummaryConnection:'Sales × VAT rate',
-  customerTotalCollected:'Customer total collected',
-  customerTotalConnection:'Sales + taxes',
-  cogsSummaryConnection:'Units sold × unit procurement cost',
-  grossSummaryConnection:'Sales − cost of goods sold',
-  damagedSummaryConnection:'Damaged units × unit procurement cost',
-  netSummaryConnection:'Product result after damaged inventory'
+  grossProfitFormula:'Sales revenue − cost of goods sold.'
 });
 Object.assign(window.CAPPETO_I18N.es.ui,{
   procurementCost:'Costo unitario de adquisición (USD)',
-  procurementCostShort:'Costo de adquisición',
   grossProfit:'Ganancia bruta',
   netProductProfit:'Ganancia neta del producto',
   accountingSummary:'Resumen',
   paidToGovernment:'Pagado al Gobierno',
-  taxesPaidToGovernment:'Impuestos: Pagados al Gobierno',
   costOfGoodsSold:'Costo de los productos vendidos',
   damagedProductCost:'Costo de productos dañados',
-  grossProfitFormula:'Ingresos por ventas − costo de los productos vendidos.',
-  summaryExplanation:'Inventario, cobros a clientes y rentabilidad de productos en una sola vista.',
-  summarySection:'Sección',
-  summaryConnection:'Cómo se relaciona',
-  summaryAmount:'Monto',
-  inventorySummaryConnection:'Unidades disponibles × costo unitario de adquisición',
-  salesSummaryConnection:'Unidades vendidas × precio de venta',
-  taxSummaryConnection:'Ventas × tasa de IVA',
-  customerTotalCollected:'Total cobrado al cliente',
-  customerTotalConnection:'Ventas + impuestos',
-  cogsSummaryConnection:'Unidades vendidas × costo unitario de adquisición',
-  grossSummaryConnection:'Ventas − costo de productos vendidos',
-  damagedSummaryConnection:'Unidades dañadas × costo unitario de adquisición',
-  netSummaryConnection:'Resultado del producto después del inventario dañado'
+  grossProfitFormula:'Ingresos por ventas − costo de los productos vendidos.'
 });
 
 Object.assign(window.CAPPETO_I18N.en.ui,{
@@ -152,51 +112,6 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
 });
 
 Object.assign(window.CAPPETO_I18N.en.ui,{
-  summaryExplanation:'See what you have, what you sold, taxes collected, and money left.',
-  summarySection:'What this means',
-  summaryConnection:'Simple calculation',
-  summaryAmount:'Amount',
-  summaryProductsAvailable:'Products still available',
-  summaryMoneyFromSales:'Money from products sold',
-  summaryTaxesCollected:'Taxes collected',
-  summaryCustomerPaid:'Total paid by customers',
-  summarySoldProductsCost:'What the sold products cost you',
-  summaryMoneyBeforeDamage:'Money earned before damaged products',
-  summaryDamagedCost:'What the damaged products cost you',
-  summaryMoneyLeft:'Money left from product sales',
-  inventorySummaryConnection:'Available quantity × what you paid for each product',
-  salesSummaryConnection:'Quantity sold × your selling price',
-  taxSummaryConnection:'Money from sales × tax percentage',
-  customerTotalConnection:'Money from sales + taxes collected',
-  cogsSummaryConnection:'Quantity sold × what you paid for each product',
-  grossSummaryConnection:'Money from sales − what the sold products cost you',
-  damagedSummaryConnection:'Damaged quantity × what you paid for each product',
-  netSummaryConnection:'Money earned − what the damaged products cost you'
-});
-Object.assign(window.CAPPETO_I18N.es.ui,{
-  summaryExplanation:'Vea lo que tiene, lo que vendió, los impuestos cobrados y el dinero restante.',
-  summarySection:'Qué significa',
-  summaryConnection:'Cálculo sencillo',
-  summaryAmount:'Valor',
-  summaryProductsAvailable:'Productos que todavía tiene disponibles',
-  summaryMoneyFromSales:'Dinero por productos vendidos',
-  summaryTaxesCollected:'Impuestos cobrados',
-  summaryCustomerPaid:'Total pagado por los clientes',
-  summarySoldProductsCost:'Lo que le costaron los productos vendidos',
-  summaryMoneyBeforeDamage:'Dinero ganado antes de productos dañados',
-  summaryDamagedCost:'Lo que le costaron los productos dañados',
-  summaryMoneyLeft:'Dinero restante de las ventas de productos',
-  inventorySummaryConnection:'Cantidad disponible × lo que pagó por cada producto',
-  salesSummaryConnection:'Cantidad vendida × su precio de venta',
-  taxSummaryConnection:'Dinero de ventas × porcentaje de impuesto',
-  customerTotalConnection:'Dinero de ventas + impuestos cobrados',
-  cogsSummaryConnection:'Cantidad vendida × lo que pagó por cada producto',
-  grossSummaryConnection:'Dinero de ventas − lo que le costaron los productos vendidos',
-  damagedSummaryConnection:'Cantidad dañada × lo que pagó por cada producto',
-  netSummaryConnection:'Dinero ganado − lo que le costaron los productos dañados'
-});
-
-Object.assign(window.CAPPETO_I18N.en.ui,{
   productEntrySection:'Product image, costs, and details',
   horizontalMenuSection:'Horizontal financial menu'
 });
@@ -206,11 +121,11 @@ Object.assign(window.CAPPETO_I18N.es.ui,{
 });
 
 Object.assign(window.CAPPETO_I18N.en.ui,{
-  inventorySummaryTitle:'Inventory Summary',inventorySummaryIntro:'Purchases, available inventory, sales, taxes, damaged products, and totals in one view.',oneDaySnapshot:'1-day snapshot',downloadSelectedDay:'Download selected day',tenDaySummary:'10-day summary',snapshotMvpNote:'Freemium MVP: reports contain saved daily snapshots. Days without a saved snapshot remain blank.',scrollSummaryTable:'Scrollable inventory summary table',purchasedProducts:'Purchased products',productsForSale:'Products for sale',damageAndTotals:'Damaged products and totals',
+  inventorySummaryTitle:'Inventory Summary',inventorySummaryIntro:'Purchases, available inventory, sales, taxes, damaged products, and totals in one view.',oneDaySnapshot:'1-day snapshot',downloadSelectedDay:'Download selected day',snapshotMvpNote:'Freemium MVP: reports contain saved daily snapshots. Days without a saved snapshot remain blank.',scrollSummaryTable:'Scrollable inventory summary table',purchasedProducts:'Purchased products',productsForSale:'Products for sale',
   purchasedUnits:'Products purchased',purchasedUnitsFormula:'Total units entered when products were purchased',purchasePayment:'Total product purchase payment',purchasePaymentFormula:'Product cost + purchase tax + delivery',purchaseVatPaid:'Purchase tax paid',purchaseVatPaidFormula:'Purchase subtotal × purchase tax rate',purchaseDeliveryPaid:'Purchase delivery paid',purchaseDeliveryFormula:'Delivery entered for each purchase',unitCostBeforeTax:'Unit cost before tax',unitCostFormula:'Purchase subtotal ÷ purchased units',availableInventoryValue:'Available inventory value',availableInventoryFormula:'Available quantity × full unit purchase cost',averageSalePerUnit:'Average selling price per unit',averageSaleFormula:'Sales before tax ÷ units sold',salesTaxPerUnit:'Sales tax per unit',salesTaxPerUnitFormula:'Sales tax collected ÷ units sold',salesBeforeTax:'Sales before tax',salesBeforeTaxFormula:'Units sold × selling price',salesTaxCollected:'Sales tax collected',salesTaxCollectedFormula:'Sales before tax × sales tax rate',customerPayments:'Total paid by customers',customerPaymentsFormula:'Sales before tax + sales tax collected',damagedCostBeforeTax:'Damaged-product cost before tax',damagedCostBeforeTaxFormula:'Damaged quantity × unit purchase cost before tax',damagedPurchaseTax:'Purchase tax on damaged products',damagedPurchaseTaxFormula:'Damaged cost × purchase tax rate',salesLessDamage:'Sales less damaged-product cost',salesLessDamageFormula:'Sales before tax − damaged cost before tax',estimatedTaxBalance:'Estimated tax balance',estimatedTaxBalanceFormula:'Sales tax collected − purchase tax on damaged products',totalCollectedBeforeTax:'Total collected before sales tax',totalCollectedBeforeTaxFormula:'Sales before sales tax',totalSalesTax:'Total sales tax collected',totalSalesTaxFormula:'Sales tax collected from customers',grandCustomerTotal:'Total',grandCustomerTotalFormula:'Sales before tax + sales tax',reportDate:'Date',snapshotUnavailable:'No saved snapshot is available for the selected day.',snapshotCsvNote:'Freemium MVP snapshot report. Blank days have no saved snapshot; values are not invented.'
 });
 Object.assign(window.CAPPETO_I18N.es.ui,{
-  inventorySummaryTitle:'Resumen de inventario',inventorySummaryIntro:'Compras, inventario disponible, ventas, impuestos, productos dañados y totales en una sola vista.',oneDaySnapshot:'Resumen de 1 día',downloadSelectedDay:'Descargar el día seleccionado',tenDaySummary:'Resumen de 10 días',snapshotMvpNote:'MVP Freemium: los informes contienen resúmenes diarios guardados. Los días sin un resumen guardado permanecen en blanco.',scrollSummaryTable:'Tabla desplazable del resumen de inventario',purchasedProducts:'Productos comprados',productsForSale:'Productos para la venta',damageAndTotals:'Productos dañados y totales',
+  inventorySummaryTitle:'Resumen de inventario',inventorySummaryIntro:'Compras, inventario disponible, ventas, impuestos, productos dañados y totales en una sola vista.',oneDaySnapshot:'Resumen de 1 día',downloadSelectedDay:'Descargar el día seleccionado',snapshotMvpNote:'MVP Freemium: los informes contienen resúmenes diarios guardados. Los días sin un resumen guardado permanecen en blanco.',scrollSummaryTable:'Tabla desplazable del resumen de inventario',purchasedProducts:'Productos comprados',productsForSale:'Productos para la venta',
   purchasedUnits:'Productos comprados',purchasedUnitsFormula:'Total de unidades ingresadas al comprar los productos',purchasePayment:'Pago total por compra de productos',purchasePaymentFormula:'Costo de productos + impuesto de compra + entrega',purchaseVatPaid:'Impuesto pagado por la compra',purchaseVatPaidFormula:'Subtotal de compra × porcentaje de impuesto de compra',purchaseDeliveryPaid:'Entrega pagada por la compra',purchaseDeliveryFormula:'Entrega ingresada para cada compra',unitCostBeforeTax:'Costo por unidad sin impuesto',unitCostFormula:'Subtotal de compra ÷ unidades compradas',availableInventoryValue:'Valor del inventario disponible',availableInventoryFormula:'Cantidad disponible × costo completo de compra por unidad',averageSalePerUnit:'Precio promedio de venta por unidad',averageSaleFormula:'Ventas sin impuesto ÷ unidades vendidas',salesTaxPerUnit:'Impuesto de venta por unidad',salesTaxPerUnitFormula:'Impuesto de venta cobrado ÷ unidades vendidas',salesBeforeTax:'Ventas sin impuesto',salesBeforeTaxFormula:'Unidades vendidas × precio de venta',salesTaxCollected:'Impuesto de venta cobrado',salesTaxCollectedFormula:'Ventas sin impuesto × porcentaje de impuesto de venta',customerPayments:'Total pagado por los clientes',customerPaymentsFormula:'Ventas sin impuesto + impuesto de venta cobrado',damagedCostBeforeTax:'Costo de productos dañados sin impuesto',damagedCostBeforeTaxFormula:'Cantidad dañada × costo de compra por unidad sin impuesto',damagedPurchaseTax:'Impuesto de compra de productos dañados',damagedPurchaseTaxFormula:'Costo de productos dañados × porcentaje de impuesto de compra',salesLessDamage:'Ventas menos costo de productos dañados',salesLessDamageFormula:'Ventas sin impuesto − costo de productos dañados sin impuesto',estimatedTaxBalance:'Balance estimado de impuestos',estimatedTaxBalanceFormula:'Impuesto de venta cobrado − impuesto de compra de productos dañados',totalCollectedBeforeTax:'Total recaudado sin impuesto de venta',totalCollectedBeforeTaxFormula:'Ventas antes del impuesto de venta',totalSalesTax:'Total de impuesto de venta cobrado',totalSalesTaxFormula:'Impuesto de venta cobrado a los clientes',grandCustomerTotal:'Total',grandCustomerTotalFormula:'Ventas sin impuesto + impuesto de venta',reportDate:'Fecha',snapshotUnavailable:'No hay un resumen guardado para el día seleccionado.',snapshotCsvNote:'Informe de resumen del MVP Freemium. Los días en blanco no tienen un resumen guardado; no se inventan valores.'
 });
 

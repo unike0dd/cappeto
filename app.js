@@ -236,7 +236,6 @@ function snapshotCsvRow(date,snapshot){return[date,...summaryCsvFields.map(([,ke
 function downloadSummaryCsv(days){const selected=$('summaryReportDate').value||localDateKey();const history=readSummaryHistory();const dates=[];const end=new Date(`${selected}T12:00:00`);for(let offset=days-1;offset>=0;offset--){const date=new Date(end);date.setDate(end.getDate()-offset);dates.push(localDateKey(date))}if(days===1&&!history[selected]){toast(t('snapshotUnavailable'));return}const header=[t('reportDate'),...summaryCsvFields.map(([label])=>t(label))].map(csvCell).join(',');const note=csvCell(t('snapshotCsvNote'));const csv=`\uFEFF${note}\n${header}\n${dates.map(date=>snapshotCsvRow(date,history[date])).join('\n')}`;const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`cappeto-${days===1?'1-day':'10-day'}-${selected}.csv`;document.body.append(link);link.click();link.remove();URL.revokeObjectURL(link.href)}
 function renderFinancialWorkspace(){
   const summary=financialSummary();
-  const customerCollectedCents=summary.salesCents+summary.taxCents;
   const grossProfitCents=summary.salesCents-summary.cogsCents;
   const netProductProfitCents=grossProfitCents-summary.damagedCostCents;
   const costValue=(cents,complete)=>complete?money(cents):t('notAvailableShort');

@@ -1,0 +1,5 @@
+Contact: https://github.com/unike0dd/cappeto/security/advisories/new
+Expires: 2027-09-18T00:00:00Z
+Canonical: https://unike0dd.github.io/cappeto/.well-known/security.txt
+Preferred-Languages: en, es
+Policy: https://github.com/unike0dd/cappeto/security/policy

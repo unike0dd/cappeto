@@ -21,8 +21,17 @@ await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true}
 if(!existsSync(runtimeFile))await writeFile(runtimeFile,await readFile(dataFile));
 const sessions=new Map();
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.webp':'image/webp','.json':'application/json; charset=utf-8'};
-const securityHeaders={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Permissions-Policy':'camera=(), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"};
-const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8',...securityHeaders,...extra});res.end(JSON.stringify(body))};
+const securityHeaders={
+  'Content-Security-Policy':"default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+  'Cross-Origin-Opener-Policy':'same-origin',
+  'Cross-Origin-Resource-Policy':'same-site',
+  'Permissions-Policy':'accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(self), usb=()',
+  'Referrer-Policy':'strict-origin-when-cross-origin',
+  'Strict-Transport-Security':'max-age=31536000; includeSubDomains',
+  'X-Content-Type-Options':'nosniff',
+  'X-Frame-Options':'DENY'
+};
+const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...securityHeaders,...extra});res.end(JSON.stringify(body))};
 const readBody=async req=>{let size=0;const chunks=[];for await(const chunk of req){size+=chunk.length;if(size>4_000_000)throw Object.assign(new Error('Request is too large'),{status:413});chunks.push(chunk)}return JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}')};
 const catalog=()=>readFile(runtimeFile,'utf8').then(JSON.parse);
 async function saveCatalog(value){const temp=`${runtimeFile}.${randomUUID()}.tmp`;await writeFile(temp,JSON.stringify(value,null,2));await rename(temp,runtimeFile)}
@@ -37,6 +46,9 @@ function applyInventoryChange(product,action,quantity){if(!['add','return','dama
 
 const server=createServer(async(req,res)=>{try{
   const url=new URL(req.url,'http://local');
+  const stateChanging=['POST','PUT','PATCH','DELETE'].includes(req.method);
+  if(stateChanging&&req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'Cross-site request rejected.'});
+  if(req.method==='OPTIONS')return json(res,405,{error:'Cross-origin preflight is not permitted on this origin.'},{'Allow':'GET, HEAD, POST, PUT, PATCH, DELETE'});
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){
     if(!adminEmail||!adminPassword)return json(res,503,{error:'Staff sign-in is not configured yet.'});
     const body=await readBody(req);
@@ -47,7 +59,7 @@ const server=createServer(async(req,res)=>{try{
     return json(res,200,{user:{email,role:'owner'},csrfToken:csrf},{'Set-Cookie':`cappeto_session=${id}.${sign(id)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${isProduction?'; Secure':''}`});
   }
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=sessionFor(req);return json(res,200,session?{authenticated:true,user:{email:session.email,role:'owner'},csrfToken:session.csrf}:{authenticated:false})}
-  if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'})}
+  if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0','Clear-Site-Data':'"cache", "cookies", "storage"'})}
   if(url.pathname==='/api/products'&&req.method==='GET'){
     const data=await catalog();
     if(sessionFor(req))return json(res,200,data);

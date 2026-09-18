@@ -14,7 +14,7 @@ const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'').toLowerCase();
 const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'';
 const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
 const isProduction=process.env.NODE_ENV==='production';
-if(isProduction&&(!adminEmail||!adminPassword||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_EMAIL, CAPPETO_ADMIN_PASSWORD, and CAPPETO_SESSION_SECRET');
+if(isProduction)throw new Error('The prototype Node server is development-only. Deploy the reviewed trusted commerce and identity services for production.');
 if(!adminEmail||!adminPassword)console.warn('Staff sign-in is disabled until CAPPETO_ADMIN_EMAIL and CAPPETO_ADMIN_PASSWORD are configured.');
 
 await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true});
@@ -91,7 +91,7 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname.startsWith('/api/products/')&&url.pathname.endsWith('/inventory')&&req.method==='PATCH'){if(!requireStaff(req,res))return;const id=decodeURIComponent(url.pathname.slice(14,-10));const body=await readBody(req);const data=await catalog();const product=data.products.find(item=>item.id===id);if(!product)return json(res,404,{error:'Product not found.'});const vatRate=Number(body.vatRate),purchaseDate=clean(body.purchaseDate,10);if(!Number.isFinite(vatRate)||vatRate<0||vatRate>100||(purchaseDate&&!/^\d{4}-\d{2}-\d{2}$/.test(purchaseDate)))return json(res,400,{error:'VAT or purchase date is invalid.'});applyInventoryChange(product,body.action,Number(body.quantity));product.vatRate=vatRate;if(purchaseDate)product.purchaseDate=purchaseDate;await saveCatalog(data);return json(res,200,{product})}
   if(url.pathname.startsWith('/api/products/')&&req.method==='DELETE'){if(!requireStaff(req,res))return;const id=decodeURIComponent(url.pathname.slice(14));const data=await catalog();const before=data.products.length;data.products=data.products.filter(p=>p.id!==id);if(data.products.length===before)return json(res,404,{error:'Product not found.'});await saveCatalog(data);return json(res,200,{ok:true})}
   if(url.pathname==='/api/orders/quote'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();return json(res,200,totals(validItems(body.items,data.products),data.vatRate))}
-  if(url.pathname==='/api/orders'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();const lines=validItems(body.items,data.products);const amount=totals(lines,data.vatRate);for(const line of lines)applyInventoryChange(line.product,'sold',line.quantity);await saveCatalog(data);return json(res,201,{orderId:randomUUID().slice(0,8).toUpperCase(),...amount})}
+  if(url.pathname==='/api/orders'&&req.method==='POST')return json(res,503,{error:'Ordering requires the trusted checkout, payment confirmation, and idempotent order service.'});
   if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
   let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const publicTopLevel=new Set(['/index.html','/styles.css','/styles-base.css','/app.js']);

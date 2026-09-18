@@ -14,13 +14,13 @@ jobs:
   security-baseline:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - run: node scripts/verify-security.mjs index.html
 
   codeql:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: github/codeql-action/init@v3
         with:
           languages: javascript-typescript

@@ -22,4 +22,5 @@ coverage/
 !.env.example
 *.pem
 *.key
-dist/\n.wrangler/\n
+dist/
+.wrangler/

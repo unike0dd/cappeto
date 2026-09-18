@@ -1,5 +1,6 @@
 {
-  "name": "cappeto-cafe-catalog",
+  "name": "cappeto-business-menu-inventory",
+  "description": "Bilingual menu, inventory, ordering, and reporting workspace for restaurants, cafés, and independent food sellers.",
   "private": true,
   "version": "1.0.0",
   "scripts": {

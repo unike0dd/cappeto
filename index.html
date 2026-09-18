@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f4f6f0">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Browse Cappeto's café menu, review product availability, and prepare an order with clear subtotal, VAT, and total pricing.">
+  <meta name="description" content="A bilingual menu, inventory, ordering, and reporting workspace for small and medium restaurants, cafés, and independent food sellers.">
   <meta name="application-name" content="Cappeto">
   <meta name="author" content="Cappeto">
   <meta name="robots" content="index,follow,max-image-preview:large">
@@ -13,21 +13,21 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="es_EC">
   <meta property="og:site_name" content="Cappeto">
-  <meta property="og:title" content="Cappeto · Café menu">
-  <meta property="og:description" content="Explore Cappeto's café products, prices, availability, and order totals.">
+  <meta property="og:title" content="Cappeto · Menu and inventory workspace">
+  <meta property="og:description" content="Manage products, inventory, orders, and reports for a restaurant, café, or independent food business.">
   <meta property="og:url" content="https://unike0dd.github.io/cappeto/">
   <meta property="og:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <meta property="og:image:alt" content="Cappeto café latte">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Cappeto · Café menu">
-  <meta name="twitter:description" content="Explore Cappeto's café products, prices, availability, and order totals.">
+  <meta name="twitter:title" content="Cappeto · Menu and inventory workspace">
+  <meta name="twitter:description" content="A bilingual workspace for restaurants, cafés, and independent food sellers.">
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
-  <title>Cappeto · Café counter</title>
+  <title>Cappeto · Menu and inventory workspace</title>
   <link rel="stylesheet" href="styles.css?v=collapsed-library-1">
   <script src="i18n/translations.js?v=collapsed-library-1" defer></script>
   <script src="app.js?v=collapsed-library-1" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"description":"A bilingual café product catalog, inventory workspace, and order station."}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"audience":{"@type":"Audience","audienceType":"Small and medium restaurants, cafés, and independent food sellers"},"description":"A bilingual menu, inventory, ordering, and reporting workspace designed to support keyboard navigation, screen readers, responsive layouts, and enlarged views."}</script>
 </head>
 <body>
   <a class="skip-link" id="skipLink" href="#landingMain">Skip to main content</a>
@@ -43,11 +43,11 @@
     </header>
     <main class="landing-main" id="landingMain">
       <div class="landing-copy">
-        <p class="eyebrow" data-i18n="landingEyebrow">A simpler café workspace</p>
+        <p class="eyebrow" data-i18n="landingEyebrow">A simpler food-business workspace</p>
         <h1 id="landingTitle" data-i18n="landingTitle" tabindex="-1">Your products, inventory, and customers—together.</h1>
-        <p class="landing-lead" data-i18n="landingLead">Cappeto helps small cafés publish a beautiful menu, keep stock organized, and serve customers from one focused workspace.</p>
+        <p class="landing-lead" data-i18n="landingLead">Cappeto helps restaurants, cafés, and independent food sellers publish a clear menu, organize stock, and serve customers from one focused workspace.</p>
         <div class="landing-cta"><button class="button button-primary" id="landingCreateAccount" data-i18n="getStarted" type="button">Get started</button><button class="button secondary-button" id="landingBrowse" data-i18n="browseMenu" type="button">Browse the menu</button></div>
-        <p class="landing-note" data-i18n="landingNote">Designed for owners, staff, and customers on any screen.</p>
+        <p class="landing-note" data-i18n="landingNote">Designed for owners, staff, and customers using different devices and assistive technologies.</p>
       </div>
       <div class="landing-showcase" aria-label="Featured Cappeto products">
         <article class="showcase-card showcase-main"><img src="assets/products/01-cappeto-cafe-latte.webp" alt="Cappeto café latte"><div><span data-i18n="featured">Featured</span><strong>Café Latte</strong></div></article>
@@ -67,7 +67,7 @@
       <aside class="auth-value" aria-labelledby="authValueTitle">
         <a class="auth-value-brand" href="#" data-auth-home><span>C</span><strong>Cappeto</strong></a>
         <p class="eyebrow" data-i18n="ownerWorkspace">Owner workspace</p>
-        <h2 id="authValueTitle" data-i18n="authValueTitle">Your café, organized in one place.</h2>
+        <h2 id="authValueTitle" data-i18n="authValueTitle">Your food business, organized in one place.</h2>
         <ul class="auth-benefits">
           <li><span aria-hidden="true">✓</span><div><strong data-i18n="authProducts">Products and menu</strong><small data-i18n="authProductsCopy">Publish clear products and prices.</small></div></li>
           <li><span aria-hidden="true">✓</span><div><strong data-i18n="authInventory">Inventory and availability</strong><small data-i18n="authInventoryCopy">Keep stock status easy to understand.</small></div></li>
@@ -306,14 +306,12 @@
 
     <section class="tutorial-view hidden" id="tutorialView" aria-labelledby="tutorialTitle">
       <header class="tutorial-hero"><p class="eyebrow" data-i18n="tutorialEyebrow">Cappeto guide</p><h1 id="tutorialTitle" data-i18n="tutorialTitle" tabindex="-1">How to use Cappeto</h1><p data-i18n="tutorialIntro">Follow these short steps to browse, sell, manage inventory, and understand your reports.</p></header>
-      <nav class="tutorial-jumps" data-i18n-aria="tutorialSections" aria-label="Tutorial sections"><a href="#tutorialCustomer" data-i18n="tutorialCustomerLink">Customer</a><a href="#tutorialOwner" data-i18n="tutorialOwnerLink">Business owner</a><a href="#tutorialReports" data-i18n="tutorialReportsLink">Reports</a><a href="#tutorialWeb3" data-i18n="tutorialWeb3Link">Future Web3</a></nav>
+      <nav class="tutorial-jumps" data-i18n-aria="tutorialSections" aria-label="Tutorial sections"><a href="#tutorialCustomer" data-i18n="tutorialCustomerLink">Customer</a><a href="#tutorialOwner" data-i18n="tutorialOwnerLink">Business owner</a><a href="#tutorialReports" data-i18n="tutorialReportsLink">Reports</a></nav>
       <div class="tutorial-grid">
         <article class="tutorial-card" id="tutorialCustomer"><span class="tutorial-number">01</span><h2 data-i18n="tutorialCustomerTitle">Browse and prepare an order</h2><ol><li data-i18n="tutorialCustomerStep1">Use Search or a category to find a product.</li><li data-i18n="tutorialCustomerStep2">Select Add to place a product in Pedido/Order.</li><li data-i18n="tutorialCustomerStep3">Open Pedido/Order, adjust quantities, review tax and total, then place the order.</li></ol></article>
         <article class="tutorial-card owner-tutorial-card" id="tutorialOwner"><span class="tutorial-number">02</span><h2 data-i18n="tutorialOwnerTitle">Manage products and inventory</h2><ol><li data-i18n="tutorialOwnerStep1">Sign in as the business owner and open Manage products.</li><li data-i18n="tutorialOwnerStep2">Add the picture, purchase cost, selling price, tax, quantity, date, and description.</li><li data-i18n="tutorialOwnerStep3">Use inventory actions to record added stock, returns, damage, or sold units.</li><li data-i18n="tutorialOwnerStep4">Use Cappeto owner to update the business name, logo, address, phone, email, and currency.</li></ol></article>
         <article class="tutorial-card" id="tutorialReports"><span class="tutorial-number">03</span><h2 data-i18n="tutorialReportsTitle">Read and download reports</h2><ol><li data-i18n="tutorialReportsStep1">Open Manage products, then Horizontal financial menu and Summary.</li><li data-i18n="tutorialReportsStep2">Review Purchases, Sales, Damaged Goods & Returns, Taxes, and Totals separately.</li><li data-i18n="tutorialReportsStep3">Choose a date and download the one-day snapshot or the 10-day CSV report.</li></ol><p class="tutorial-note" data-i18n="tutorialReportsNote">Freemium reports are daily snapshots saved by this browser. Blank days mean no snapshot was saved.</p></article>
-        <article class="tutorial-card web3-tutorial-card" id="tutorialWeb3"><span class="tutorial-number">04</span><div class="future-badge" data-i18n="futureLabel">Future—not active</div><h2 data-i18n="tutorialWeb3Title">Future Web3 possibilities</h2><p data-i18n="tutorialWeb3Intro">Cappeto does not currently use wallets, tokens, blockchain payments, or smart contracts.</p><ul><li data-i18n="tutorialWeb3Item1">Optional wallet sign-in could be evaluated without replacing normal accounts.</li><li data-i18n="tutorialWeb3Item2">Receipts or loyalty rewards could use verifiable records only when they add clear value.</li><li data-i18n="tutorialWeb3Item3">Any future blockchain payment must show fees, refunds, taxes, privacy, and consumer protections clearly.</li></ul></article>
       </div>
-      <section class="tutorial-foundation" aria-labelledby="tutorialFoundationTitle"><h2 id="tutorialFoundationTitle" data-i18n="tutorialFoundationTitle">How the current HTML5 app works</h2><dl><div><dt>HTML5</dt><dd data-i18n="tutorialHtml">Provides the semantic screens, forms, navigation, tables, dialogs, and accessibility structure.</dd></div><div><dt>CSS</dt><dd data-i18n="tutorialCss">Controls responsive layouts, light and dark themes, contrast, and support for enlarged views.</dd></div><div><dt>JavaScript</dt><dd data-i18n="tutorialJs">Controls language switching, catalog search, orders, inventory calculations, views, and CSV downloads.</dd></div><div><dt data-i18n="tutorialServerLabel">Server</dt><dd data-i18n="tutorialServer">Provides the local API, owner authentication, catalog updates, inventory changes, and order calculations.</dd></div></dl></section>
     </section>
   </main>
 

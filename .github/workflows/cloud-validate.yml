@@ -1,9 +1,12 @@
-name: Cloud configuration validation
+name: Cloud and commerce configuration validation
 
 on:
   pull_request:
     paths:
+      - "agent/**"
       - "apps/flutter/**"
+      - "contracts/**"
+      - "docs/AGENTIC_COMMERCE.md"
       - "firebase/**"
       - "firebase.json"
       - "infra/terraform/**"
@@ -14,6 +17,13 @@ permissions:
   contents: read
 
 jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON contracts
+        run: find agent contracts -type f -name '*.json' -print0 | xargs -0 -r -n1 jq empty
+
   terraform:
     runs-on: ubuntu-latest
     defaults:

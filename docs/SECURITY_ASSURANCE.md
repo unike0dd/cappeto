@@ -1,30 +1,22 @@
 # Security assurance status
 
-This repository is prepared for verification; it is not certified or attested compliant.
+This repository is source-ready for the GitHub-to-Cloudflare phase; it is not certified, attested, or production-authorized.
 
 ## Implemented in source
 
-- Restrictive Content Security Policy without unsafe-inline or unsafe-eval.
-- HTTPS upgrade directive plus Cloudflare-ready HSTS, anti-clickjacking, MIME-sniffing, referrer, permissions, opener, and resource policies.
-- No browser-side demonstration password authentication.
-- Deny-by-default Firebase rules and least-data public catalog boundary.
-- Server-authoritative price, tax, cart, checkout, payment, inventory, and order design.
-- Explicit confirmation for agent cart and checkout actions.
-- No raw payment-card handling.
-- Responsible-disclosure file and automated security checks.
-- DEV, STAGING, and PRODUCTION separation.
+- Allowlisted Cloudflare static build; repository internals are excluded from deployment.
+- SHA-384 asset manifest tied to the GitHub commit and checked after deployment.
+- Worker-enforced CSP, HSTS, anti-clickjacking, nosniff, referrer, permissions, opener, resource, reporting, cache, and fetch-metadata controls.
+- API routes fail closed until the trusted Google backend is connected.
+- Responsible disclosure, deny-by-default Firebase rules, server-authoritative commerce contracts, and no raw card handling.
+- Exact two-target model: Cappeto Non-Specific and PRODUCTION; billing is deferred.
+- Third-party GitHub Actions are pinned to reviewed commit SHAs.
 
 ## Deployment verification still required
 
-- TLS 1.2/1.3, redirects, HSTS and headers observed on every production response.
-- Exact CORS allowlist on the API; no wildcard with credentials.
-- Firebase App Check, identity configuration, MFA policy, tenant claims, and emulator tests.
-- Cloudflare WAF, rate limits, bot controls, logging, alerting, DNS CAA, and DNSSEC where supported.
-- Google Cloud IAM, workload identity, Secret Manager, audit logging, backup/restore, and incident-response exercises.
-- Stripe-hosted payment entry, signed webhooks, idempotency, reconciliation, and formal PCI DSS scope/validation.
-- SAST, DAST, dependency, secret, accessibility, abuse-case, prompt-injection, tool-authorization, data-leakage, and adversarial AI testing.
-- Evidence review against OWASP ASVS, OWASP MASVS for Flutter mobile releases, CISA Secure by Design, NIST CSF 2.0, NIST AI RMF, and applicable PCI DSS requirements.
+- Connect protected GitHub environments to a least-privilege Cloudflare token.
+- Verify TLS 1.2/1.3, HTTPS redirects, headers, CAA, DNSSEC, WAF, rate limits, Turnstile, logs, and alerts on the final domains.
+- Run MDN HTTP Observatory against every final public hostname.
+- Complete identity, session, authorization, CORS, App Check, IAM, Secret Manager, backup, payment, PCI scope, DAST, accessibility, abuse, AI, recovery, and incident-response testing.
 
-## AI controls
-
-Treat every prompt, retrieved document, catalog field, tool result, URL, and model response as untrusted. The model cannot authorize itself, widen permissions, change policy, set authoritative totals, access unpublished data, handle payment credentials, or complete irreversible actions without server validation and explicit user approval. Log tool decisions without storing unnecessary conversation or payment data.
+See SECURITY_CONTROL_MATRIX.md for the current NIST, CISA, OWASP, PCI DSS, MDN Observatory, and Website Security Specification mapping.

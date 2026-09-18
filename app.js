@@ -95,51 +95,27 @@ function productMatchesSearch(product,query){
 const staticPrototype=location.hostname.endsWith('github.io');
 let staticCatalog=null;
 
-async function digest(value){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return [...new Uint8Array(bytes)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
 async function staticApi(path,options={}){
   const method=options.method||'GET';
   const body=JSON.parse(options.body||'{}');
-  if(path==='/api/auth/session')return sessionStorage.getItem('cappeto_demo_session')?{authenticated:true,user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'}:{authenticated:false};
-  if(path==='/api/auth/login'&&method==='POST'){
-    const fingerprint=await digest(`${String(body.email||'').trim().toLowerCase()}:${String(body.password||'')}`);
-    if(fingerprint!=='b6b030b845221156f2bd566f039e0d9d076c636f019b6e6f4e0a3fedd4b5d336')throw new Error('Email or password is incorrect.');
-    sessionStorage.setItem('cappeto_demo_session','active');return{user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'};
-  }
-  if(path==='/api/auth/logout'){sessionStorage.removeItem('cappeto_demo_session');return{ok:true}}
-  if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store'}).then(response=>response.json());
+  if(path==='/api/auth/session')return{authenticated:false};
+  if(path==='/api/auth/login'&&method==='POST')throw new Error('Staff sign-in requires the trusted identity service.');
+  if(path==='/api/auth/logout')return{ok:true};
+  if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store',credentials:'omit'}).then(response=>{
+    if(!response.ok)throw new Error('Request failed');
+    return response.json();
+  });
   if(path==='/api/products'&&method==='GET'){
-    if(sessionStorage.getItem('cappeto_demo_session'))return staticCatalog;
     return{...staticCatalog,products:staticCatalog.products.map(({procurementCostCents,purchaseTaxRate,purchaseDeliveryCents,procurementQuantity,returned,damaged,sold,purchaseDate,...product})=>product)};
   }
-  if(path==='/api/inventory/reset'&&method==='POST'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    const resetCount=staticCatalog.products.filter(product=>Number(product.stock)>0).length;
-    staticCatalog.products.forEach(product=>{product.stock=0});
-    return{ok:true,resetCount};
+  if(path==='/api/orders/quote'&&method==='POST'){
+    const lines=(body.items||[]).map(item=>({product:staticCatalog.products.find(entry=>entry.id===item.productId),quantity:Number(item.quantity)})).filter(line=>line.product&&Number.isInteger(line.quantity)&&line.quantity>0);
+    const subtotalCents=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
+    const vatCents=lines.reduce((sum,line)=>sum+Math.round(line.product.priceCents*line.quantity*Number(line.product.vatRate??staticCatalog.vatRate)/100),0);
+    return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate:staticCatalog.vatRate,previewOnly:true};
   }
-  if(path==='/api/products'&&method==='POST'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    if(staticCatalog.products.length>=20)throw new Error('The 20-product limit has been reached.');
-    const product={id:`demo-${Date.now()}`,name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost||0)*100),purchaseTaxRate:Number(body.purchaseTaxRate||0),purchaseDeliveryCents:Math.round(Number(body.purchaseDeliveryCost||0)*100),procurementQuantity:Number(body.stock),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,returned:0,damaged:0,sold:0,imageUrl:body.imageData};
-    staticCatalog.products.push(product);return{product};
-  }
-  if(path.startsWith('/api/products/')&&method==='PUT'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    const id=decodeURIComponent(path.slice(14));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
-    Object.assign(product,{name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost||0)*100),purchaseTaxRate:Number(body.purchaseTaxRate||0),purchaseDeliveryCents:Math.round(Number(body.purchaseDeliveryCost||0)*100),procurementQuantity:Number(body.stock),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,imageUrl:body.imageData||product.imageUrl});return{product};
-  }
-  if(path.endsWith('/inventory')&&path.startsWith('/api/products/')&&method==='PATCH'){
-    const id=decodeURIComponent(path.slice(14,-10));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
-    applyInventoryChange(product,body.action,Number(body.quantity));product.vatRate=Number(body.vatRate);if(body.purchaseDate)product.purchaseDate=body.purchaseDate;return{product};
-  }
-  if(path.startsWith('/api/products/')&&method==='DELETE'){staticCatalog.products=staticCatalog.products.filter(product=>product.id!==decodeURIComponent(path.slice(14)));return{ok:true}}
-  if((path==='/api/orders/quote'||path==='/api/orders')&&method==='POST'){
-    const lines=(body.items||[]).map(item=>({product:staticCatalog.products.find(entry=>entry.id===item.productId),quantity:item.quantity})).filter(line=>line.product);const subtotalCents=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
-    const vatCents=lines.reduce((sum,line)=>sum+Math.round(line.product.priceCents*line.quantity*Number(line.product.vatRate??staticCatalog.vatRate)/100),0);if(path==='/api/orders')lines.forEach(line=>applyInventoryChange(line.product,'sold',line.quantity));return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate:staticCatalog.vatRate,orderId:`DEMO-${Date.now().toString().slice(-6)}`};
-  }
-  throw new Error('This action is unavailable.');
+  throw new Error('This action requires the trusted backend service.');
 }
-
 async function api(path,options={}){
   if(staticPrototype)return staticApi(path,options);
   const response=await fetch(path,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(state.csrf?{'X-CSRF-Token':state.csrf}:{}),...options.headers},...options});

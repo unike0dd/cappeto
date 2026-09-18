@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cappeto.example/schemas/public-catalog-item.json",
+  "title": "Cappeto public catalog item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "category", "currency", "unitAmount", "available", "published", "imageUrl"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1, "maxLength": 160},
+    "description": {"type": "string", "maxLength": 1000},
+    "category": {"type": "string", "minLength": 1, "maxLength": 80},
+    "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+    "unitAmount": {"type": "integer", "minimum": 0, "description": "Final customer price in minor currency units."},
+    "taxDisplay": {"type": "string", "enum": ["included", "calculated_at_checkout", "not_applicable"]},
+    "available": {"type": "boolean"},
+    "published": {"const": true},
+    "imageUrl": {"type": "string", "format": "uri"},
+    "locale": {"type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$"},
+    "dietaryTags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "allergenNotice": {"type": "string", "maxLength": 500}
+  }
+}

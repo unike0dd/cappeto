@@ -1,14 +1,14 @@
 variable "environment" {
-  description = "Deployment environment: dev, staging, or production."
+  description = "Deployment target: non_specific or production."
   type        = string
   validation {
-    condition     = contains(["dev", "staging", "production"], var.environment)
-    error_message = "environment must be dev, staging, or production."
+    condition     = contains(["non_specific", "production"], var.environment)
+    error_message = "environment must be non_specific or production."
   }
 }
 
 variable "project_id" {
-  description = "Dedicated Google Cloud project ID for this environment."
+  description = "Dedicated Google Cloud project ID for the selected target."
   type        = string
 }
 
@@ -27,7 +27,7 @@ variable "cloudflare_api_token" {
 }
 
 variable "cloudflare_account_id" {
-  description = "Cloudflare account ID for the selected environment."
+  description = "Cloudflare account ID supplied at activation time."
   type        = string
   default     = null
   nullable    = true

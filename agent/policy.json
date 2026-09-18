@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "defaultDecision": "deny",
+  "localeSupport": ["en", "es"],
+  "allowedTools": [
+    "catalog.search",
+    "catalog.getPublishedProduct",
+    "cart.create",
+    "cart.previewMutation",
+    "cart.applyConfirmedMutation",
+    "checkout.createConfirmedSession",
+    "order.getAuthorizedStatus",
+    "support.handoff"
+  ],
+  "requiresExplicitConfirmation": [
+    "cart.applyConfirmedMutation",
+    "checkout.createConfirmedSession"
+  ],
+  "neverExpose": [
+    "purchaseCost",
+    "supplier",
+    "inventoryMovements",
+    "margin",
+    "returns",
+    "damage",
+    "accounting",
+    "staff",
+    "tenantAdministration",
+    "unpublishedProducts",
+    "paymentCredentials",
+    "providerSecrets"
+  ],
+  "authoritativeSources": {
+    "products": "publicCatalog",
+    "pricesAndTaxes": "commerce-api",
+    "availability": "commerce-api",
+    "paymentStatus": "verified-provider-webhook"
+  }
+}

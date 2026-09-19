@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  title: Cappeto Agentic Commerce API
+  version: 0.2.0
+  description: Future server-authoritative contract; not an active backend.
+  license:
+    name: Proprietary
+servers:
+  - url: https://api.example.invalid
+security:
+  - bearerAuth: []
+paths:
+  /v1/catalog/search:
+    get:
+      summary: Search published products
+      operationId: searchCatalog
+      security: []
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 300
+      responses:
+        "200":
+          description: Published catalog results
+  /v1/carts:
+    post:
+      summary: Create a temporary cart
+      operationId: createCart
+      responses:
+        "201":
+          description: Cart created
+  /v1/carts/{cartId}/items:
+    put:
+      summary: Apply a confirmed cart mutation and return authoritative totals
+      operationId: updateCartItems
+      parameters:
+        - in: path
+          name: cartId
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 128
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [productId, quantity]
+              properties:
+                productId:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                quantity:
+                  type: integer
+                  minimum: 0
+                  maximum: 99
+      responses:
+        "200":
+          description: Updated cart
+        "409":
+          description: Price or availability changed
+  /v1/checkout-sessions:
+    post:
+      summary: Create a short-lived checkout session after explicit confirmation
+      operationId: createCheckoutSession
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 255
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [cartId]
+              properties:
+                cartId:
+                  type: string
+                  minLength: 16
+                  maxLength: 128
+      responses:
+        "201":
+          description: Checkout session created
+  /v1/orders/{orderId}:
+    get:
+      summary: Retrieve a permission-checked order status
+      operationId: getOrder
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+            minLength: 16
+            maxLength: 128
+      responses:
+        "200":
+          description: Order status
+        "404":
+          description: Not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

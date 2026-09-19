@@ -95,51 +95,27 @@ function productMatchesSearch(product,query){
 const staticPrototype=location.hostname.endsWith('github.io');
 let staticCatalog=null;
 
-async function digest(value){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return [...new Uint8Array(bytes)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
 async function staticApi(path,options={}){
   const method=options.method||'GET';
   const body=JSON.parse(options.body||'{}');
-  if(path==='/api/auth/session')return sessionStorage.getItem('cappeto_demo_session')?{authenticated:true,user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'}:{authenticated:false};
-  if(path==='/api/auth/login'&&method==='POST'){
-    const fingerprint=await digest(`${String(body.email||'').trim().toLowerCase()}:${String(body.password||'')}`);
-    if(fingerprint!=='b6b030b845221156f2bd566f039e0d9d076c636f019b6e6f4e0a3fedd4b5d336')throw new Error('Email or password is incorrect.');
-    sessionStorage.setItem('cappeto_demo_session','active');return{user:{email:'Cappeto owner',role:'owner'},csrfToken:'static-preview'};
-  }
-  if(path==='/api/auth/logout'){sessionStorage.removeItem('cappeto_demo_session');return{ok:true}}
-  if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store'}).then(response=>response.json());
+  if(path==='/api/auth/session')return{authenticated:false};
+  if(path==='/api/auth/login'&&method==='POST')throw new Error('Staff sign-in requires the trusted identity service.');
+  if(path==='/api/auth/logout')return{ok:true};
+  if(!staticCatalog)staticCatalog=await fetch('data/products.json',{cache:'no-store',credentials:'omit'}).then(response=>{
+    if(!response.ok)throw new Error('Request failed');
+    return response.json();
+  });
   if(path==='/api/products'&&method==='GET'){
-    if(sessionStorage.getItem('cappeto_demo_session'))return staticCatalog;
     return{...staticCatalog,products:staticCatalog.products.map(({procurementCostCents,purchaseTaxRate,purchaseDeliveryCents,procurementQuantity,returned,damaged,sold,purchaseDate,...product})=>product)};
   }
-  if(path==='/api/inventory/reset'&&method==='POST'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    const resetCount=staticCatalog.products.filter(product=>Number(product.stock)>0).length;
-    staticCatalog.products.forEach(product=>{product.stock=0});
-    return{ok:true,resetCount};
+  if(path==='/api/orders/quote'&&method==='POST'){
+    const lines=(body.items||[]).map(item=>({product:staticCatalog.products.find(entry=>entry.id===item.productId),quantity:Number(item.quantity)})).filter(line=>line.product&&Number.isInteger(line.quantity)&&line.quantity>0);
+    const subtotalCents=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
+    const vatCents=lines.reduce((sum,line)=>sum+Math.round(line.product.priceCents*line.quantity*Number(line.product.vatRate??staticCatalog.vatRate)/100),0);
+    return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate:staticCatalog.vatRate,previewOnly:true};
   }
-  if(path==='/api/products'&&method==='POST'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    if(staticCatalog.products.length>=20)throw new Error('The 20-product limit has been reached.');
-    const product={id:`demo-${Date.now()}`,name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost||0)*100),purchaseTaxRate:Number(body.purchaseTaxRate||0),purchaseDeliveryCents:Math.round(Number(body.purchaseDeliveryCost||0)*100),procurementQuantity:Number(body.stock),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,returned:0,damaged:0,sold:0,imageUrl:body.imageData};
-    staticCatalog.products.push(product);return{product};
-  }
-  if(path.startsWith('/api/products/')&&method==='PUT'){
-    if(!sessionStorage.getItem('cappeto_demo_session'))throw new Error('Please sign in again.');
-    const id=decodeURIComponent(path.slice(14));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
-    Object.assign(product,{name:body.name,category:body.category,description:body.description,priceCents:Math.round(Number(body.price)*100),procurementCostCents:Math.round(Number(body.procurementCost||0)*100),purchaseTaxRate:Number(body.purchaseTaxRate||0),purchaseDeliveryCents:Math.round(Number(body.purchaseDeliveryCost||0)*100),procurementQuantity:Number(body.stock),vatRate:Number(body.vatRate),stock:Number(body.stock),purchaseDate:body.purchaseDate,imageUrl:body.imageData||product.imageUrl});return{product};
-  }
-  if(path.endsWith('/inventory')&&path.startsWith('/api/products/')&&method==='PATCH'){
-    const id=decodeURIComponent(path.slice(14,-10));const product=staticCatalog.products.find(entry=>entry.id===id);if(!product)throw new Error('Product not found.');
-    applyInventoryChange(product,body.action,Number(body.quantity));product.vatRate=Number(body.vatRate);if(body.purchaseDate)product.purchaseDate=body.purchaseDate;return{product};
-  }
-  if(path.startsWith('/api/products/')&&method==='DELETE'){staticCatalog.products=staticCatalog.products.filter(product=>product.id!==decodeURIComponent(path.slice(14)));return{ok:true}}
-  if((path==='/api/orders/quote'||path==='/api/orders')&&method==='POST'){
-    const lines=(body.items||[]).map(item=>({product:staticCatalog.products.find(entry=>entry.id===item.productId),quantity:item.quantity})).filter(line=>line.product);const subtotalCents=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
-    const vatCents=lines.reduce((sum,line)=>sum+Math.round(line.product.priceCents*line.quantity*Number(line.product.vatRate??staticCatalog.vatRate)/100),0);if(path==='/api/orders')lines.forEach(line=>applyInventoryChange(line.product,'sold',line.quantity));return{subtotalCents,vatCents,totalCents:subtotalCents+vatCents,vatRate:staticCatalog.vatRate,orderId:`DEMO-${Date.now().toString().slice(-6)}`};
-  }
-  throw new Error('This action is unavailable.');
+  throw new Error('This action requires the trusted backend service.');
 }
-
 async function api(path,options={}){
   if(staticPrototype)return staticApi(path,options);
   const response=await fetch(path,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(state.csrf?{'X-CSRF-Token':state.csrf}:{}),...options.headers},...options});
@@ -228,8 +204,8 @@ function financialSummary(){
 }
 function localDateKey(date=new Date()){const local=new Date(date.getTime()-date.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}
 function summarySnapshot(summary){return{purchasedUnits:summary.purchasedUnits,purchasePaymentCents:summary.purchasePaymentCents,purchaseTaxCents:summary.purchaseTaxCents,purchaseDeliveryCents:summary.purchaseDeliveryCents,unitCostCents:summary.purchasedUnits?Math.round(summary.purchaseSubtotalCents/summary.purchasedUnits):null,inventoryValueCents:summary.inventoryValueCents,averageSaleCents:summary.soldUnits?Math.round(summary.salesCents/summary.soldUnits):null,salesTaxPerUnitCents:summary.soldUnits?Math.round(summary.taxCents/summary.soldUnits):null,salesCents:summary.salesCents,salesTaxCents:summary.taxCents,customerPaymentsCents:summary.salesCents+summary.taxCents,returnedUnits:summary.returnedUnits,returnedInventoryValueCents:summary.returnedInventoryValueCents,damagedBaseCostCents:summary.damagedBaseCostCents,damagedPurchaseTaxCents:summary.damagedPurchaseTaxCents,salesLessDamageCents:summary.salesCents-summary.damagedBaseCostCents,estimatedTaxBalanceCents:summary.taxCents-summary.damagedPurchaseTaxCents,totalCollectedBeforeTaxCents:summary.salesCents,totalSalesTaxCents:summary.taxCents,grandTotalCents:summary.salesCents+summary.taxCents}}
-function readSummaryHistory(){try{return JSON.parse(localStorage.getItem('cappeto_summary_snapshots')||'{}')}catch{return{}}}
-function saveSummarySnapshot(snapshot){const history=readSummaryHistory();history[localDateKey()]=snapshot;const keys=Object.keys(history).sort().slice(-31);localStorage.setItem('cappeto_summary_snapshots',JSON.stringify(Object.fromEntries(keys.map(key=>[key,history[key]]))))}
+function readSummaryHistory(){try{return JSON.parse(sessionStorage.getItem('cappeto_summary_snapshots')||'{}')}catch{return{}}}
+function saveSummarySnapshot(snapshot){const history=readSummaryHistory();history[localDateKey()]=snapshot;const keys=Object.keys(history).sort().slice(-31);sessionStorage.setItem('cappeto_summary_snapshots',JSON.stringify(Object.fromEntries(keys.map(key=>[key,history[key]]))))}
 const summaryCsvFields=[['purchasedUnits','purchasedUnits',false],['purchasePayment','purchasePaymentCents',true],['purchaseVatPaid','purchaseTaxCents',true],['purchaseDeliveryPaid','purchaseDeliveryCents',true],['unitCostBeforeTax','unitCostCents',true],['availableInventoryValue','inventoryValueCents',true],['averageSalePerUnit','averageSaleCents',true],['salesTaxPerUnit','salesTaxPerUnitCents',true],['salesBeforeTax','salesCents',true],['salesTaxCollected','salesTaxCents',true],['customerPayments','customerPaymentsCents',true],['returnedUnits','returnedUnits',false],['returnedInventoryValue','returnedInventoryValueCents',true],['damagedCostBeforeTax','damagedBaseCostCents',true],['damagedPurchaseTax','damagedPurchaseTaxCents',true],['salesLessDamage','salesLessDamageCents',true],['estimatedTaxBalance','estimatedTaxBalanceCents',true],['totalCollectedBeforeTax','totalCollectedBeforeTaxCents',true],['totalSalesTax','totalSalesTaxCents',true],['grandCustomerTotal','grandTotalCents',true]];
 function csvCell(value){return`"${String(value??'').replaceAll('"','""')}"`}
 function snapshotCsvRow(date,snapshot){return[date,...summaryCsvFields.map(([,key,currency])=>snapshot?.[key]===null||snapshot?.[key]===undefined?'':currency?(snapshot[key]/100).toFixed(2):snapshot[key])].map(csvCell).join(',')}
@@ -328,12 +304,12 @@ document.querySelectorAll('[data-site-route]').forEach(button=>button.addEventLi
 }));
 
 
-function loadBusinessProfile(){try{return{...defaultBusinessProfile,...JSON.parse(localStorage.getItem('cappeto_business_profile')||'{}')}}catch{return{...defaultBusinessProfile}}}
+function loadBusinessProfile(){try{return{...defaultBusinessProfile,...JSON.parse(sessionStorage.getItem('cappeto_business_profile')||'{}')}}catch{return{...defaultBusinessProfile}}}
 function paintBusinessLogo(element,logo,name){element.style.backgroundImage=logo?`url("${logo}")`:'';element.classList.toggle('has-logo',Boolean(logo));const label=element.querySelector('span')||element;label.textContent=logo?'':(name.trim().charAt(0)||'C').toUpperCase()}
 function applyBusinessProfile(fillForm=false){$('businessWordmark').textContent=businessProfile.name||'Cappeto';paintBusinessLogo($('businessLogoMark'),businessProfile.logo,businessProfile.name);paintBusinessLogo($('businessLogoPreview'),pendingBusinessLogo,businessProfile.name);if(fillForm){$('businessName').value=businessProfile.name;$('businessAddress').value=businessProfile.address;$('businessPhone').value=businessProfile.phone;$('businessEmail').value=businessProfile.email;$('businessCurrency').value=businessProfile.currency||'USD';$('businessProfileMessage').textContent=''}}
 async function toBusinessLogo(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('chooseImage');if(file.size>8*1024*1024)throw new Error('imageSize');const bitmap=await createImageBitmap(file);const scale=Math.min(1,400/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.82)}
 applyBusinessProfile();
-const rememberedEmail=localStorage.getItem('cappeto_remembered_email')||'';if(rememberedEmail){$('staffEmail').value=rememberedEmail;$('rememberMe').checked=true}
+const rememberedEmail=sessionStorage.getItem('cappeto_remembered_email')||'';if(rememberedEmail){$('staffEmail').value=rememberedEmail;$('rememberMe').checked=true}
 const summaryToday=localDateKey();$('summaryReportDate').max=summaryToday;$('summaryReportDate').value=summaryToday;
 $('downloadDaySummary').addEventListener('click',()=>downloadSummaryCsv(1));
 $('downloadTenDaySummary').addEventListener('click',()=>downloadSummaryCsv(10));
@@ -344,7 +320,7 @@ $('signInTab').addEventListener('click',()=>setAuthMode('signin'));$('signUpTab'
 $('passwordToggle').addEventListener('click',()=>{const visible=$('authCode').type==='text';$('authCode').type=visible?'password':'text';$('passwordToggle').textContent=t(visible?'showPassword':'hidePassword');$('passwordToggle').setAttribute('aria-pressed',String(!visible));$('authCode').focus()});
 $('landingBrowse').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('forgotPassword').addEventListener('click',()=>{$('authError').textContent=t('passwordResetInfo')});
-$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';if(event.currentTarget.dataset.mode==='signup'){if($('authCode').value!==$('confirmPassword').value){$('authError').textContent=t('passwordMismatch');return}$('authError').textContent=t('signupBackendRequired');return}const button=$('signInButton');button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=t('signingIn');try{const email=$('staffEmail').value.trim();const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email,password:$('authCode').value})});if($('rememberMe').checked)localStorage.setItem('cappeto_remembered_email',email);else localStorage.removeItem('cappeto_remembered_email');state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}finally{button.disabled=false;button.removeAttribute('aria-busy');button.textContent=t('signIn')}});
+$('authForm').addEventListener('submit',async event=>{event.preventDefault();$('authError').textContent='';if(event.currentTarget.dataset.mode==='signup'){if($('authCode').value!==$('confirmPassword').value){$('authError').textContent=t('passwordMismatch');return}$('authError').textContent=t('signupBackendRequired');return}const button=$('signInButton');button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=t('signingIn');try{const email=$('staffEmail').value.trim();const result=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email,password:$('authCode').value})});if($('rememberMe').checked)sessionStorage.setItem('cappeto_remembered_email',email);else sessionStorage.removeItem('cappeto_remembered_email');state.staff=result.user;state.csrf=result.csrfToken;showStaffControls(true);await loadCatalog();enterApp()}catch(error){$('authError').textContent=localizeError(error)}finally{button.disabled=false;button.removeAttribute('aria-busy');button.textContent=t('signIn')}});
 $('browseButton').addEventListener('click',async()=>{showStaffControls(false);await loadCatalog();enterApp()});
 $('logoutButton').addEventListener('click',async()=>{await api('/api/auth/logout',{method:'POST',body:'{}'});location.reload()});
 $('categoryRow').addEventListener('click',event=>{const button=event.target.closest('[data-category]');if(!button)return;state.category=button.dataset.category;state.carouselIndex=0;renderCategories();renderProducts()});
@@ -361,7 +337,7 @@ document.querySelectorAll('.nav-button').forEach(button=>button.addEventListener
 $('ownerSettingsButton').addEventListener('click',()=>{pendingBusinessLogo=businessProfile.logo;applyBusinessProfile(true);switchView('settings');$('settingsTitle').focus?.()});
 $('businessLogo').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{pendingBusinessLogo=await toBusinessLogo(file);paintBusinessLogo($('businessLogoPreview'),pendingBusinessLogo,$('businessName').value||businessProfile.name);$('businessProfileMessage').textContent=''}catch(error){$('businessProfileMessage').textContent=localizeError(error)}});
 $('businessName').addEventListener('input',()=>paintBusinessLogo($('businessLogoPreview'),pendingBusinessLogo,$('businessName').value||'Cappeto'));
-$('businessProfileForm').addEventListener('submit',event=>{event.preventDefault();if(!event.currentTarget.checkValidity()){event.currentTarget.reportValidity();return}businessProfile={name:$('businessName').value.trim(),logo:pendingBusinessLogo,address:$('businessAddress').value.trim(),phone:$('businessPhone').value.trim(),email:$('businessEmail').value.trim(),currency:$('businessCurrency').value};localStorage.setItem('cappeto_business_profile',JSON.stringify(businessProfile));applyBusinessProfile();$('businessProfileMessage').textContent=t('settingsSaved');toast(t('settingsSaved'))});
+$('businessProfileForm').addEventListener('submit',event=>{event.preventDefault();if(!event.currentTarget.checkValidity()){event.currentTarget.reportValidity();return}businessProfile={name:$('businessName').value.trim(),logo:pendingBusinessLogo,address:$('businessAddress').value.trim(),phone:$('businessPhone').value.trim(),email:$('businessEmail').value.trim(),currency:$('businessCurrency').value};sessionStorage.setItem('cappeto_business_profile',JSON.stringify(businessProfile));applyBusinessProfile();$('businessProfileMessage').textContent=t('settingsSaved');toast(t('settingsSaved'))});
 $('productImage').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{state.imageData=await toWebP(file);for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage=`url(${state.imageData})`;$(id).classList.add('has-image')}$('productMessage').textContent='';updateProductAction()}catch(error){state.imageData='';$('productMessage').textContent=localizeError(error);updateProductAction()}});
 $('removePictureButton').addEventListener('click',()=>{state.imageData='';$('productImage').value='';for(const id of ['uploadPreview','previewPicture']){$(id).style.backgroundImage='';$(id).classList.remove('has-image')}updateProductAction();$('productMessage').textContent=t('pictureRequired')});
 $('productForm').addEventListener('input',()=>{renderProductPreview();updateProductAction()});

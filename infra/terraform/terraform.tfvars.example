@@ -1,5 +1,0 @@
-environment           = "non_specific"
-project_id            = "replace-with-cappeto-non-specific-project"
-region                = "us-central1"
-cloudflare_account_id = "set-at-activation-time"
-# Set TF_VAR_cloudflare_api_token only in the protected deployment environment.

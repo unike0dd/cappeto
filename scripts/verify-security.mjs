@@ -1,4 +1,4 @@
-import {readFile} from "node:fs/promises";
+import {access, readFile} from "node:fs/promises";
 
 const htmlFiles = process.argv.slice(2);
 if (!htmlFiles.length) throw new Error("Provide at least one HTML file.");
@@ -17,6 +17,13 @@ for (const file of htmlFiles) {
   if (csp.includes("'unsafe-inline'") || csp.includes("'unsafe-eval'")) throw new Error(`${file} CSP permits unsafe execution`);
   if (/\son[a-z]+\s*=/i.test(html)) throw new Error(`${file} contains an inline event handler`);
 }
+for (const file of [".github/CODEOWNERS", ".github/pull_request_template.md", ".github/dependabot.yml", "docs/OPS_CYSEC_GITHUB_GOVERNANCE.md", "docs/THREAT_MODEL.md", "docs/DATA_CLASSIFICATION.md", "docs/ACCESS_CONTROL_MATRIX.md", "docs/ADR-001-INFRASTRUCTURE-OWNERSHIP.md", "docs/RELEASE_EVIDENCE.md"]) {
+  await access(file).catch(() => { throw new Error(`Missing governance artifact: ${file}`); });
+}
+for (const forbiddenPath of ["firebase.json", "infra/terraform/main.tf", "apps/flutter/pubspec.yaml"]) {
+  try { await access(forbiddenPath); throw new Error(`External foundation ownership leaked into application repository: ${forbiddenPath}`); }
+  catch (error) { if (error.code !== "ENOENT") throw error; }
+}
 const headersText = await readFile("_headers", "utf8");
 for (const name of ["Content-Security-Policy", "Strict-Transport-Security", "X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy", "Permissions-Policy", "Cross-Origin-Opener-Policy", "Cross-Origin-Resource-Policy", "Reporting-Endpoints"]) {
   if (!headersText.includes(name + ":")) throw new Error(`_headers is missing ${name}`);
@@ -25,8 +32,8 @@ if (/X-XSS-Protection:/i.test(headersText)) throw new Error("_headers contains o
 const securityTxt = await readFile(".well-known/security.txt", "utf8");
 for (const field of ["Contact:", "Expires:", "Canonical:"]) if (!securityTxt.includes(field)) throw new Error(`security.txt is missing ${field}`);
 const workerText = await readFile("cloudflare/worker.js", "utf8");
-for (const control of ["Sec-Fetch-Site", "Reporting-Endpoints", "trusted_backend_not_connected", "X-Content-Type-Options"]) {
-  if (!workerText.includes(control)) throw new Error(`Cloudflare Worker lacks ${control}`);
+for (const control of ["Sec-Fetch-Site", "Reporting-Endpoints", "trusted_backend_not_connected", "X-Content-Type-Options", "Length Required", "path.startsWith(\"/api/\")"]) {
+  if (!workerText.includes(control)) throw new Error(`Edge source lacks ${control}`);
 }
 const wranglerText = await readFile("wrangler.toml", "utf8");
 for (const control of ["[env.non_specific]", "[env.production]", 'binding = "ASSETS"', "run_worker_first = true"]) {
@@ -43,4 +50,4 @@ for (const workflow of [".github/workflows/security.yml", ".github/workflows/clo
     if (!/^[0-9a-f]{40}$/.test(match[1])) throw new Error(`${workflow} has an unpinned action: ${match[0]}`);
   }
 }
-console.log("Security, metadata, Cloudflare, and supply-chain checks passed.");
+console.log("GitHub governance, metadata, edge-source, and supply-chain checks passed.");

@@ -3,13 +3,18 @@ info:
   title: Cappeto Agentic Commerce API
   version: 0.2.0
   description: Future server-authoritative contract; not an active backend.
+  license:
+    name: Proprietary
 servers:
   - url: https://api.example.invalid
+security:
+  - bearerAuth: []
 paths:
   /v1/catalog/search:
     get:
       summary: Search published products
       operationId: searchCatalog
+      security: []
       parameters:
         - in: query
           name: q
@@ -107,3 +112,10 @@ paths:
           description: Order status
         "404":
           description: Not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

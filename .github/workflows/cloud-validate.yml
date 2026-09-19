@@ -1,27 +1,16 @@
-name: Cloud and commerce configuration validation
+name: GitHub foundation validation
 
 on:
   pull_request:
-    paths:
-      - "agent/**"
-      - "apps/flutter/**"
-      - "cloudflare/**"
-      - "contracts/**"
-      - "docs/AGENTIC_COMMERCE.md"
-      - "firebase/**"
-      - "firebase.json"
-      - "infra/terraform/**"
-      - "scripts/build-cloudflare.mjs"
-      - "scripts/verify-cloudflare-deployment.mjs"
-      - "wrangler.toml"
-      - ".github/workflows/cloud-validate.yml"
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  contracts:
+  contracts-and-governance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -29,8 +18,12 @@ jobs:
           persist-credentials: false
       - name: Validate JSON contracts
         run: find agent contracts -type f -name '*.json' -print0 | xargs -0 -r -n1 jq empty
+      - name: Validate OpenAPI contract
+        run: npx --yes @redocly/cli@2.12.4 lint contracts/agentic-commerce.openapi.yaml
+      - name: Validate GitHub governance and security
+        run: node scripts/verify-security.mjs index.html
 
-  cloudflare:
+  edge-source:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -38,33 +31,3 @@ jobs:
           persist-credentials: false
       - run: node scripts/build-cloudflare.mjs owner
       - run: npx --yes wrangler@4.135.0 deploy --dry-run --env non_specific
-
-  terraform:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: infra/terraform
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e
-      - run: terraform fmt -check -recursive
-      - run: terraform init -backend=false
-      - run: terraform validate
-
-  flutter:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/flutter
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - run: flutter analyze

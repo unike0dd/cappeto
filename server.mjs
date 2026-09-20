@@ -14,15 +14,24 @@ const adminEmail=(process.env.CAPPETO_ADMIN_EMAIL||'').toLowerCase();
 const adminPassword=process.env.CAPPETO_ADMIN_PASSWORD||'';
 const sessionSecret=process.env.CAPPETO_SESSION_SECRET||randomBytes(32).toString('hex');
 const isProduction=process.env.NODE_ENV==='production';
-if(isProduction&&(!adminEmail||!adminPassword||!process.env.CAPPETO_SESSION_SECRET))throw new Error('Production requires CAPPETO_ADMIN_EMAIL, CAPPETO_ADMIN_PASSWORD, and CAPPETO_SESSION_SECRET');
+if(isProduction)throw new Error('The prototype Node server is development-only. Deploy the reviewed trusted commerce and identity services for production.');
 if(!adminEmail||!adminPassword)console.warn('Staff sign-in is disabled until CAPPETO_ADMIN_EMAIL and CAPPETO_ADMIN_PASSWORD are configured.');
 
 await mkdir(runtimeDir,{recursive:true});await mkdir(uploadsDir,{recursive:true});
 if(!existsSync(runtimeFile))await writeFile(runtimeFile,await readFile(dataFile));
 const sessions=new Map();
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.webp':'image/webp','.json':'application/json; charset=utf-8'};
-const securityHeaders={'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Permissions-Policy':'camera=(), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"};
-const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8',...securityHeaders,...extra});res.end(JSON.stringify(body))};
+const securityHeaders={
+  'Content-Security-Policy':"default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+  'Cross-Origin-Opener-Policy':'same-origin',
+  'Cross-Origin-Resource-Policy':'same-site',
+  'Permissions-Policy':'accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(self), usb=()',
+  'Referrer-Policy':'strict-origin-when-cross-origin',
+  'Strict-Transport-Security':'max-age=31536000; includeSubDomains',
+  'X-Content-Type-Options':'nosniff',
+  'X-Frame-Options':'DENY'
+};
+const json=(res,status,body,extra={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...securityHeaders,...extra});res.end(JSON.stringify(body))};
 const readBody=async req=>{let size=0;const chunks=[];for await(const chunk of req){size+=chunk.length;if(size>4_000_000)throw Object.assign(new Error('Request is too large'),{status:413});chunks.push(chunk)}return JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}')};
 const catalog=()=>readFile(runtimeFile,'utf8').then(JSON.parse);
 async function saveCatalog(value){const temp=`${runtimeFile}.${randomUUID()}.tmp`;await writeFile(temp,JSON.stringify(value,null,2));await rename(temp,runtimeFile)}
@@ -37,6 +46,9 @@ function applyInventoryChange(product,action,quantity){if(!['add','return','dama
 
 const server=createServer(async(req,res)=>{try{
   const url=new URL(req.url,'http://local');
+  const stateChanging=['POST','PUT','PATCH','DELETE'].includes(req.method);
+  if(stateChanging&&req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'Cross-site request rejected.'});
+  if(req.method==='OPTIONS')return json(res,405,{error:'Cross-origin preflight is not permitted on this origin.'},{'Allow':'GET, HEAD, POST, PUT, PATCH, DELETE'});
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){
     if(!adminEmail||!adminPassword)return json(res,503,{error:'Staff sign-in is not configured yet.'});
     const body=await readBody(req);
@@ -47,7 +59,7 @@ const server=createServer(async(req,res)=>{try{
     return json(res,200,{user:{email,role:'owner'},csrfToken:csrf},{'Set-Cookie':`cappeto_session=${id}.${sign(id)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${isProduction?'; Secure':''}`});
   }
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=sessionFor(req);return json(res,200,session?{authenticated:true,user:{email:session.email,role:'owner'},csrfToken:session.csrf}:{authenticated:false})}
-  if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'})}
+  if(url.pathname==='/api/auth/logout'&&req.method==='POST'){const session=requireStaff(req,res);if(!session)return;const raw=cookies(req).cappeto_session;sessions.delete(raw?.split('.')[0]);return json(res,200,{ok:true},{'Set-Cookie':'cappeto_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0','Clear-Site-Data':'"cache", "cookies", "storage"'})}
   if(url.pathname==='/api/products'&&req.method==='GET'){
     const data=await catalog();
     if(sessionFor(req))return json(res,200,data);
@@ -79,7 +91,7 @@ const server=createServer(async(req,res)=>{try{
   if(url.pathname.startsWith('/api/products/')&&url.pathname.endsWith('/inventory')&&req.method==='PATCH'){if(!requireStaff(req,res))return;const id=decodeURIComponent(url.pathname.slice(14,-10));const body=await readBody(req);const data=await catalog();const product=data.products.find(item=>item.id===id);if(!product)return json(res,404,{error:'Product not found.'});const vatRate=Number(body.vatRate),purchaseDate=clean(body.purchaseDate,10);if(!Number.isFinite(vatRate)||vatRate<0||vatRate>100||(purchaseDate&&!/^\d{4}-\d{2}-\d{2}$/.test(purchaseDate)))return json(res,400,{error:'VAT or purchase date is invalid.'});applyInventoryChange(product,body.action,Number(body.quantity));product.vatRate=vatRate;if(purchaseDate)product.purchaseDate=purchaseDate;await saveCatalog(data);return json(res,200,{product})}
   if(url.pathname.startsWith('/api/products/')&&req.method==='DELETE'){if(!requireStaff(req,res))return;const id=decodeURIComponent(url.pathname.slice(14));const data=await catalog();const before=data.products.length;data.products=data.products.filter(p=>p.id!==id);if(data.products.length===before)return json(res,404,{error:'Product not found.'});await saveCatalog(data);return json(res,200,{ok:true})}
   if(url.pathname==='/api/orders/quote'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();return json(res,200,totals(validItems(body.items,data.products),data.vatRate))}
-  if(url.pathname==='/api/orders'&&req.method==='POST'){const body=await readBody(req);const data=await catalog();const lines=validItems(body.items,data.products);const amount=totals(lines,data.vatRate);for(const line of lines)applyInventoryChange(line.product,'sold',line.quantity);await saveCatalog(data);return json(res,201,{orderId:randomUUID().slice(0,8).toUpperCase(),...amount})}
+  if(url.pathname==='/api/orders'&&req.method==='POST')return json(res,503,{error:'Ordering requires the trusted checkout, payment confirmation, and idempotent order service.'});
   if(url.pathname.startsWith('/api/'))return json(res,404,{error:'Not found'});
   let pathname=url.pathname==='/'?'/index.html':url.pathname;pathname=normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const publicTopLevel=new Set(['/index.html','/styles.css','/styles-base.css','/app.js']);

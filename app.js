@@ -92,7 +92,7 @@ function productMatchesSearch(product,query){
     return alternatives.some(alternative=>available.some(candidate=>tokenMatches(alternative,candidate)));
   });
 }
-const staticPrototype=location.hostname.endsWith('github.io');
+const staticPrototype=location.hostname==='unike0dd.github.io';
 let staticCatalog=null;
 
 async function staticApi(path,options={}){

@@ -362,7 +362,7 @@ $('resetInventoryButton').addEventListener('click',async()=>{
   }
 });
 document.querySelectorAll('.tax-disclosure-button').forEach(button=>button.addEventListener('click',()=>{
-  const disclosure=$(button.getAttribute('aria-controls'));
+  const disclosure=$('taxDisclosure');
   const open=button.getAttribute('aria-expanded')==='true';
   button.setAttribute('aria-expanded',String(!open));
   disclosure.classList.toggle('hidden',open);

@@ -2,23 +2,25 @@
 
 ## OPS Cyber Resilience Security Standard
 
-**Document status:** Authoritative master standard  
+**Document status:** Proposed master standard — not yet operative  
 **Version:** 1.0  
 **Effective date:** 2026-09-21  
-**Authority:** OPS CySec Governance  
+**Proposed authority:** OPS CySec Governance  
 **Applies to:** OPS repositories, applications, infrastructure, data, identities, personnel, contractors, automated agents, integrations, releases, and service providers
 
 ---
 
 ## 1. Authority and purpose
 
-OPReSS is the single authoritative security and resilience standard for OPS. It defines the mandatory outcomes, control requirements, evidence, approvals, and exit gates for Foundations Zero through Seven.
+OPReSS is proposed as the single authoritative security and resilience standard for OPS. It defines the mandatory outcomes, control requirements, evidence, approvals, and exit gates for Foundations Zero through Seven.
 
-All human operators, software agents, repositories, deployment workflows, cloud resources, and infrastructure definitions shall follow this document. Platform-specific files may implement these requirements but shall not redefine, weaken, or contradict them.
+After formal approval, all human operators, software agents, repositories, deployment workflows, cloud resources, and infrastructure definitions shall follow this document. Platform-specific files may implement these requirements but shall not redefine, weaken, or contradict them.
 
-The control chain is:
+Upon approval, the control chain is:
 
 > OPS CySec Governance → OPReSS → Foundations Zero–Seven → Controls → Evidence → Approval
+
+Until the Approval record in Section 24 is completed, this document is non-binding and its MUST/SHALL language describes the controls proposed for adoption.
 
 Documentation is not proof of implementation. A requirement is complete only when its prescribed evidence exists and its approval gate has passed.
 

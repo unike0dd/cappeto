@@ -4,8 +4,8 @@ import path from "node:path";
 
 const profile = process.argv[2];
 const allowlists = {
-  owner: ["index.html", "app.js", "styles.css", "styles-base.css", "assets", "data", "i18n", ".well-known/security.txt"],
-  consumer: ["index.html", "login.html", "app.js", "storefront.js", "login.js", "adaptive.js", "splash.js", "styles.css", "storefront.css", "login.css", "adaptive.css", "splash.css", "splash-transition.css", ".well-known/security.txt"]
+  owner: ["index.html", "app.js", "preview-session.js", "styles.css", "styles-base.css", "assets", "data", "i18n", ".well-known/security.txt"],
+  consumer: ["index.html", "login.html", "app.js", "preview-session.js", "storefront.js", "login.js", "adaptive.js", "splash.js", "styles.css", "storefront.css", "login.css", "adaptive.css", "splash.css", "splash-transition.css", ".well-known/security.txt"]
 };
 if (!allowlists[profile]) throw new Error("Profile must be owner or consumer.");
 

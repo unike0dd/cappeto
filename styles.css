@@ -1,11 +1,11 @@
 @import url("./styles-base.css?v=split-auth-2-fix1");
 
 /* Shared main navigation: always above page content and available on every screen. */
-.topbar,.landing-header{position:sticky;top:0;z-index:3500}
+.topbar,.landing-header{position:sticky;top:0;z-index:100}
 .topbar{grid-template-columns:minmax(0,1fr) auto}
 .topbar>.view-switcher,.top-actions>.owner-profile-button,.top-actions>.icon-button{display:none!important}
 .landing-header{background:color-mix(in srgb,var(--cream) 94%,transparent);backdrop-filter:blur(14px)}
-.auth-toolbar{position:relative;z-index:3500;display:flex;align-items:center;gap:10px}
+.auth-toolbar{position:relative;z-index:100;display:flex;align-items:center;gap:10px}
 .site-menu-button{display:grid;flex:0 0 auto;place-content:center;gap:4px;width:44px;height:44px;padding:0;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink)}
 .site-menu-button span{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;transition:transform .2s,opacity .2s}
 .site-menu-button[aria-expanded=true] span:nth-child(1){transform:translateY(6px) rotate(45deg)}

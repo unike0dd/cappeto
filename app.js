@@ -125,7 +125,7 @@ async function api(path,options={}){
   return body;
 }
 function toast(message){$('toast').textContent=message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
-function enterApp(){ $('landingView').classList.add('hidden');$('authView').classList.add('hidden');$('appView').classList.remove('hidden');$('skipLink').href='#appView';renderAll() }
+function enterApp(){ if(!state.staff)switchView('catalog'); $('landingView').classList.add('hidden');$('authView').classList.add('hidden');$('appView').classList.remove('hidden');$('skipLink').href='#appView';renderAll() }
 function showLanding(){ $('landingView').classList.remove('hidden');$('authView').classList.add('hidden');$('appView').classList.add('hidden');$('skipLink').href='#landingMain';$('landingTitle').focus?.() }
 function showAuth(mode='signin'){$('landingView').classList.add('hidden');$('authView').classList.remove('hidden');$('appView').classList.add('hidden');$('skipLink').href='#authForm';setAuthMode(mode);$('authTitle').focus?.()}
 function setAuthMode(mode){

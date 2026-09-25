@@ -27,10 +27,10 @@
   <meta name="twitter:image" content="https://unike0dd.github.io/cappeto/assets/products/01-cappeto-cafe-latte.webp">
   <link rel="canonical" href="https://unike0dd.github.io/cappeto/">
   <title>Cappeto · Menu and inventory workspace</title>
-  <link rel="stylesheet" href="styles.css?v=preview-session-2026-09-21-fix1">
+  <link rel="stylesheet" href="styles.css?v=owner-preview-removal-2026-09-24">
   <script src="i18n/translations.js?v=preview-session-2026-09-21-fix1" defer></script>
   <script src="preview-session.js?v=preview-session-2026-09-21-fix1" defer></script>
-  <script src="app.js?v=preview-session-2026-09-21-fix1" defer></script>
+  <script src="app.js?v=owner-preview-removal-2026-09-24" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cappeto","url":"https://unike0dd.github.io/cappeto/","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":["en","es"],"audience":{"@type":"Audience","audienceType":"Small and medium restaurants, cafés, and independent food sellers"},"description":"A bilingual menu, inventory, ordering, and reporting workspace designed to support keyboard navigation, screen readers, responsive layouts, and enlarged views."}</script>
 </head>
 <body>
@@ -114,8 +114,6 @@
         <label class="consent signup-only hidden"><input id="termsConsent" type="checkbox"><span data-i18n="termsConsent">I agree to the Terms and Privacy Notice.</span></label>
         <p class="form-message" id="authError" role="alert" aria-live="assertive"></p>
         <button class="button button-primary button-full" id="signInButton" data-i18n="signIn" type="submit">Sign in</button>
-        <button class="button secondary-button button-full" id="previewOwnerButton" data-i18n="previewOwner" type="button">Preview owner workspace</button>
-        <p class="password-help" data-i18n="previewOwnerNotice">Preview access is session-only and is not production authentication.</p>
       </div>
       <div class="customer-route"><span data-i18n="notManaging">Not managing a business?</span><button class="text-button" id="browseButton" data-i18n="browseMenu" type="button">Explore the customer menu</button></div>
       </form>
@@ -127,6 +125,7 @@
       <a class="wordmark" href="#catalog" data-i18n-aria="cappetoHome" aria-label="Cappeto home"><span id="businessLogoMark">C</span><strong id="businessWordmark">Cappeto</strong></a>
       <nav class="view-switcher" data-i18n-aria="workspace" aria-label="Workspace">
         <button class="nav-button active" id="menuNav" data-i18n="menu" data-view="catalog" aria-current="page" type="button">Menu</button>
+        <button class="nav-button staff-only hidden" id="tutorialNav" data-i18n="tutorialMenu" data-view="tutorial" type="button">Tutorial</button>
         <button class="nav-button staff-only hidden" id="manageNav" data-i18n="manage" data-view="manage" type="button">Manage products</button>
       </nav>
       <div class="top-actions">
@@ -327,7 +326,7 @@
     <nav>
       <button type="button" data-site-route="home" data-i18n="home">Home</button>
       <button type="button" data-site-route="catalog" data-i18n="menu">Menu</button>
-      <button type="button" data-site-route="tutorial" data-i18n="tutorialMenu">Tutorial</button>
+      <button class="staff-only hidden" type="button" data-site-route="tutorial" data-i18n="tutorialMenu">Tutorial</button>
       <button class="staff-only hidden" type="button" data-site-route="manage" data-i18n="manage">Manage products</button>
       <button class="staff-only hidden" type="button" data-site-route="settings" data-i18n="ownerProfile">Cappeto owner</button>
       <button class="staff-only hidden" type="button" data-site-route="logout" data-i18n="signOut">Sign out</button>
